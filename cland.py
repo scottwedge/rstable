@@ -29,12 +29,12 @@ client = discord.Client()
 
 
 def add_member(userid,rs3,osrs,usd):
-	c.execute("INSERT INTO rsemoney VALUES (%s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,usd,0,0,0))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,usd,0,0,0))
 	conn.commit()
 
 def getvalue(userid,value):
 	try:
-		c.execute("SELECT {} FROM rsemoney WHERE id={}".format(str(value),userid))
+		c.execute("SELECT {} FROM rsmoney WHERE id={}".format(str(value),userid))
 
 		if value=="usd" or "usdtotal":
 			return float(str(c.fetchone())[1:-2])
@@ -51,11 +51,11 @@ def update_money(userid,amount,currency):
 	osrs=getvalue(int(userid),currency)
 	usd=getvalue(int(userid),currency)
 	if currency=="07":
-		c.execute("UPDATE rsemoney SET osrs={} WHERE id={}".format(osrs+amount, userid))
+		c.execute("UPDATE rsmoney SET osrs={} WHERE id={}".format(osrs+amount, userid))
 	elif currency=="rs3":
-		c.execute("UPDATE rsemoney SET rs3={} WHERE id={}".format(rs3+amount, userid))
+		c.execute("UPDATE rsmoney SET rs3={} WHERE id={}".format(rs3+amount, userid))
 	elif currency.lower()=="usd":
-		c.execute("UPDATE rsemoney SET usd={} WHERE id={}".format(float(usd)+float(amount), userid))
+		c.execute("UPDATE rsmoney SET usd={} WHERE id={}".format(float(usd)+float(amount), userid))
 	conn.commit()
 
 def isstaff(checkedid):
@@ -300,13 +300,13 @@ async def on_message(message):
 
 				if str(message.content).split(" ")[1]=="07":
 					currency="07"
-					c.execute("UPDATE rsemoney SET osrs={} WHERE id={}".format(0, member.id))
+					c.execute("UPDATE rsmoney SET osrs={} WHERE id={}".format(0, member.id))
 				elif str(message.content).split(" ")[1]=="rs3":
 					currency="rs3"
-					c.execute("UPDATE rsemoney SET rs3={} WHERE id={}".format(0, member.id))
+					c.execute("UPDATE rsmoney SET rs3={} WHERE id={}".format(0, member.id))
 				elif str(message.content).split(" ")[1]=="usd":
 					currency="usd"
-					c.execute("UPDATE rsemoney SET usd={} WHERE id={}".format(0, member.id))
+					c.execute("UPDATE rsmoney SET usd={} WHERE id={}".format(0, member.id))
 				conn.commit()
 
 				await client.send_message(message.channel, str(member)+"'s "+currency+" currency has been reset to 0. RIP")
@@ -539,11 +539,11 @@ async def on_message(message):
 		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!transfer (rs3, 07, or usd) (@user) (Amount you want to give)`.")
 	###################################
 	elif message.content.startswith("!total wallet"):
-		c.execute("SELECT SUM(rs3) FROM rsemoney")
+		c.execute("SELECT SUM(rs3) FROM rsmoney")
 		rs3=formatfromk(int(str(c.fetchall())[2:-3]), "rs3")
-		c.execute("SELECT SUM(osrs) FROM rsemoney")
+		c.execute("SELECT SUM(osrs) FROM rsmoney")
 		osrs=formatfromk(int(str(c.fetchall())[2:-3]), "osrs")
-		c.execute("SELECT SUM(usd) FROM rsemoney")
+		c.execute("SELECT SUM(usd) FROM rsmoney")
 		usd=formatfromk(float(str(c.fetchall())[2:-3]), "usd")
 
 		embed = discord.Embed(color=16766463)
