@@ -37,7 +37,7 @@ def getvalue(userid,value):
 		value="osrs"
 	try:
 		c.execute("SELECT rs3 FROM rsmoney WHERE id={}".format(userid))
-		tester=int(c.fetchone()[0])
+		tester=int(str(c.fetchone())[1:-2])
 	except:
 		print("New Member")
 		add_member(int(userid),0,0)
@@ -46,10 +46,10 @@ def getvalue(userid,value):
 		c.execute("SELECT {} FROM rsmoney WHERE id={}".format(value, userid))
 
 		if value=="usd" or "usdtotal":
-			return float(c.fetchone()[0])
+			return float(str(c.fetchone())[1:-2])
 		else:
-			print(int(c.fetchone()[0]))
-			return int(c.fetchone()[0])
+			print(int(str(c.fetchone())[1:-2]))
+			return int(str(c.fetchone())[1:-2])
 
 #amount should be in K not M
 def update_money(userid,amount,currency):
