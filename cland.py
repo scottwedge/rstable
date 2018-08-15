@@ -435,9 +435,9 @@ async def on_message(message):
 						await client.send_message(message.channel, "You can only give up to 100b at one time for...reasons.")
 						maximum=True
 				elif (str(message.content).split(" ")[1]).lower()=="usd":
-				if formatok((str(message.content).split(" ")[3]), "usd")>1000.0:
-					await client.send_message(message.channel, "You can only give up to $1000 at one time for...reasons.")
-					maximum=True
+					if formatok((str(message.content).split(" ")[3]), "usd")>1000.0:
+						await client.send_message(message.channel, "You can only give up to $1000 at one time for...reasons.")
+						maximum=True
 
 				if maximum==False:
 					game=(message.content).split(" ")[1]
@@ -841,7 +841,7 @@ async def on_message(message):
 #client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
 client.run(str(Bot_Token))
-#https://discordapp.com/oauth2/authorize?client_id=456484773783928843&scope=bot&permissions=0
+#https://discordapp.com/oauth2/authorize?client_id=478960758114484224&scope=bot&permissions=0
 
 
 
