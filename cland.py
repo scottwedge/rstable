@@ -33,17 +33,23 @@ def add_member(userid,rs3,osrs,usd):
 	conn.commit()
 
 def getvalue(userid,value):
+	if value=="07":
+		value="osrs"
 	try:
-		c.execute("SELECT {} FROM rsmoney WHERE id={}".format(str(value),userid))
+		c.execute("SELECT rs3 FROM rsmoney WHERE id={}".format(userid))
+		tester=int(c.fetchone()[0])
+	except:
+		print("New Member")
+		add_member(int(userid),0,0)
+		return 0
+
+		c.execute("SELECT {} FROM rsmoney WHERE id={}".format(str(column), userid))
 
 		if value=="usd" or "usdtotal":
-			return float(str(c.fetchone())[1:-2])
+			return float(c.fetchone()[0])
 		else:
-			return int(str(c.fetchone())[1:-2])
-
-	except:
-		add_member(int(userid),0,0,0)
-		return 0
+			print(int(c.fetchone()[0]))
+			return int(c.fetchone()[0])
 
 #amount should be in K not M
 def update_money(userid,amount,currency):
