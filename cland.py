@@ -44,7 +44,8 @@ def getvalue(userid,value):
 		return 0
 
 		c.execute("SELECT {} FROM rsmoney WHERE id={}".format(value, userid))
-
+		print(c.fetchone()[0])
+		
 		if value=="usd" or value=="usdtotal":
 			return float(c.fetchone()[0])
 		else:
