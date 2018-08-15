@@ -58,14 +58,6 @@ def update_money(userid,amount,currency):
 		c.execute("UPDATE rsemoney SET usd={} WHERE id={}".format(float(usd)+float(amount), userid))
 	conn.commit()
 
-def reset():
-	global guesses,solved,blank,wrong,word1
-	guesses=6
-	solved=[]
-	blank=[]
-	wrong=[]
-	word1="skdfjgslddddfgggsdflkgashdflkjhesrflskjerhfs;eroifaasdfalwkefjhs"
-
 def isstaff(checkedid):
 	for i in open("staff.txt"):
 		if str(i.split(" ")[0])==str(checkedid):
@@ -119,8 +111,6 @@ def formatfromk(amount, currency):
 
 #Predefined Variables
 colors=["A","B","C","D","E","F","0","1","2","3","4","5","6","7","8","9"]
-objects=[]
-word="skdfjgslddddfgggsdflkgashdflkjhesrflskjerhfs;eroifaasdfalwkefjhs"
 flowers=["Red","Orange","Yellow","Green","Blue","Purple"]
 sidecolors=[16711680, 16743712, 16776960, 1305146, 1275391, 16730111]
 
@@ -143,28 +133,20 @@ async def on_reaction_add(reaction, user):
 
 @client.event
 async def on_message_delete(message):
-	for attachment in message.attachments:
-		await client.send_message(message.server.get_channel("465634969633554443"), "\"*"+str(attachment.get('proxy_url'))+"*\" was posted by **"+str(message.author)+"**.")
-	if message.content=="":	
-		None
-	else:
-		await client.send_message(message.server.get_channel("465634969633554443"), "\""+str(message.content)+"\" was posted by "+str(message.author)+".")
+	# for attachment in message.attachments:
+	# 	await client.send_message(message.server.get_channel("465634969633554443"), "\"*"+str(attachment.get('proxy_url'))+"*\" was posted by **"+str(message.author)+"**.")
+	# if message.content=="":	
+	# 	None
+	# else:
+	# 	await client.send_message(message.server.get_channel("465634969633554443"), "\""+str(message.content)+"\" was posted by "+str(message.author)+".")
 
 
 @client.event
 async def on_message(message):
-	global words,objects,word,guesses,solved,blank,wrong,word1,poet
+	#global 
 	
 	message.content=(message.content).lower()
 
-	#############################################
-	if message.channel not in (client.get_server("465548502462889985").channels):
-		if str(message.author.id)!=("199630284906430465"):
-			if str(message.author.id)!=("465636490014097418"):
-				await client.send_message(poet, "\""+str(message.content)+"\" was sent by "+str(message.author)+".")
-	else:
-		if str(message.author.id)==("199630284906430465"):
-			poet=message.author
 	#############################################
 	if message.content.startswith("!input"):
 		print(message.content)
@@ -182,67 +164,7 @@ async def on_message(message):
 			await client.send_message(message.channel, "Your random color is https://www.colorhexa.com/"+color)
 		elif message.content.startswith("!colourpicker"):
 			await client.send_message(message.channel, "Your random colour is https://www.colorhexa.com/"+color)
-    #########################################
-	elif message.content.startswith("!throw"):
-		await client.send_message(message.channel,"You throw "+str(message.content[7:])+" into the deep, dark, empty void.")
-		objects.append(str(message.content[7:]))
-	#########################################
-	elif message.content.startswith("!catch"):
-		if len(objects)==0:
-			caught="nothing"
-		else:
-			caught=str(random.choice(objects))
-		await client.send_message(message.channel, "You catch a "+caught+" out of the void that someone threw earlier!")
-	#########################################
-	elif message.content.startswith("!clearthevoid"):
-		objects=[]
-		await client.send_message(message.channel, "The void is now lonely.")
-	########################################
-	elif message.content.startswith('!random'):
-		try:
-			size=int((message.content).split(" ")[1])
-		except:
-			size=10
-
-		await client.send_message(message.channel, 'Guess a number between __**1**__ and __**'+str(size)+'**__')
-
-		def guess_check(m):
-			return m.content.isdigit()
-
-		guess = await client.wait_for_message(timeout=10.0, author=message.author, check=guess_check)
-		answer = random.randint(1, size)
-		if guess is None:
-			fmt = '**Sorry**, you took too long :cry:. It was __**{}**__.'
-			await client.send_message(message.channel, fmt.format(answer))
-			return
-		if int(guess.content) == answer:
-			await client.send_message(message.channel, 'You are **correct**! It was indeed __**{}**__!'.format(answer))
-		else:
-			await client.send_message(message.channel, '**Sorry**, it was actually __**{}**__.'.format(answer))
-	#########################################
-	elif message.content.startswith("!start unscramble"):
-		await client.send_message(message.channel, "The first person to type the unscrambled version of this word wins!")
-		word=str(open("words.csv").readlines()[random.randint(0,100)].splitlines()[0])
-		characters=[]
-		characters+=word
-		scrambled=("")
-		for i in range(len(characters)):
-			letter=random.randint(0, (len(characters)-1))
-			scrambled+=str(characters[letter])
-			characters.remove(str(characters[letter]))
-		await client.send_message(message.channel, "The word is:   "+str(scrambled))
-	#########################################
-	elif (str(message.content)).lower()==str(word):
-		word="skdfjgslddddfgggsdflkgashdflkjhesrflskjerhfs;eroifaasdfalwkefjhs"
-		await client.send_message(message.channel, str(message.author)+" has succesfully unscrambled the word!")
-	########################################
-	elif message.content.startswith("!skipword"):
-		if word!="skdfjgslddddfgggsdflkgashdflkjhesrflskjerhfs;eroifaasdfalwkefjhs":
-			await client.send_message(message.channel, "Too difficult for you? The word was "+str(word)+".")
-			word="skdfjgslddddfgggsdflkgashdflkjhesrflskjerhfs;eroifaasdfalwkefjhs"
-		else:
-			await client.send_message(message.channel, "There is no word right now. Use \"!start unscramble\" to play.")
-	#########################################
+	###############################################
 	elif message.content.startswith("!emoji"):
 		try:
 			await client.delete_message(message)
@@ -286,41 +208,7 @@ async def on_message(message):
 		embed.set_author(name="Information of "+str(member)[:-5], icon_url=str(member.avatar_url))
 		embed.set_footer(text="Spying on people's information isn't very nice...")
 		await client.send_message(message.channel, embed=embed)
-	##############################################
-	elif message.content.startswith("!start hangman"):
-		reset()
-		word1=str(open("words.csv").readlines()[random.randint(0,100)].splitlines()[0])
-		solved+=word1
-		for i in range(len(solved)):
-			blank+="_"
-			blank+=" "
-		await client.send_message(message.channel, "```css\nUse !guess (letter or word here)   to guess a letter, or the whole word\nThe first person to guess the word correctly wins!\n\n"+(''.join(blank))+"\n```")
-	###################################################
-	elif message.content.startswith("!guess"):
-		if len(blank)==0:
-			await client.send_message(message.channel, "There is not a game of hangman going on right now. Use \"!start hangman\" to start a game.")
-		else:
-			guess=(message.content[7:]).lower()
-			if guess == word1.lower():
-				reset()
-				await client.send_message(message.channel, "<@"+str(message.author.id)+"> has solved the puzzle!")
-			elif guess not in solved:
-				wrong.append(message.content[7:])
-				guesses-=1
-				if guesses<1:
-					await client.send_message(message.channel, "GAME OVER! You guessed wrong letters/words 6 times. The word was \""+str(word1)+"\".")
-					reset()
-				else:
-					await client.send_message(message.channel, "```css\nUse !guess (letter or word here) to guess a letter, or the whole word\nThe first person to guess the word correctly wins!\n\n"+(''.join(blank))+"\n\nIncorrect guesses left: "+str(guesses)+"\nPrevious incorrect guesses: "+", ".join(wrong)+"\n```")
-			else:
-				for counter, i in enumerate(solved):
-					if i.lower() == guess:
-						blank[counter+counter]=guess
-				await client.send_message(message.channel, "```css\nUse !guess (letter or word here) to guess a letter, or the whole word\nThe first person to guess the word correctly wins!\n\n"+(''.join(blank))+"\n\nIncorrect guesses left: "+str(guesses)+"\nPrevious incorrect guesses: "+", ".join(wrong)+"\n```")			
-	####################################################
 	
-
-
 
 
 
