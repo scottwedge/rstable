@@ -233,6 +233,9 @@ async def on_message(message):
 		osrs=getvalue(int(message.author.id),"07")
 		rs3=getvalue(int(message.author.id),"rs3")
 		usd=getvalue(int(message.author.id),"usd")
+		print(osrs)
+		print(rs3)
+		print(usd)
 		if osrs>=1000000 or rs3>=1000000 or usd>=100.00:
 			sidecolor=2693614
 		elif osrs>=10000 or rs3>=10000 or usd>=10.00:
