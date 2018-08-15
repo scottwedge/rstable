@@ -12,16 +12,16 @@ conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 c=conn.cursor()
 
 #c.execute("DROP TABLE rsmoney")
-c.execute("""CREATE TABLE rsmoney (
-				id bigint,
-				rs3 integer,
-				osrs integer,
-				usd float(2),
-				rs3total bigint,
-				osrstotal bigint,
-				usdtotal float(2)
-				)""")
-conn.commit()
+# c.execute("""CREATE TABLE rsmoney (
+# 				id bigint,
+# 				rs3 integer,
+# 				osrs integer,
+# 				usd float(2),
+# 				rs3total bigint,
+# 				osrstotal bigint,
+# 				usdtotal float(2)
+# 				)""")
+# conn.commit()
 
 
 client = discord.Client()
