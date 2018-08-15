@@ -40,7 +40,7 @@ def getvalue(userid,value):
 		tester=int(c.fetchone()[0])
 	except:
 		print("New Member")
-		add_member(int(userid),0,0)
+		add_member(int(userid),0,0,0)
 		return 0
 
 	c.execute("SELECT {} FROM rsmoney WHERE id={}".format(value, userid))
