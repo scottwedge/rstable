@@ -98,20 +98,26 @@ def formatfromk(amount, currency):
 		else:
 			return "$"+'{0:.6g}'.format(amount)	
 
-	if amount>=1000000:
-		if len(str(amount))==7:
-			return '{0:.3g}'.format(amount*0.000001)+"B"
-		elif len(str(amount))==8:
-			return '{0:.4g}'.format(amount*0.000001)+"B"
-		else:
-			return '{0:.5g}'.format(amount*0.000001)+"B"
-	elif amount>=10000:
-		if len(str(amount))==5:
-			return '{0:.4g}'.format(amount*0.001)+"M"
-		elif len(str(amount))==6:
-			return '{0:.5g}'.format(amount*0.001)+"M"
-	else:
-		return str(amount)+"k"
+	amount=round((amount*0.001), 2)
+	if isinstance(amount, float):
+		if (amount).is_integer():
+			amount=int(amount)
+	return str(amount)+"M"
+
+	# if amount>=1000000:
+	# 	if len(str(amount))==7:
+	# 		return '{0:.3g}'.format(amount*0.000001)+"B"
+	# 	elif len(str(amount))==8:
+	# 		return '{0:.4g}'.format(amount*0.000001)+"B"
+	# 	else:
+	# 		return '{0:.5g}'.format(amount*0.000001)+"B"
+	# elif amount>=10000:
+	# 	if len(str(amount))==5:
+	# 		return '{0:.4g}'.format(amount*0.001)+"M"
+	# 	elif len(str(amount))==6:
+	# 		return '{0:.5g}'.format(amount*0.001)+"M"
+	# else:
+	# 	return str(amount)+"k"
 ######################################################################################
 
 #Predefined Variables
