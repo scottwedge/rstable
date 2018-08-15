@@ -133,6 +133,7 @@ async def on_reaction_add(reaction, user):
 
 @client.event
 async def on_message_delete(message):
+	None
 	# for attachment in message.attachments:
 	# 	await client.send_message(message.server.get_channel("465634969633554443"), "\"*"+str(attachment.get('proxy_url'))+"*\" was posted by **"+str(message.author)+"**.")
 	# if message.content=="":	
