@@ -43,7 +43,7 @@ def getvalue(userid,value):
 		add_member(int(userid),0,0)
 		return 0
 
-		c.execute("SELECT {} FROM rsmoney WHERE id={}".format(str(column), userid))
+		c.execute("SELECT {} FROM rsmoney WHERE id={}".format(value, userid))
 
 		if value=="usd" or "usdtotal":
 			return float(c.fetchone()[0])
