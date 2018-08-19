@@ -11,19 +11,19 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 c=conn.cursor()
 
-c.execute("DROP TABLE rsmoney")
-c.execute("""CREATE TABLE rsmoney (
-				id bigint,
-				rs3 integer,
-				osrs integer,
-				usd float(2),
-				rs3total bigint,
-				osrstotal bigint,
-				usdtotal float(2),
-				client text,
-				tickets integer
-				)""")
-conn.commit()
+# c.execute("DROP TABLE rsmoney")
+# c.execute("""CREATE TABLE rsmoney (
+# 				id bigint,
+# 				rs3 integer,
+# 				osrs integer,
+# 				usd float(2),
+# 				rs3total bigint,
+# 				osrstotal bigint,
+# 				usdtotal float(2),
+# 				client text,
+# 				tickets integer
+# 				)""")
+# conn.commit()
 
 
 client = discord.Client()
@@ -601,7 +601,7 @@ async def on_message(message):
 		bet=formatok(str(message.content).split(" ")[2], game)
 		current=getvalue(message.author.id, game)
 
-		if enough(bet, game)[0]==True:
+		if (enough(bet, game))[0]==True:
 			if message.content.startswith("!54x2") or message.content.startswith("!54"):
 				odds=55
 				commission=0
@@ -630,11 +630,14 @@ async def on_message(message):
 					winnings=(bet*multiplier)-(bet*multiplier*commission)
 
 				if game=="rs3":
+					totalbet=getvalue(message.author.id, "rs3total")
 					c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet+bet, message.author.id))
 				elif game=="07":
+					totalbet=getvalue(message.author.id, "osrstotal")
 					c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, message.author.id))
 				elif game=="usd":
-					c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, message.author.id))
+					totalbet=getvalue(message.author.id, "usdtotal")
+					c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet+bet, message.author.id))
 				conn.commit()
 
 				if isinstance(winnings, float):
@@ -656,7 +659,7 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 		else:
-			await client.send_message(message.channel, enough(bet, game)[1])
+			await client.send_message(message.channel, (enough(bet, game))[1])
 		#except:
 		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!(50, 54, or 75) (rs3 or 07) (BET)`.")
 	#############################
@@ -687,7 +690,7 @@ async def on_message(message):
 		flower=flowers[index]
 		sidecolor=sidecolors[index]
 
-		if enough(bet, currency)[0]==True:	
+		if (enough(bet, currency))[0]==True:	
 			if current>=bet:
 				win=False
 				if (message.content).split(" ")[3]=="hot":
@@ -723,13 +726,25 @@ async def on_message(message):
 					update_money(int(message.author.id), bet*-1, currency)
 
 				embed = discord.Embed(description=words, color=sidecolor)
-				embed.set_author(name=(str(message.author))[:-5]+"'s Wallet", icon_url=str(message.author.avatar_url))
+				embed.set_author(name=(str(message.author))[:-5]+"'s Gamble", icon_url=str(message.author.avatar_url))
 				embed.set_footer(text="Gambled on: "+str(datetime.datetime.now())[:-7])
 				await client.send_message(message.channel, embed=embed)	
+
+				if currency=="rs3":
+					totalbet=getvalue(message.author.id, "rs3total")
+					c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet+bet, message.author.id))
+				elif currency=="07":
+					totalbet=getvalue(message.author.id, "osrstotal")
+					c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, message.author.id))
+				elif currency=="usd":
+					totalbet=getvalue(message.author.id, "usdtotal")
+					c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet+bet, message.author.id))
+				conn.commit()
+
 			else:
 				await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much gold!")
 		else:
-			await client.send_message(message.channel, enough(bet, currency)[1])
+			await client.send_message(message.channel, (enough(bet, currency))[1])
 		# except:
 		# 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!flower (rs3, 07, or usd) (Amount) (hot, cold, red, orange, yellow, green, blue, or purple)`.")
 	#############################
@@ -743,7 +758,7 @@ async def on_message(message):
 			bet=formatok((message.content).split(" ")[2], currency)
 			current=getvalue(int(message.author.id), currency)
 
-			if enough(bet, currency)[0]==True:
+			if (enough(bet, currency))[0]==True:
 				await client.send_message(message.channel, "<@"+str(message.author.id)+"> wants to duel for `"+formatfromk(bet)+" "+currency+"`. Use `!call` to accept the duel.")
 				while True:
 					call = await client.wait_for_message(timeout=60, channel=message.channel, content="!call")
@@ -810,10 +825,27 @@ async def on_message(message):
 						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current-bet, message.author.id))
 						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current2+bet, caller.id))
 					conn.commit()
+
+					if currency=="rs3":
+						totalbet=getvalue(message.author.id, "rs3total")
+						totalbet2=getvalue(caller.id, "rs3total")
+						c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet+bet, message.author.id))
+						c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet2+bet, caller.id))
+					elif currency=="07":
+						totalbet=getvalue(message.author.id, "osrstotal")
+						totalbet2=getvalue(caller.id, "osrstotal")
+						c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, message.author.id))
+						c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet2+bet, caller.id))
+					elif currency=="usd":
+						totalbet=getvalue(message.author.id, "usdtotal")
+						totalbet2=getvalue(caller.id, "usdtotal")
+						c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet+bet, message.author.id))
+						c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet2+bet, caller.id))
+					conn.commit()
 				else:
 					None
 			else:
-				await client.send_message(message.channel, enough(bet, currency)[1])
+				await client.send_message(message.channel, (enough(bet, currency))[1])
 		#except:
 
 
