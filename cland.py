@@ -598,7 +598,7 @@ async def on_message(message):
 	elif message.content.startswith("!54") or message.content.startswith("!50") or message.content.startswith("!75"):
 		#try:
 		game=str(message.content).split(" ")[1]
-		bet=formatok(str(message.content).split(" ")[2])
+		bet=formatok(str(message.content).split(" ")[2], currency)
 		current=getvalue(message.author.id, game)
 
 		if enough(bet, game)[0]==True:
@@ -680,7 +680,7 @@ async def on_message(message):
 	elif message.content.startswith("!flower"):
 		#try:
 		currency=(message.content).split(" ")[1]
-		bet=formatok((message.content).split(" ")[2])
+		bet=formatok((message.content).split(" ")[2], currency)
 		current=getvalue(int(message.author.id), currency)
 		commission=0.05
 		index=random.randint(0,5)
@@ -740,7 +740,7 @@ async def on_message(message):
 		else:
 			duel=False
 			currency=(message.content).split(" ")[1]
-			bet=formatok((message.content).split(" ")[2])
+			bet=formatok((message.content).split(" ")[2], currency)
 			current=getvalue(int(message.author.id), currency)
 
 			if enough(bet, currency)[0]==True:
