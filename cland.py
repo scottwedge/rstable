@@ -177,7 +177,7 @@ async def on_message_delete(message):
 
 @client.event
 async def on_message(message):
-	#global 
+	global words 
 	
 	message.content=(message.content).lower()
 
