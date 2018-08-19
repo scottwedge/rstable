@@ -598,7 +598,7 @@ async def on_message(message):
 	elif message.content.startswith("!54") or message.content.startswith("!50") or message.content.startswith("!75"):
 		#try:
 		game=str(message.content).split(" ")[1]
-		bet=formatok(str(message.content).split(" ")[2], currency)
+		bet=formatok(str(message.content).split(" ")[2], game)
 		current=getvalue(message.author.id, game)
 
 		if enough(bet, game)[0]==True:
@@ -729,7 +729,7 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much gold!")
 		else:
-			await client.send_message(message.channel, enough(bet, game)[1])
+			await client.send_message(message.channel, enough(bet, currency)[1])
 		# except:
 		# 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!flower (rs3, 07, or usd) (Amount) (hot, cold, red, orange, yellow, green, blue, or purple)`.")
 	#############################
@@ -813,7 +813,7 @@ async def on_message(message):
 				else:
 					None
 			else:
-				await client.send_message(message.channel, enough(bet, game)[1])
+				await client.send_message(message.channel, enough(bet, currency)[1])
 		#except:
 
 
