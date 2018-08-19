@@ -735,85 +735,85 @@ async def on_message(message):
 	#############################
 	elif message.content.startswith("!dd"):
 		#try:
-			if duel==True:
-				await client.send_message(message.channel, "There is a dice duel already going on. Please wait until that one finishes.")
-			else:
-				duel=False
-				currency=(message.content).split(" ")[1]
-				bet=formatok((message.content).split(" ")[2])
-				current=getvalue(int(message.author.id), currency)
+		if duel==True:
+			await client.send_message(message.channel, "There is a dice duel already going on. Please wait until that one finishes.")
+		else:
+			duel=False
+			currency=(message.content).split(" ")[1]
+			bet=formatok((message.content).split(" ")[2])
+			current=getvalue(int(message.author.id), currency)
 
-				if enough(bet, currency)[0]==True:
-					await client.send_message(message.channel, "<@"+str(message.author.id)+"> wants to duel for `"+formatfromk(bet)+" "+currency+"`. Use `!call` to accept the duel.")
-					while True:
-						call = await client.wait_for_message(timeout=60, channel=message.channel, content="!call")
-						if call is None:
-							await client.send_message(message.channel, "<@"+str(message.author.id)+">'s duel request has timed out.")
-							break
-						caller=guess.author
-						current2=getvalue(int(caller.id), currency)
-						if str(caller.id)==str(message.author.id):
-							await client.send_message(message.channel, "As exciting as it may sound, you cannot duel yourself ._.")
-							continue
-						if current2<bet:
-							await client.send_message(message.channel, "You don't have enough gp to call that duel.")
-							continue
-						else:
-							duel=True
-							break
-
-					if duel==True:
-						await client.send_message(message.channel, "Duel Initiated. Use `!roll` to roll.")
-						gamblerroll=random.randint(2,12)
-						callerroll=random.randint(2,12)
-						roll = await client.wait_for_message(timeout=30, channel=message.channel, content="!roll")
-						if roll is None:
-							await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled a `"+str(gamblerroll)+"` :game_die: ")
-							second=caller
-						if str(roll.author.id)==str(message.author.id):
-							await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled a `"+str(gamblerroll)+"` :game_die: ")
-							second=caller
-						elif str(roll.author.id)==str(caller.id):
-							await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled a `"+str(callerroll)+"` :game_die: ")
-							second=message.author
-
-						roll = await client.wait_for_message(timeout=30, channel=message.channel, author=second, content="!roll")
-						if roll is None:
-							await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled a `"+str(callerroll)+"` :game_die: ")
-						if str(roll.author.id)==str(message.author.id):
-							await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled a `"+str(gamblerroll)+"` :game_die: ")
-						elif str(roll.author.id)==str(caller.id):
-							await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled a `"+str(callerroll)+"` :game_die: ")
-
-						embed = discord.Embed(color=16766463)
-						embed.set_author(name="Dice Duel :game_die: ", icon_url=str(message.server.icon_url))
-						embed.add_field(name=str(message.author)+" Roll", value=str(gamblerroll), inline=True)
-						embed.add_field(name=str(caller)+" Roll", value=str(callerroll), inline=True)
-						embed.set_footer(text="Dueled On: "+str(datetime.datetime.now())[:-7])
-						await client.send_message(message.channel, embed=embed)
-
-						embed = discord.Embed(color=16766463)
-						embed.set_author(name="Dice Duel :game_die: ", icon_url=str(message.server.icon_url))
-						embed.add_field(name=str(message.author)+" Roll", value=str(gamblerroll), inline=True)
-						embed.add_field(name=str(caller)+" Roll", value=str(callerroll), inline=True)
-						embed.set_footer(text="Dueled On: "+str(datetime.datetime.now())[:-7])
-						await client.send_message(message.channel, embed=embed)
-
-						if gamblerroll==callerroll:
-							await client.send_message(message.channel, "Tie. Money Back.")
-						elif gamblerroll>callerroll:
-							await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled higher and won"+formatfromk(bet)+" "+currency+"!")
-							c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current+bet, message.author.id))
-							c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current2-bet, caller.id))
-						elif callerroll>gamblerroll:
-							await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled higher and won"+formatfromk(bet)+" "+currency+"!")
-							c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current-bet, message.author.id))
-							c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current2+bet, caller.id))
-						conn.commit()
+			if enough(bet, currency)[0]==True:
+				await client.send_message(message.channel, "<@"+str(message.author.id)+"> wants to duel for `"+formatfromk(bet)+" "+currency+"`. Use `!call` to accept the duel.")
+				while True:
+					call = await client.wait_for_message(timeout=60, channel=message.channel, content="!call")
+					if call is None:
+						await client.send_message(message.channel, "<@"+str(message.author.id)+">'s duel request has timed out.")
+						break
+					caller=guess.author
+					current2=getvalue(int(caller.id), currency)
+					if str(caller.id)==str(message.author.id):
+						await client.send_message(message.channel, "As exciting as it may sound, you cannot duel yourself ._.")
+						continue
+					if current2<bet:
+						await client.send_message(message.channel, "You don't have enough gp to call that duel.")
+						continue
 					else:
-						None
+						duel=True
+						break
+
+				if duel==True:
+					await client.send_message(message.channel, "Duel Initiated. Use `!roll` to roll.")
+					gamblerroll=random.randint(2,12)
+					callerroll=random.randint(2,12)
+					roll = await client.wait_for_message(timeout=30, channel=message.channel, content="!roll")
+					if roll is None:
+						await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled a `"+str(gamblerroll)+"` :game_die: ")
+						second=caller
+					if str(roll.author.id)==str(message.author.id):
+						await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled a `"+str(gamblerroll)+"` :game_die: ")
+						second=caller
+					elif str(roll.author.id)==str(caller.id):
+						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled a `"+str(callerroll)+"` :game_die: ")
+						second=message.author
+
+					roll = await client.wait_for_message(timeout=30, channel=message.channel, author=second, content="!roll")
+					if roll is None:
+						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled a `"+str(callerroll)+"` :game_die: ")
+					if str(roll.author.id)==str(message.author.id):
+						await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled a `"+str(gamblerroll)+"` :game_die: ")
+					elif str(roll.author.id)==str(caller.id):
+						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled a `"+str(callerroll)+"` :game_die: ")
+
+					embed = discord.Embed(color=16766463)
+					embed.set_author(name="Dice Duel :game_die: ", icon_url=str(message.server.icon_url))
+					embed.add_field(name=str(message.author)+" Roll", value=str(gamblerroll), inline=True)
+					embed.add_field(name=str(caller)+" Roll", value=str(callerroll), inline=True)
+					embed.set_footer(text="Dueled On: "+str(datetime.datetime.now())[:-7])
+					await client.send_message(message.channel, embed=embed)
+
+					embed = discord.Embed(color=16766463)
+					embed.set_author(name="Dice Duel :game_die: ", icon_url=str(message.server.icon_url))
+					embed.add_field(name=str(message.author)+" Roll", value=str(gamblerroll), inline=True)
+					embed.add_field(name=str(caller)+" Roll", value=str(callerroll), inline=True)
+					embed.set_footer(text="Dueled On: "+str(datetime.datetime.now())[:-7])
+					await client.send_message(message.channel, embed=embed)
+
+					if gamblerroll==callerroll:
+						await client.send_message(message.channel, "Tie. Money Back.")
+					elif gamblerroll>callerroll:
+						await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled higher and won"+formatfromk(bet)+" "+currency+"!")
+						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current+bet, message.author.id))
+						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current2-bet, caller.id))
+					elif callerroll>gamblerroll:
+						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled higher and won"+formatfromk(bet)+" "+currency+"!")
+						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current-bet, message.author.id))
+						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current2+bet, caller.id))
+					conn.commit()
 				else:
-					await client.send_message(message.channel, enough(bet, game)[1])
+					None
+			else:
+				await client.send_message(message.channel, enough(bet, game)[1])
 		#except:
 
 
