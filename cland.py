@@ -122,6 +122,7 @@ def formatfromk(amount, currency):
 	# 	return str(amount)+"k"
 
 def enough(amount, currency):
+	global words
 	if currency=="rs3":
 		if amount<1000:
 			words="The minimum amount you can bet is **1m** gp RS3."
@@ -177,7 +178,7 @@ async def on_message_delete(message):
 
 @client.event
 async def on_message(message):
-	
+	global words
 	message.content=(message.content).lower()
 
 	#############################################
@@ -612,7 +613,7 @@ async def on_message(message):
 		bet=formatok(str(message.content).split(" ")[2], game)
 		current=getvalue(message.author.id, game)
 
-		if (enough(bet, currency))[0]:
+		if enough(bet, currency)[0]:
 			if message.content.startswith("!54x2") or message.content.startswith("!54"):
 				odds=56
 				multiplier=2
@@ -695,9 +696,9 @@ async def on_message(message):
 		osrstotal=getvalue(message.author.id, "osrstotal")
 		usdtotal=getvalue(message.author.id, "usdtotal")
 
-		osrs=formatfromk(osrs, "osrs")
-		rs3=formatfromk(rs3, "rs3")
-		usd=formatfromk(usd, "usd")
+		osrs=formatfromk(osrstotal, "osrs")
+		rs3=formatfromk(rs3total, "rs3")
+		usd=formatfromk(usdtotal, "usd")
 
 		embed = discord.Embed(color=16766463)
 		embed.set_author(name=(str(message.author))[:-5]+"'s Total Bets", icon_url=str(message.author.avatar_url))
@@ -717,7 +718,7 @@ async def on_message(message):
 		flower=flowers[index]
 		sidecolor=sidecolors[index]
 
-		if (enough(bet, currency))[0]==True:	
+		if enough(bet, currency)[0]:	
 			if current>=bet:
 				win=False
 				if (message.content).split(" ")[3]=="hot":
@@ -785,7 +786,7 @@ async def on_message(message):
 			bet=formatok((message.content).split(" ")[2], currency)
 			current=getvalue(int(message.author.id), currency)
 
-			if (enough(bet, currency))[0]==True:
+			if enough(bet, currency)[0]:
 				await client.send_message(message.channel, "<@"+str(message.author.id)+"> wants to duel for `"+formatfromk(bet)+" "+currency+"`. Use `!call` to accept the duel.")
 				while True:
 					call = await client.wait_for_message(timeout=60, channel=message.channel, content="!call")
