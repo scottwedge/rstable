@@ -122,6 +122,7 @@ def formatfromk(amount, currency):
 	# 	return str(amount)+"k"
 
 def enough(amount, currency):
+	global words
 	if currency=="rs3":
 		if bet<1000:
 			words="The minimum amount you can bet is **1m** gp RS3."
@@ -265,6 +266,7 @@ async def on_message(message):
 		osrs=getvalue(int(message.author.id),"07")
 		rs3=getvalue(int(message.author.id),"rs3")
 		usd=getvalue(int(message.author.id),"usd")
+		tickets=getvalue(int(message.author.id),"tickets")
 
 		if osrs>=1000000 or rs3>=1000000 or usd>=100.00:
 			sidecolor=2693614
@@ -284,6 +286,7 @@ async def on_message(message):
 		embed.add_field(name="07 Balance", value=osrs, inline=True)
 		embed.add_field(name="RS3 Balance", value=rs3, inline=True)
 		embed.add_field(name="USD Balance", value=usd, inline=True)
+		embed.add_field(name="Tickets", value=tickets, inline=True)
 		embed.set_footer(text="Wallet checked on: "+str(datetime.datetime.now())[:-7])
 		await client.send_message(message.channel, embed=embed)
 
@@ -306,6 +309,7 @@ async def on_message(message):
 		osrs=getvalue(int(member.id),"07")
 		rs3=getvalue(int(member.id),"rs3")
 		usd=getvalue(int(member.id),"usd")
+		tickets=getvalue(int(member.id),"tickets")
 
 		if osrs>=1000000 or rs3>=1000000 or usd>=100.00:
 			sidecolor=2693614
@@ -325,6 +329,7 @@ async def on_message(message):
 		embed.add_field(name="07 Balance", value=osrs, inline=True)
 		embed.add_field(name="RS3 Balance", value=rs3, inline=True)
 		embed.add_field(name="USD Balance", value=usd, inline=True)
+		embed.add_field(name="Tickets", value=tickets, inline=True)
 		embed.set_footer(text="Wallet checked on: "+str(datetime.datetime.now())[:-7])
 		await client.send_message(message.channel, embed=embed)
 	##########################################
@@ -595,30 +600,31 @@ async def on_message(message):
 		embed.set_footer(text="Total Wallet checked on: "+str(datetime.datetime.now())[:-7])
 		await client.send_message(message.channel, embed=embed)
 	################################3
-	elif message.content.startswith("!54") or message.content.startswith("!50") or message.content.startswith("!75"):
+	elif message.content.startswith("!54") or message.content.startswith("!50") or message.content.startswith("!75") or message.content.startswith("!45") or message.content.startswith("!90") or message.content.startswith("!95"):
 		#try:
 		game=str(message.content).split(" ")[1]
 		bet=formatok(str(message.content).split(" ")[2], game)
 		current=getvalue(message.author.id, game)
 
-		if (enough(bet, game))[0]==True:
+		is_enough, words = enough(bet, game)
+		if is_enough:
 			if message.content.startswith("!54x2") or message.content.startswith("!54"):
-				odds=55
-				commission=0
+				odds=56
 				multiplier=2
 			elif message.content.startswith("!75x3") or message.content.startswith("!75"):
-				odds=76
-				commission=0
+				odds=77
 				multiplier=3
 			elif message.content.startswith("!50x2") or message.content.startswith("!50"):
-				odds=51
-				commission=0.05
-				multiplier=2
-
+				odds=52
+				multiplier=1.9
+			elif message.content.startswith("!45x1.5") or message.content.startswith("!45"):
+				odds=47
+				multiplier=1.5
+			elif message.content.startswith("!90")
 			if current>=bet:
 				roll=random.randint(1,100)
 
-				if roll in range(0,odds):
+				if roll in range(1,odds):
 					win=False
 					sidecolor=16718121
 					gains=bet*-1
