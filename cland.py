@@ -672,7 +672,7 @@ async def on_message(message):
 					if (winnings).is_integer():
 						winnings=int(winnings)
 
-				winnings=formatfromk(winnings)
+				winnings=formatfromk(winnings, game)
 				update_money(int(message.author.id), gains, game)
 
 				if win==False:
@@ -744,13 +744,13 @@ async def on_message(message):
 				if isinstance(winnings, float):
 					if (winnings).is_integer():
 						winnings=int(winnings)
-				winnings=formatfromk(winnings)
+				winnings=formatfromk(winnings, currency)
 
 				if win==True:
 					words=("Congratulations! The color of the flower was `"+flower+"`. "+str(message.author)+" won `"+winnings+"` "+currency+".")
 					update_money(int(message.author.id), (bet)-(bet*commission*multiplier), currency)
 				else:
-					words=("Sorry, the color the flower was `"+flower+"`. "+str(message.author)+" lost `"+formatfromk(bet)+"` "+currency+".")
+					words=("Sorry, the color the flower was `"+flower+"`. "+str(message.author)+" lost `"+formatfromk(bet, currency)+"` "+currency+".")
 					update_money(int(message.author.id), bet*-1, currency)
 
 				embed = discord.Embed(description=words, color=sidecolor)
@@ -787,7 +787,7 @@ async def on_message(message):
 			current=getvalue(int(message.author.id), currency)
 
 			if isenough(bet, currency)[0]:
-				await client.send_message(message.channel, "<@"+str(message.author.id)+"> wants to duel for `"+formatfromk(bet)+" "+currency+"`. Use `!call` to accept the duel.")
+				await client.send_message(message.channel, "<@"+str(message.author.id)+"> wants to duel for `"+formatfromk(bet, currency)+" "+currency+"`. Use `!call` to accept the duel.")
 				while True:
 					call = await client.wait_for_message(timeout=60, channel=message.channel, content="!call")
 					if call is None:
@@ -845,11 +845,11 @@ async def on_message(message):
 					if gamblerroll==callerroll:
 						await client.send_message(message.channel, "Tie. Money Back.")
 					elif gamblerroll>callerroll:
-						await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled higher and won"+formatfromk(bet)+" "+currency+"!")
+						await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled higher and won"+formatfromk(bet, currency)+" "+currency+"!")
 						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current+bet, message.author.id))
 						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current2-bet, caller.id))
 					elif callerroll>gamblerroll:
-						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled higher and won"+formatfromk(bet)+" "+currency+"!")
+						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled higher and won"+formatfromk(bet, currency)+" "+currency+"!")
 						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current-bet, message.author.id))
 						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current2+bet, caller.id))
 					conn.commit()
