@@ -122,21 +122,20 @@ def formatfromk(amount, currency):
 	# 	return str(amount)+"k"
 
 def enough(amount, currency):
-	global words
 	if currency=="rs3":
-		if bet<1000:
+		if amount<1000:
 			words="The minimum amount you can bet is **1m** gp RS3."
 			return False, words
 		else:
 			return True, words
 	elif currency=="07":
-		if bet<100:
+		if amount<100:
 			words="The minimum amount you can bet is **100k** gp 07."
 			return False, words
 		else:
 			return True, words
 	elif currency=="usd":
-		if bet<1.00:
+		if amount<1.00:
 			words="The minimum amount you can bet is **$1** USD."
 			return False, words
 		else:
@@ -178,7 +177,6 @@ async def on_message_delete(message):
 
 @client.event
 async def on_message(message):
-	global words 
 	
 	message.content=(message.content).lower()
 
@@ -599,15 +597,23 @@ async def on_message(message):
 		embed.add_field(name="USD Balance", value=usd, inline=True)
 		embed.set_footer(text="Total Wallet checked on: "+str(datetime.datetime.now())[:-7])
 		await client.send_message(message.channel, embed=embed)
-	################################3
+	################################
+
+# def starts_w(content, starts):
+# 		for s in starts:
+# 			if content.startswith(s):
+# 				return True
+# 			else:
+# 				return False
+	
+	# elif starts_w(message.content):
 	elif message.content.startswith("!54") or message.content.startswith("!50") or message.content.startswith("!75") or message.content.startswith("!45") or message.content.startswith("!90") or message.content.startswith("!95"):
 		#try:
 		game=str(message.content).split(" ")[1]
 		bet=formatok(str(message.content).split(" ")[2], game)
 		current=getvalue(message.author.id, game)
 
-		is_enough, words = enough(bet, game)
-		if is_enough:
+		if (enough(bet, currency))[0]:
 			if message.content.startswith("!54x2") or message.content.startswith("!54"):
 				odds=56
 				multiplier=2
@@ -620,7 +626,13 @@ async def on_message(message):
 			elif message.content.startswith("!45x1.5") or message.content.startswith("!45"):
 				odds=47
 				multiplier=1.5
-			elif message.content.startswith("!90")
+			elif message.content.startswith("!90x7") or message.content.startswith("!90"):
+				odds=92
+				multiplier=7
+			elif message.content.startswith("!95x10") or message.content.startswith("!95"):
+				odds=97
+				multiplier=10
+
 			if current>=bet:
 				roll=random.randint(1,100)
 
@@ -632,8 +644,8 @@ async def on_message(message):
 				else:
 					win=True
 					sidecolor=3997475
-					gains=(bet)-(bet*commission*multiplier)
-					winnings=(bet*multiplier)-(bet*multiplier*commission)
+					gains=(bet*multiplier)-(bet)
+					winnings=(bet*multiplier)
 
 				if game=="rs3":
 					totalbet=getvalue(message.author.id, "rs3total")
