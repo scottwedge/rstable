@@ -676,7 +676,7 @@ async def on_message(message):
 				update_money(int(message.author.id), gains, game)
 
 				if win==False:
-					words=(str(message.author)+" rolled a `"+str(roll)+"` and has lost `"+str(winnings)+"` "+str(game)+".")
+					words=(str(message.author)+" rolled a `"+str(roll)+"` and has lost `"+str(formatfromk(bet, game))+"` "+str(game)+".")
 				elif win==True:
 					words=("Congratulations! "+str(message.author)+" rolled a `"+str(roll)+"` and has won `"+str(winnings)+"` "+str(game)+".")	
 
@@ -702,9 +702,9 @@ async def on_message(message):
 
 		embed = discord.Embed(color=16766463)
 		embed.set_author(name=(str(message.author))[:-5]+"'s Total Bets", icon_url=str(message.author.avatar_url))
-		embed.add_field(name="07 Total Bets", value=osrstotal, inline=True)
-		embed.add_field(name="RS3 Total Bets", value=rs3total, inline=True)
-		embed.add_field(name="USD Total Bets", value=usdtotal, inline=True)
+		embed.add_field(name="07 Total Bets", value=osrs, inline=True)
+		embed.add_field(name="RS3 Total Bets", value=rs3, inline=True)
+		embed.add_field(name="USD Total Bets", value=usd, inline=True)
 		embed.set_footer(text="Total Bets checked on: "+str(datetime.datetime.now())[:-7])
 		await client.send_message(message.channel, embed=embed)
 	#############################
