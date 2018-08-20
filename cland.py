@@ -121,7 +121,7 @@ def formatfromk(amount, currency):
 	# else:
 	# 	return str(amount)+"k"
 
-def enough(amount, currency):
+def isenough(amount, currency):
 	global words
 	if currency=="rs3":
 		if amount<1000:
@@ -613,7 +613,7 @@ async def on_message(message):
 		bet=formatok(str(message.content).split(" ")[2], game)
 		current=getvalue(message.author.id, game)
 
-		if enough(bet, currency)[0]:
+		if isenough(bet, currency)[0]:
 			if message.content.startswith("!54x2") or message.content.startswith("!54"):
 				odds=56
 				multiplier=2
@@ -687,7 +687,7 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 		else:
-			await client.send_message(message.channel, (enough(bet, game))[1])
+			await client.send_message(message.channel, (isenough(bet, game))[1])
 		#except:
 		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!(50, 54, or 75) (rs3 or 07) (BET)`.")
 	#############################
@@ -718,7 +718,7 @@ async def on_message(message):
 		flower=flowers[index]
 		sidecolor=sidecolors[index]
 
-		if enough(bet, currency)[0]:	
+		if isenough(bet, currency)[0]:	
 			if current>=bet:
 				win=False
 				if (message.content).split(" ")[3]=="hot":
@@ -772,7 +772,7 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much gold!")
 		else:
-			await client.send_message(message.channel, (enough(bet, currency))[1])
+			await client.send_message(message.channel, (isenough(bet, currency))[1])
 		# except:
 		# 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!flower (rs3, 07, or usd) (Amount) (hot, cold, red, orange, yellow, green, blue, or purple)`.")
 	#############################
@@ -786,7 +786,7 @@ async def on_message(message):
 			bet=formatok((message.content).split(" ")[2], currency)
 			current=getvalue(int(message.author.id), currency)
 
-			if enough(bet, currency)[0]:
+			if isenough(bet, currency)[0]:
 				await client.send_message(message.channel, "<@"+str(message.author.id)+"> wants to duel for `"+formatfromk(bet)+" "+currency+"`. Use `!call` to accept the duel.")
 				while True:
 					call = await client.wait_for_message(timeout=60, channel=message.channel, content="!call")
@@ -873,7 +873,7 @@ async def on_message(message):
 				else:
 					None
 			else:
-				await client.send_message(message.channel, (enough(bet, currency))[1])
+				await client.send_message(message.channel, (isenough(bet, currency))[1])
 		#except:
 
 
