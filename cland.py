@@ -128,19 +128,19 @@ def isenough(amount, currency):
 			words="The minimum amount you can bet is **1m** gp RS3."
 			return False, words
 		else:
-			return True, words
+			return True
 	elif currency=="07":
 		if amount<100:
 			words="The minimum amount you can bet is **100k** gp 07."
 			return False, words
 		else:
-			return True, words
+			return True
 	elif currency=="usd":
 		if amount<1.00:
 			words="The minimum amount you can bet is **$1** USD."
 			return False, words
 		else:
-			return True, words
+			return True
 ######################################################################################
 
 #Predefined Variables
