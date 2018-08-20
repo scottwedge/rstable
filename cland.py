@@ -20,7 +20,7 @@ c=conn.cursor()
 # 				rs3total bigint,
 # 				osrstotal bigint,
 # 				usdtotal float(2),
-# 				client text,
+# 				clientseed text,
 # 				tickets integer
 # 				)""")
 # conn.commit()
@@ -31,7 +31,7 @@ client = discord.Client()
 
 
 def add_member(userid,rs3,osrs,usd):
-	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,usd,0,0,0))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,usd,0,0,0,"CryptoLandClientSeed",0))
 	conn.commit()
 
 def getvalue(userid,value):
@@ -243,13 +243,12 @@ async def on_message(message):
 		await client.send_message(message.channel, embed=embed)
 	#####################################
 	elif message.content.startswith("!setclientseed"):
-		client=(message.content)[15:]
-		if len(client)>30:
+		clientseed=(message.content)[15:]
+		if len(clientseed)>30:
 			await client.send_message(message.channel, "That client seed is too long. Please try a shorter one. (30 Character Limit)")
 		else:
-			c.execute("UPDATE rsmoney SET client={} WHERE id={}".format(client, int(message.author.id)))
+			c.execute("UPDATE rsmoney SET clientseed={} WHERE id={}".format(clientseed, int(message.author.id)))
 	#####################################
-
 
 
 
@@ -647,15 +646,25 @@ async def on_message(message):
 					gains=(bet*multiplier)-(bet)
 					winnings=(bet*multiplier)
 
+				ticket=0
 				if game=="rs3":
+					if bet>=1000:
+						ticket=1
 					totalbet=getvalue(message.author.id, "rs3total")
 					c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet+bet, message.author.id))
 				elif game=="07":
+					if bet>=1000:
+						ticket=6
 					totalbet=getvalue(message.author.id, "osrstotal")
 					c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, message.author.id))
 				elif game=="usd":
+					if bet>=1.00:
+						ticket=8
 					totalbet=getvalue(message.author.id, "usdtotal")
 					c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet+bet, message.author.id))
+
+				tickets=getvalue(message.author.id, "tickets")
+				c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+ticket, message.author.id))
 				conn.commit()
 
 				if isinstance(winnings, float):
