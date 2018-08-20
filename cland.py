@@ -613,7 +613,7 @@ async def on_message(message):
 		bet=formatok(str(message.content).split(" ")[2], game)
 		current=getvalue(message.author.id, game)
 
-		if isenough(bet, currency)[0]:
+		if isenough(bet, game)[0]:
 			if message.content.startswith("!54x2") or message.content.startswith("!54"):
 				odds=56
 				multiplier=2
