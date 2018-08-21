@@ -217,7 +217,11 @@ async def on_message(message):
 		await client.send_message(message.channel, finalmessage)
 	############################################
 	elif message.content.startswith("!poll"):
-		sent = await client.send_message(message.channel, "```css\n"+str(message.content[6:])+"\n\nRespond below with 👍 for YES, 👎 for NO, or 🤔 for UNSURE/NEUTRAL\n```")
+		message.content=(message.content).title()
+		embed = discord.Embed(description="Respond below with 👍 for YES, 👎 for NO, or 🤔 for UNSURE/NEUTRAL", color=16724721)
+		embed.set_author(name=str(message.content[6:]), icon_url="https://cdn.discordapp.com/attachments/457004723158122498/466268822735683584/00c208fecf617c79a3f719f1a9d9c9e8.png")
+		embed.set_footer(text="Polled on: "+str(datetime.datetime.now())[:-7])
+		sent = await client.send_message(message.channel, embed=embed)
 		await client.add_reaction(sent,"👍")
 		await client.add_reaction(sent,"👎")
 		await client.add_reaction(sent,"🤔")
@@ -453,24 +457,27 @@ async def on_message(message):
 	# 	await client.send_message(message.channel, embed=embed)
 	############################################
 	elif message.content.startswith("!help") or message.content.startswith("!commands"):
-		embed = discord.Embed(description=  "\n `!colorpicker` - Shows a random color" +
-											#"\n `!start unscramble` - Starts a game where you unscramble a word" +
-											#"\n `!start hangman` - Starts a game of hangman" +
-											#"\n `!random (SIZE)` - Starts a game where you guess a number between 1 and the given size" +
-											"\n `!poll (QUESTION)` - Starts a Yes/No poll with the given question" +
-											"\n `!w`, `!wallet`, or `!$` - Checks your own wallet" +
-											"\n `!w (@USER)`, `!wallet (@USER)`, or `!$ (@USER)` - Checks that user's wallet" +
-											"\n `!flower (AMOUNT) (hot, cold, red, orange, yellow, green, blue, or purple)` - Hot or cold gives x2 minus commission, specific color gives x6 minus commission\n" +
-											"\n `!50x2 (rs3, 07, or usd) (BET)` - 50/50 chance of winning, x2 your bet minus commission" +
-											"\n `!54x2 (rs3, 07, or usd) (BET)` - 46/54 chance of winning, x2 your bet with no commission" +
-											"\n `!75x3 (rs3, 07, or usd) (BET)` - 25/75 chance of winning, x3 your bet minus commission" +
-											"\n `!dd (rs3, 07, or usd) (BET)` - Hosts a dice duel of the given amount" +
+		embed = discord.Embed(description=  "\n `!colorpicker` - Shows a random color\n" +
+											#"\n `!start unscramble` - Starts a game where you unscramble a word\n" +
+											#"\n `!start hangman` - Starts a game of hangman\n" +
+											#"\n `!random (SIZE)` - Starts a game where you guess a number between 1 and the given size\n" +
+											"\n `!poll (QUESTION)` - Starts a Yes/No poll with the given question\n" +
+											"\n `!w`, `!wallet`, or `!$` - Checks your own wallet\n" +
+											"\n `!w (@USER)`, `!wallet (@USER)`, or `!$ (@USER)` - Checks that user's wallet\n" +
+											"\n `!flower (AMOUNT) (hot, cold, red, orange, yellow, green, blue, or purple)` - Hot or cold gives x2, specific color gives x6\n" +
+											"\n `!45x1.5 (rs3, 07, or usd) (BET)` - Must roll above 45, x1.5 payout\n" +
+											"\n `!50x1.9 (rs3, 07, or usd) (BET)` - Must roll above 50, x1.9 payout\n" +
+											"\n `!54x2 (rs3, 07, or usd) (BET)` - Must roll above 54, x2 payout\n" +
+											"\n `!75x3 (rs3, 07, or usd) (BET)` - Must roll above 75, x3 payout\n" +
+											"\n `!90x7 (rs3, 07, or usd) (BET)` - Must roll above 90, x7 payout\n" +
+											"\n `!95x10 (rs3, 07, or usd) (BET)` - Must roll above 95, x10 payout\n" +
+											"\n `!dd (rs3, 07, or usd) (BET)` - Hosts a dice duel of the given amount\n" +
 											#"\n `!swap (rs3 or 07) (AMOUNT)` - Swaps that amount of gold to the other game" +
 											#"\n `!rates` - Shows the swapping rates between currencies" +
 											#"\n `!cashin (rs3 or 07) (AMOUNT)` - Notifes a cashier that you want to cash in that amount" +
 											#"\n `!cashout (rs3 or 07) (AMOUNT)` - Notifes a cashier that you want to cash out that amount"
-											"\n `!transfer (rs3, 07, or usd) (@USER) (AMOUNT)` - Transfers that amount from your wallet to the user's wallet"+
-											"\n `!wager`, or `!total bet` or `!tb` - Shows your total amount bet for rs3 and 07", color=16771099)
+											"\n `!transfer (rs3, 07, or usd) (@USER) (AMOUNT)` - Transfers that amount from your wallet to the user's wallet\n"+
+											"\n `!wager`, or `!total bet` or `!tb` - Shows your total amount bet for rs3 and 07\n", color=16771099)
 
 		embed.set_author(name="Crypto Land Bot Commands", icon_url=str(message.server.icon_url))
 		await client.send_message(message.author, embed=embed)
@@ -838,11 +845,11 @@ async def on_message(message):
 					if gamblerroll==callerroll:
 						await client.send_message(message.channel, "Tie. Money Back.")
 					elif gamblerroll>callerroll:
-						await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled higher and won "+formatfromk(bet, currency)+" "+currency+"!")
+						await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled higher and won `"+formatfromk(bet, currency)+" "+currency+"`!")
 						update_money(int(message.author.id), bet, currency)
 						update_money(int(caller.id), bet*-1, currency)
 					elif callerroll>gamblerroll:
-						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled higher and won "+formatfromk(bet, currency)+" "+currency+"!")
+						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled higher and won `"+formatfromk(bet, currency)+" "+currency+"`!")
 						update_money(int(message.author.id), bet*-1, currency)
 						update_money(int(caller.id), bet, currency)
 
