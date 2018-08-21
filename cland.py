@@ -178,7 +178,7 @@ async def on_message_delete(message):
 
 @client.event
 async def on_message(message):
-	global words
+	global words, duel
 	message.content=(message.content).lower()
 
 	#############################################
@@ -728,7 +728,7 @@ async def on_message(message):
 						else:
 							multiplier=0
 					elif (message.content).split(" ")[3]=="cold":
-						if flower=="Blue" or flower=="Green" or flower=="Purple":
+						if flower=="Blue" or flower=="Pastel" or flower=="Purple":
 							multiplier=2
 							win=True
 						else:
@@ -739,6 +739,7 @@ async def on_message(message):
 							win=True
 						else:
 							multiplier=0
+
 
 					winnings=(bet*multiplier)-(commission*bet*multiplier)
 					if isinstance(winnings, float):
