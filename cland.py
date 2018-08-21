@@ -31,7 +31,7 @@ client = discord.Client()
 
 
 def add_member(userid,rs3,osrs,usd):
-	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,usd,0,0,0,"CryptoLandClientSeed",0))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,usd,0,0,0,"CryptoLandClientSeed",0))
 	conn.commit()
 
 def getvalue(userid,value):
@@ -608,88 +608,88 @@ async def on_message(message):
 	
 	# elif starts_w(message.content):
 	elif message.content.startswith("!54") or message.content.startswith("!50") or message.content.startswith("!75") or message.content.startswith("!45") or message.content.startswith("!90") or message.content.startswith("!95"):
-		#try:
-		game=str(message.content).split(" ")[1]
-		bet=formatok(str(message.content).split(" ")[2], game)
-		current=getvalue(message.author.id, game)
+		try:
+			game=str(message.content).split(" ")[1]
+			bet=formatok(str(message.content).split(" ")[2], game)
+			current=getvalue(message.author.id, game)
 
-		if isenough(bet, game)[0]:
-			if message.content.startswith("!54x2") or message.content.startswith("!54"):
-				odds=56
-				multiplier=2
-			elif message.content.startswith("!75x3") or message.content.startswith("!75"):
-				odds=77
-				multiplier=3
-			elif message.content.startswith("!50x2") or message.content.startswith("!50"):
-				odds=52
-				multiplier=1.9
-			elif message.content.startswith("!45x1.5") or message.content.startswith("!45"):
-				odds=47
-				multiplier=1.5
-			elif message.content.startswith("!90x7") or message.content.startswith("!90"):
-				odds=92
-				multiplier=7
-			elif message.content.startswith("!95x10") or message.content.startswith("!95"):
-				odds=97
-				multiplier=10
+			if isenough(bet, game)[0]:
+				if message.content.startswith("!54x2") or message.content.startswith("!54"):
+					odds=56
+					multiplier=2
+				elif message.content.startswith("!75x3") or message.content.startswith("!75"):
+					odds=77
+					multiplier=3
+				elif message.content.startswith("!50x2") or message.content.startswith("!50"):
+					odds=52
+					multiplier=1.9
+				elif message.content.startswith("!45x1.5") or message.content.startswith("!45"):
+					odds=47
+					multiplier=1.5
+				elif message.content.startswith("!90x7") or message.content.startswith("!90"):
+					odds=92
+					multiplier=7
+				elif message.content.startswith("!95x10") or message.content.startswith("!95"):
+					odds=97
+					multiplier=10
 
-			if current>=bet:
-				roll=random.randint(1,100)
+				if current>=bet:
+					roll=random.randint(1,100)
 
-				if roll in range(1,odds):
-					win=False
-					sidecolor=16718121
-					gains=bet*-1
-					winnings=bet*-1
+					if roll in range(1,odds):
+						win=False
+						sidecolor=16718121
+						gains=bet*-1
+						winnings=bet*-1
+					else:
+						win=True
+						sidecolor=3997475
+						gains=(bet*multiplier)-(bet)
+						winnings=(bet*multiplier)
+
+					ticket=0
+					if game=="rs3":
+						if bet>=1000:
+							ticket=1
+						totalbet=getvalue(message.author.id, "rs3total")
+						c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet+bet, message.author.id))
+					elif game=="07":
+						if bet>=1000:
+							ticket=6
+						totalbet=getvalue(message.author.id, "osrstotal")
+						c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, message.author.id))
+					elif game=="usd":
+						if bet>=1.00:
+							ticket=8
+						totalbet=getvalue(message.author.id, "usdtotal")
+						c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet+bet, message.author.id))
+
+					tickets=getvalue(message.author.id, "tickets")
+					c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+ticket, message.author.id))
+					conn.commit()
+
+					if isinstance(winnings, float):
+						if (winnings).is_integer():
+							winnings=int(winnings)
+
+					winnings=formatfromk(winnings, game)
+					update_money(int(message.author.id), gains, game)
+
+					if win==False:
+						words=(str(message.author)+" rolled a `"+str(roll)+"` and has lost `"+str(formatfromk(bet, game))+"` "+str(game)+".")
+					elif win==True:
+						words=("Congratulations! "+str(message.author)+" rolled a `"+str(roll)+"` and has won `"+str(winnings)+"` "+str(game)+".")	
+
+					embed = discord.Embed(description=words, color=sidecolor)
+					embed.set_author(name=(str(message.author))[:-5]+"'s Gamble", icon_url=str(message.author.avatar_url))
+					embed.set_footer(text="Gambled on: "+str(datetime.datetime.now())[:-7])
+					await client.send_message(message.channel, embed=embed)
 				else:
-					win=True
-					sidecolor=3997475
-					gains=(bet*multiplier)-(bet)
-					winnings=(bet*multiplier)
-
-				ticket=0
-				if game=="rs3":
-					if bet>=1000:
-						ticket=1
-					totalbet=getvalue(message.author.id, "rs3total")
-					c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet+bet, message.author.id))
-				elif game=="07":
-					if bet>=1000:
-						ticket=6
-					totalbet=getvalue(message.author.id, "osrstotal")
-					c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, message.author.id))
-				elif game=="usd":
-					if bet>=1.00:
-						ticket=8
-					totalbet=getvalue(message.author.id, "usdtotal")
-					c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet+bet, message.author.id))
-
-				tickets=getvalue(message.author.id, "tickets")
-				c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+ticket, message.author.id))
-				conn.commit()
-
-				if isinstance(winnings, float):
-					if (winnings).is_integer():
-						winnings=int(winnings)
-
-				winnings=formatfromk(winnings, game)
-				update_money(int(message.author.id), gains, game)
-
-				if win==False:
-					words=(str(message.author)+" rolled a `"+str(roll)+"` and has lost `"+str(formatfromk(bet, game))+"` "+str(game)+".")
-				elif win==True:
-					words=("Congratulations! "+str(message.author)+" rolled a `"+str(roll)+"` and has won `"+str(winnings)+"` "+str(game)+".")	
-
-				embed = discord.Embed(description=words, color=sidecolor)
-				embed.set_author(name=(str(message.author))[:-5]+"'s Gamble", icon_url=str(message.author.avatar_url))
-				embed.set_footer(text="Gambled on: "+str(datetime.datetime.now())[:-7])
-				await client.send_message(message.channel, embed=embed)
+					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 			else:
-				await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
-		else:
-			await client.send_message(message.channel, (isenough(bet, game))[1])
-		#except:
-		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!(50, 54, or 75) (rs3 or 07) (BET)`.")
+				await client.send_message(message.channel, (isenough(bet, game))[1])
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `!(50, 54, or 75) (rs3 or 07) (BET)`.")
 	#############################
 	elif ((message.content).lower()).startswith("!wager") or ((message.content).lower()).startswith("!total bet") or ((message.content).lower()).startswith("!tb"):
 		rs3total=getvalue(message.author.id, "rs3total")
@@ -709,79 +709,78 @@ async def on_message(message):
 		await client.send_message(message.channel, embed=embed)
 	#############################
 	elif message.content.startswith("!flower"):
-		#try:
-		currency=(message.content).split(" ")[1]
-		bet=formatok((message.content).split(" ")[2], currency)
-		current=getvalue(int(message.author.id), currency)
-		commission=0.05
-		index=random.randint(0,5)
-		flower=flowers[index]
-		sidecolor=sidecolors[index]
+		try:
+			currency=(message.content).split(" ")[1]
+			bet=formatok((message.content).split(" ")[2], currency)
+			current=getvalue(int(message.author.id), currency)
+			commission=0.05
+			index=random.randint(0,5)
+			flower=flowers[index]
+			sidecolor=sidecolors[index]
 
-		if isenough(bet, currency)[0]:	
-			if current>=bet:
-				win=False
-				if (message.content).split(" ")[3]=="hot":
-					if flower=="Red" or flower=="Orange" or flower=="Yellow":
-						multiplier=2
-						win=True
-					else:
-						multiplier=0
-				elif (message.content).split(" ")[3]=="cold":
-					if flower=="Blue" or flower=="Green" or flower=="Purple":
-						multiplier=2
-						win=True
-					else:
-						multiplier=0
-				elif ((message.content).split(" ")[3]).title() in flowers:
-					if flower==((message.content).split(" ")[3]).title():
-						multiplier=6
-						win=True
-					else:
-						multiplier=0
+			if isenough(bet, currency)[0]:	
+				if current>=bet:
+					win=False
+					if (message.content).split(" ")[3]=="hot":
+						if flower=="Red" or flower=="Orange" or flower=="Yellow":
+							multiplier=2
+							win=True
+						else:
+							multiplier=0
+					elif (message.content).split(" ")[3]=="cold":
+						if flower=="Blue" or flower=="Green" or flower=="Purple":
+							multiplier=2
+							win=True
+						else:
+							multiplier=0
+					elif ((message.content).split(" ")[3]).title() in flowers:
+						if flower==((message.content).split(" ")[3]).title():
+							multiplier=6
+							win=True
+						else:
+							multiplier=0
 
-				winnings=(bet*multiplier)-(commission*bet*multiplier)
-				if isinstance(winnings, float):
-					if (winnings).is_integer():
-						winnings=int(winnings)
-				winnings=formatfromk(winnings, currency)
+					winnings=(bet*multiplier)-(commission*bet*multiplier)
+					if isinstance(winnings, float):
+						if (winnings).is_integer():
+							winnings=int(winnings)
+					winnings=formatfromk(winnings, currency)
 
-				if win==True:
-					words=("Congratulations! The color of the flower was `"+flower+"`. "+str(message.author)+" won `"+winnings+"` "+currency+".")
-					update_money(int(message.author.id), (bet)-(bet*commission*multiplier), currency)
+					if win==True:
+						words=("Congratulations! The color of the flower was `"+flower+"`. "+str(message.author)+" won `"+winnings+"` "+currency+".")
+						update_money(int(message.author.id), (bet)-(bet*commission*multiplier), currency)
+					else:
+						words=("Sorry, the color the flower was `"+flower+"`. "+str(message.author)+" lost `"+formatfromk(bet, currency)+"` "+currency+".")
+						update_money(int(message.author.id), bet*-1, currency)
+
+					embed = discord.Embed(description=words, color=sidecolor)
+					embed.set_author(name=(str(message.author))[:-5]+"'s Gamble", icon_url=str(message.author.avatar_url))
+					embed.set_footer(text="Gambled on: "+str(datetime.datetime.now())[:-7])
+					await client.send_message(message.channel, embed=embed)	
+
+					if currency=="rs3":
+						totalbet=getvalue(message.author.id, "rs3total")
+						c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet+bet, message.author.id))
+					elif currency=="07":
+						totalbet=getvalue(message.author.id, "osrstotal")
+						c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, message.author.id))
+					elif currency=="usd":
+						totalbet=getvalue(message.author.id, "usdtotal")
+						c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet+bet, message.author.id))
+					conn.commit()
+
 				else:
-					words=("Sorry, the color the flower was `"+flower+"`. "+str(message.author)+" lost `"+formatfromk(bet, currency)+"` "+currency+".")
-					update_money(int(message.author.id), bet*-1, currency)
-
-				embed = discord.Embed(description=words, color=sidecolor)
-				embed.set_author(name=(str(message.author))[:-5]+"'s Gamble", icon_url=str(message.author.avatar_url))
-				embed.set_footer(text="Gambled on: "+str(datetime.datetime.now())[:-7])
-				await client.send_message(message.channel, embed=embed)	
-
-				if currency=="rs3":
-					totalbet=getvalue(message.author.id, "rs3total")
-					c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet+bet, message.author.id))
-				elif currency=="07":
-					totalbet=getvalue(message.author.id, "osrstotal")
-					c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, message.author.id))
-				elif currency=="usd":
-					totalbet=getvalue(message.author.id, "usdtotal")
-					c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet+bet, message.author.id))
-				conn.commit()
-
+					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much gold!")
 			else:
-				await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much gold!")
-		else:
-			await client.send_message(message.channel, (isenough(bet, currency))[1])
-		# except:
-		# 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!flower (rs3, 07, or usd) (Amount) (hot, cold, red, orange, yellow, green, blue, or purple)`.")
+				await client.send_message(message.channel, (isenough(bet, currency))[1])
+		except:
+		 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!flower (rs3, 07, or usd) (Amount) (hot, cold, red, orange, yellow, green, blue, or purple)`.")
 	#############################
 	elif message.content.startswith("!dd"):
 		#try:
 		if duel==True:
 			await client.send_message(message.channel, "There is a dice duel already going on. Please wait until that one finishes.")
 		else:
-			duel=False
 			currency=(message.content).split(" ")[1]
 			bet=formatok((message.content).split(" ")[2], currency)
 			current=getvalue(int(message.author.id), currency)
