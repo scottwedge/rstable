@@ -793,7 +793,7 @@ async def on_message(message):
 					if call is None:
 						await client.send_message(message.channel, "<@"+str(message.author.id)+">'s duel request has timed out.")
 						break
-					caller=guess.author
+					caller=call.author
 					current2=getvalue(int(caller.id), currency)
 					if str(caller.id)==str(message.author.id):
 						await client.send_message(message.channel, "As exciting as it may sound, you cannot duel yourself ._.")
