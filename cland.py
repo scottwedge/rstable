@@ -829,14 +829,7 @@ async def on_message(message):
 						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled a `"+str(callerroll)+"` :game_die: ")
 
 					embed = discord.Embed(color=16766463)
-					embed.set_author(name="Dice Duel :game_die: ", icon_url=str(message.server.icon_url))
-					embed.add_field(name=str(message.author)+" Roll", value=str(gamblerroll), inline=True)
-					embed.add_field(name=str(caller)+" Roll", value=str(callerroll), inline=True)
-					embed.set_footer(text="Dueled On: "+str(datetime.datetime.now())[:-7])
-					await client.send_message(message.channel, embed=embed)
-
-					embed = discord.Embed(color=16766463)
-					embed.set_author(name="Dice Duel :game_die: ", icon_url=str(message.server.icon_url))
+					embed.set_author(name="Dice Duel", icon_url=str(message.server.icon_url))
 					embed.add_field(name=str(message.author)+" Roll", value=str(gamblerroll), inline=True)
 					embed.add_field(name=str(caller)+" Roll", value=str(callerroll), inline=True)
 					embed.set_footer(text="Dueled On: "+str(datetime.datetime.now())[:-7])
@@ -845,14 +838,13 @@ async def on_message(message):
 					if gamblerroll==callerroll:
 						await client.send_message(message.channel, "Tie. Money Back.")
 					elif gamblerroll>callerroll:
-						await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled higher and won"+formatfromk(bet, currency)+" "+currency+"!")
-						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current+bet, message.author.id))
-						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current2-bet, caller.id))
+						await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled higher and won "+formatfromk(bet, currency)+" "+currency+"!")
+						update_money(int(message.author.id), bet, currency)
+						update_money(int(caller.id), bet*-1, currency)
 					elif callerroll>gamblerroll:
-						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled higher and won"+formatfromk(bet, currency)+" "+currency+"!")
-						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current-bet, message.author.id))
-						c.execute("UPDATE rsmoney SET credit={} WHERE id={}".format(current2+bet, caller.id))
-					conn.commit()
+						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled higher and won "+formatfromk(bet, currency)+" "+currency+"!")
+						update_money(int(message.author.id), bet*-1, currency)
+						update_money(int(caller.id), bet, currency)
 
 					if currency=="rs3":
 						totalbet=getvalue(message.author.id, "rs3total")
@@ -882,6 +874,8 @@ Bot_Token = os.environ['TOKEN']
 client.run(str(Bot_Token))
 #https://discordapp.com/oauth2/authorize?client_id=478960758114484224&scope=bot&permissions=0
 
-
+#tickets
+#flowers
+#
 
 
