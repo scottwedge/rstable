@@ -141,6 +141,28 @@ def isenough(amount, currency):
 			return False, words
 		else:
 			return True, " "
+
+def ticketbets(userid, bet, currency):
+	ticket=0
+	if currency=="rs3":
+		if bet>=1000:
+			ticket=int(bet/1000)
+		totalbet=getvalue(message.author.id, "rs3total")
+		c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet+bet, userid))
+	elif currency=="07":
+		if bet>=1000:
+			ticket=6*int(bet/1000)
+		totalbet=getvalue(message.author.id, "osrstotal")
+		c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, userid))
+	elif currency=="usd":
+		if bet>=1.00:
+			ticket=8*int(bet)
+		totalbet=getvalue(message.author.id, "usdtotal")
+		c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet+bet, userid))
+
+	tickets=getvalue(message.author.id, "tickets")
+	c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+ticket, userid))
+	conn.commit()
 ######################################################################################
 
 #Predefined Variables
@@ -219,7 +241,7 @@ async def on_message(message):
 	elif message.content.startswith("!poll"):
 		message.content=(message.content).title()
 		embed = discord.Embed(description="Respond below with 👍 for YES, 👎 for NO, or 🤔 for UNSURE/NEUTRAL", color=16724721)
-		embed.set_author(name=str(message.content[6:]), icon_url="https://cdn.discordapp.com/attachments/457004723158122498/466268822735683584/00c208fecf617c79a3f719f1a9d9c9e8.png")
+		embed.set_author(name=str(message.content[6:]), icon_url=str(message.server.icon_url))
 		embed.set_footer(text="Polled on: "+str(datetime.datetime.now())[:-7])
 		sent = await client.send_message(message.channel, embed=embed)
 		await client.add_reaction(sent,"👍")
@@ -622,21 +644,27 @@ async def on_message(message):
 
 			if isenough(bet, game)[0]:
 				if message.content.startswith("!54x2") or message.content.startswith("!54"):
+					title="54x2"
 					odds=56
 					multiplier=2
 				elif message.content.startswith("!75x3") or message.content.startswith("!75"):
+					title="75x3"
 					odds=77
 					multiplier=3
 				elif message.content.startswith("!50x2") or message.content.startswith("!50"):
+					title="50x2"
 					odds=52
 					multiplier=1.9
 				elif message.content.startswith("!45x1.5") or message.content.startswith("!45"):
+					title="45x1.5"
 					odds=47
 					multiplier=1.5
 				elif message.content.startswith("!90x7") or message.content.startswith("!90"):
+					title="90x7"
 					odds=92
 					multiplier=7
 				elif message.content.startswith("!95x10") or message.content.startswith("!95"):
+					title="95x10"
 					odds=97
 					multiplier=10
 
@@ -654,27 +682,6 @@ async def on_message(message):
 						gains=(bet*multiplier)-(bet)
 						winnings=(bet*multiplier)
 
-					ticket=0
-					if game=="rs3":
-						if bet>=1000:
-							ticket=1
-						totalbet=getvalue(message.author.id, "rs3total")
-						c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet+bet, message.author.id))
-					elif game=="07":
-						if bet>=1000:
-							ticket=6
-						totalbet=getvalue(message.author.id, "osrstotal")
-						c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, message.author.id))
-					elif game=="usd":
-						if bet>=1.00:
-							ticket=8
-						totalbet=getvalue(message.author.id, "usdtotal")
-						c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet+bet, message.author.id))
-
-					tickets=getvalue(message.author.id, "tickets")
-					c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+ticket, message.author.id))
-					conn.commit()
-
 					if isinstance(winnings, float):
 						if (winnings).is_integer():
 							winnings=int(winnings)
@@ -683,14 +690,18 @@ async def on_message(message):
 					update_money(int(message.author.id), gains, game)
 
 					if win==False:
-						words=(str(message.author)+" rolled a `"+str(roll)+"` and has lost `"+str(formatfromk(bet, game))+"` "+str(game)+".")
+						words="Rolled **"+str(roll)+"** out of **100**. You lost **"+str(formatfromk(bet, game))+"** "+str(game)+"."
 					elif win==True:
-						words=("Congratulations! "+str(message.author)+" rolled a `"+str(roll)+"` and has won `"+str(winnings)+"` "+str(game)+".")	
+						words="Rolled **"+str(roll)+"** out of **100**. You won **"+str(winnings)+"** "+str(game)+"."	
 
-					embed = discord.Embed(description=words, color=sidecolor)
-					embed.set_author(name=(str(message.author))[:-5]+"'s Gamble", icon_url=str(message.author.avatar_url))
+					embed = discord.Embed(color=sidecolor)
+					embed.set_author(name=str(message.author), icon_url=str(message.author.avatar_url))
+					embed.add_field(name=title, value=words, inline=True)
 					embed.set_footer(text="Gambled on: "+str(datetime.datetime.now())[:-7])
 					await client.send_message(message.channel, embed=embed)
+
+					ticketbets(message.author.id, bet, game)
+
 				else:
 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 			else:
@@ -766,16 +777,7 @@ async def on_message(message):
 					embed.set_footer(text="Gambled on: "+str(datetime.datetime.now())[:-7])
 					await client.send_message(message.channel, embed=embed)	
 
-					if currency=="rs3":
-						totalbet=getvalue(message.author.id, "rs3total")
-						c.execute("UPDATE rsmoney SET rs3total={} WHERE id={}".format(totalbet+bet, message.author.id))
-					elif currency=="07":
-						totalbet=getvalue(message.author.id, "osrstotal")
-						c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, message.author.id))
-					elif currency=="usd":
-						totalbet=getvalue(message.author.id, "usdtotal")
-						c.execute("UPDATE rsmoney SET usdtotal={} WHERE id={}".format(totalbet+bet, message.author.id))
-					conn.commit()
+					ticketbets(message.author.id, bet, currency)
 
 				else:
 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much gold!")
@@ -883,6 +885,7 @@ client.run(str(Bot_Token))
 
 #tickets
 #flowers
-#
+#multiple dice duel
+#duel continues if times out
 
 
