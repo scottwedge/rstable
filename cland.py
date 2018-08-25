@@ -11,19 +11,20 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 c=conn.cursor()
 
-# c.execute("DROP TABLE rsmoney")
-# c.execute("""CREATE TABLE rsmoney (
-# 				id bigint,
-# 				rs3 integer,
-# 				osrs integer,
-# 				usd float(2),
-# 				rs3total bigint,
-# 				osrstotal bigint,
-# 				usdtotal float(2),
-# 				clientseed text,
-# 				tickets integer
-# 				)""")
-# conn.commit()
+c.execute("DROP TABLE rsmoney")
+c.execute("""CREATE TABLE rsmoney (
+				id bigint,
+				rs3 integer,
+				osrs integer,
+				usd float(2),
+				rs3total bigint,
+				osrstotal bigint,
+				usdtotal float(2),
+				clientseed text,
+				tickets integer,
+				privacy boolean
+				)""")
+conn.commit()
 
 
 client = discord.Client()
@@ -31,7 +32,7 @@ client = discord.Client()
 
 
 def add_member(userid,rs3,osrs,usd):
-	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,usd,0,0,0,"CryptoLandClientSeed",0))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,usd,0,0,0,"CryptoLandClientSeed",0,False))
 	conn.commit()
 
 def getvalue(userid,value):
@@ -49,6 +50,8 @@ def getvalue(userid,value):
 
 	if value=="usd" or value=="usdtotal":
 		return float(c.fetchone()[0])
+	elif value=="privacy":
+		return bool(c.fetchone()[0])
 	else:
 		return int(c.fetchone()[0])
 
@@ -284,35 +287,37 @@ async def on_message(message):
 
 
 
-
 	###################################################
 	elif (message.content).lower()==("!wallet") or (message.content).lower()==("!w") or message.content=="!$":
-		osrs=getvalue(int(message.author.id),"07")
-		rs3=getvalue(int(message.author.id),"rs3")
-		usd=getvalue(int(message.author.id),"usd")
-		tickets=getvalue(int(message.author.id),"tickets")
-
-		if osrs>=1000000 or rs3>=1000000 or usd>=100.00:
-			sidecolor=2693614
-		elif osrs>=10000 or rs3>=10000 or usd>=10.00:
-			sidecolor=2490163
+		if getvalue(int(message.author.id), "privacy")==True:
+			await client.send_message(message.channel, "Sorry, that user has wallet privacy mode enabled.")
 		else:
-			sidecolor=12249599
-		osrs=formatfromk(osrs, "osrs")
-		rs3=formatfromk(rs3, "rs3")
-		usd=formatfromk(usd, "usd")
-		if rs3=="0k":
-			rs3="0 k"
-		if osrs=="0k":
-			osrs="0 k"
-		embed = discord.Embed(color=sidecolor)
-		embed.set_author(name=(str(message.author))[:-5]+"'s Wallet", icon_url=str(message.author.avatar_url))
-		embed.add_field(name="07 Balance", value=osrs, inline=True)
-		embed.add_field(name="RS3 Balance", value=rs3, inline=True)
-		embed.add_field(name="USD Balance", value=usd, inline=True)
-		embed.add_field(name="Tickets", value=tickets, inline=True)
-		embed.set_footer(text="Wallet checked on: "+str(datetime.datetime.now())[:-7])
-		await client.send_message(message.channel, embed=embed)
+			osrs=getvalue(int(message.author.id),"07")
+			rs3=getvalue(int(message.author.id),"rs3")
+			usd=getvalue(int(message.author.id),"usd")
+			tickets=getvalue(int(message.author.id),"tickets")
+
+			if osrs>=1000000 or rs3>=1000000 or usd>=100.00:
+				sidecolor=2693614
+			elif osrs>=10000 or rs3>=10000 or usd>=10.00:
+				sidecolor=2490163
+			else:
+				sidecolor=12249599
+			osrs=formatfromk(osrs, "osrs")
+			rs3=formatfromk(rs3, "rs3")
+			usd=formatfromk(usd, "usd")
+			if rs3=="0k":
+				rs3="0 k"
+			if osrs=="0k":
+				osrs="0 k"
+			embed = discord.Embed(color=sidecolor)
+			embed.set_author(name=(str(message.author))[:-5]+"'s Wallet", icon_url=str(message.author.avatar_url))
+			embed.add_field(name="07 Balance", value=osrs, inline=True)
+			embed.add_field(name="RS3 Balance", value=rs3, inline=True)
+			embed.add_field(name="USD Balance", value=usd, inline=True)
+			embed.add_field(name="Tickets", value=tickets, inline=True)
+			embed.set_footer(text="Wallet checked on: "+str(datetime.datetime.now())[:-7])
+			await client.send_message(message.channel, embed=embed)
 
 
 
@@ -330,32 +335,35 @@ async def on_message(message):
 			except:
 				member=message.server.get_member(message.content[6:24])
 
-		osrs=getvalue(int(member.id),"07")
-		rs3=getvalue(int(member.id),"rs3")
-		usd=getvalue(int(member.id),"usd")
-		tickets=getvalue(int(member.id),"tickets")
-
-		if osrs>=1000000 or rs3>=1000000 or usd>=100.00:
-			sidecolor=2693614
-		elif osrs>=10000 or rs3>=10000 or usd>=10.00:
-			sidecolor=2490163
+		if getvalue(int(member.id), "privacy")==True:
+			await client.send_message(message.channel, "Sorry, that user has wallet privacy mode enabled.")
 		else:
-			sidecolor=12249599
-		osrs=formatfromk(osrs, "osrs")
-		rs3=formatfromk(rs3, "rs3")
-		usd=formatfromk(usd, "usd")
-		if rs3=="0k":
-			rs3="0 k"
-		if osrs=="0k":
-			osrs="0 k"
-		embed = discord.Embed(color=sidecolor)
-		embed.set_author(name=(str(member))[:-5]+"'s Wallet", icon_url=str(member.avatar_url))
-		embed.add_field(name="07 Balance", value=osrs, inline=True)
-		embed.add_field(name="RS3 Balance", value=rs3, inline=True)
-		embed.add_field(name="USD Balance", value=usd, inline=True)
-		embed.add_field(name="Tickets", value=tickets, inline=True)
-		embed.set_footer(text="Wallet checked on: "+str(datetime.datetime.now())[:-7])
-		await client.send_message(message.channel, embed=embed)
+			osrs=getvalue(int(member.id),"07")
+			rs3=getvalue(int(member.id),"rs3")
+			usd=getvalue(int(member.id),"usd")
+			tickets=getvalue(int(member.id),"tickets")
+
+			if osrs>=1000000 or rs3>=1000000 or usd>=100.00:
+				sidecolor=2693614
+			elif osrs>=10000 or rs3>=10000 or usd>=10.00:
+				sidecolor=2490163
+			else:
+				sidecolor=12249599
+			osrs=formatfromk(osrs, "osrs")
+			rs3=formatfromk(rs3, "rs3")
+			usd=formatfromk(usd, "usd")
+			if rs3=="0k":
+				rs3="0 k"
+			if osrs=="0k":
+				osrs="0 k"
+			embed = discord.Embed(color=sidecolor)
+			embed.set_author(name=(str(member))[:-5]+"'s Wallet", icon_url=str(member.avatar_url))
+			embed.add_field(name="07 Balance", value=osrs, inline=True)
+			embed.add_field(name="RS3 Balance", value=rs3, inline=True)
+			embed.add_field(name="USD Balance", value=usd, inline=True)
+			embed.add_field(name="Tickets", value=tickets, inline=True)
+			embed.set_footer(text="Wallet checked on: "+str(datetime.datetime.now())[:-7])
+			await client.send_message(message.channel, embed=embed)
 	##########################################
 	elif message.content.startswith("!reset"):
 		try:
@@ -796,11 +804,13 @@ async def on_message(message):
 			current=getvalue(int(message.author.id), currency)
 
 			if isenough(bet, currency)[0]:
+				update_money(message.author.id, current-bet, currency)
 				await client.send_message(message.channel, "<@"+str(message.author.id)+"> wants to duel for `"+formatfromk(bet, currency)+" "+currency+"`. Use `!call` to accept the duel.")
 				while True:
 					call = await client.wait_for_message(timeout=60, channel=message.channel, content="!call")
 					if call is None:
 						await client.send_message(message.channel, "<@"+str(message.author.id)+">'s duel request has timed out.")
+						update_money(message.author.id, current, currency)
 						break
 					caller=call.author
 					current2=getvalue(int(caller.id), currency)
@@ -811,6 +821,7 @@ async def on_message(message):
 						await client.send_message(message.channel, "You don't have enough money to call that duel.")
 						continue
 					else:
+						update_money(caller.id, current2-bet, currency)
 						duel=True
 						break
 
@@ -846,14 +857,14 @@ async def on_message(message):
 
 					if gamblerroll==callerroll:
 						await client.send_message(message.channel, "Tie. Money Back.")
+						update_money(message.author.id, current, currency)
+						update_money(caller.id, current2, currency)
 					elif gamblerroll>callerroll:
 						await client.send_message(message.channel, "<@"+str(message.author.id)+"> rolled higher and won `"+formatfromk(bet, currency)+" "+currency+"`!")
-						update_money(int(message.author.id), bet, currency)
-						update_money(int(caller.id), bet*-1, currency)
+						update_money(int(message.author.id), bet+current, currency)
 					elif callerroll>gamblerroll:
 						await client.send_message(message.channel, "<@"+str(caller.id)+"> rolled higher and won `"+formatfromk(bet, currency)+" "+currency+"`!")
-						update_money(int(message.author.id), bet*-1, currency)
-						update_money(int(caller.id), bet, currency)
+						update_money(int(caller.id), bet+current, currency)
 
 					ticketbets(message.author.id, bet, currency)
 					ticketbets(caller.id, bet, currency)
@@ -864,7 +875,14 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, (isenough(bet, currency))[1])
 		#except:
-
+	################################
+	elif message.content=="!privacy on":
+		c.execute("UPDATE rsmoney SET privacy=True WHERE id={}".format(message.author.id))
+		await client.send_message(message.channel, "<@"+str(message.author.id)+">'s wallet privacy is now enabled.")
+	#################################
+	elif message.content=="!privacy off":
+		c.execute("UPDATE rsmoney SET privacy=False WHERE id={}".format(message.author.id))
+		await client.send_message(message.channel, "<@"+str(message.author.id)+">'s wallet privacy is now disabled.")
 
 #client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
