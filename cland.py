@@ -290,6 +290,7 @@ async def on_message(message):
 
 	###################################################
 	elif (message.content).lower()==("!wallet") or (message.content).lower()==("!w") or message.content=="!$":
+		print(getvalue(int(message.author.id), "privacy"))
 		if getvalue(int(message.author.id), "privacy")==True:
 			await client.send_message(message.channel, "Sorry, that user has wallet privacy mode enabled.")
 		else:
