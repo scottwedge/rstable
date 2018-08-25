@@ -170,8 +170,8 @@ def ticketbets(userid, bet, currency):
 
 #Predefined Variables
 colors=["A","B","C","D","E","F","0","1","2","3","4","5","6","7","8","9"]
-flowers=["Red","Orange","Yellow","Green","Blue","Purple"]
-sidecolors=[16711680, 16743712, 16776960, 1305146, 1275391, 16730111]
+flowers=["Red","Orange","Yellow","Pastel","Blue","Purple"]
+sidecolors=[16711680, 16743712, 16776960, 7399068, 1275391, 16730111]
 duel=False
 
 # async def my_background_task():
@@ -272,11 +272,12 @@ async def on_message(message):
 		embed.set_footer(text="Spying on people's information isn't very nice...")
 		await client.send_message(message.channel, embed=embed)
 	#####################################
-	elif message.content.startswith("!setclientseed"):
-		clientseed=(message.content)[15:]
-		if len(clientseed)>30:
-			await client.send_message(message.channel, "That client seed is too long. Please try a shorter one. (30 Character Limit)")
+	elif message.content.startswith("!setseed"):
+		clientseed=str((message.content)[15:])
+		if len(clientseed)>20:
+			await client.send_message(message.channel, "That client seed is too long. Please try a shorter one. (20 Character Limit)")
 		else:
+			await client.send_message(message.channel, "Your client seed has been set to "+(message.content)[15:]+".")
 			c.execute("UPDATE rsmoney SET clientseed={} WHERE id={}".format(clientseed, int(message.author.id)))
 	#####################################
 
