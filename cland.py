@@ -25,14 +25,16 @@ c.execute("""CREATE TABLE rsmoney (
 				)""")
 conn.commit()
 
+c.execute("DROP TABLE data")
 c.execute("""CREATE TABLE data (
 				seedreset text,
 				serverseed text,
 				yesterdayseed text,
-				07tors3 real,
+				o7tors3 real,
 				rs3to07 real
 				)""")
 c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0))
+conn.commit()
 
 client = discord.Client()
 
@@ -419,7 +421,7 @@ async def on_message(message):
 			enough=True
 			c.execute("SELECT rs3to07 FROM data")
 			rs307=float(c.fetchone()[0])
-			c.execute("SELECT 07tors3 FROM data")
+			c.execute("SELECT o7tors3 FROM data")
 			o7rs3=float(c.fetchone()[0])
 
 			if (message.content).split(" ")[1]=="07":
@@ -470,7 +472,7 @@ async def on_message(message):
 	elif ((message.content).lower()).startswith("!rates"):
 		c.execute("SELECT rs3to07 FROM data")
 		rs307=str(float(c.fetchone()[0]))
-		c.execute("SELECT 07tors3 FROM data")
+		c.execute("SELECT o7tors3 FROM data")
 		o7rs3=str(float(c.fetchone()[0]))
 		embed = discord.Embed(description=rs307+"M RS3 = 1M 07  | 1M 07 = "+o7rs3+"M RS3", color=16771099)
 		embed.set_author(name="Crypto Land Swapping Rates", icon_url=str(message.server.icon_url))
@@ -858,7 +860,7 @@ async def on_message(message):
 		if isstaff(message.author.id)=="verified":
 			o7rs3=float((message.content).split(" ")[1])
 			rs307=float((message.content).split(" ")[2])
-			c.execute("UPDATE data SET 07tors3={}".format(o7rs3))
+			c.execute("UPDATE data SET o7tors3={}".format(o7rs3))
 			c.execute("UPDATE data SET rs3to07={}".format(rs307))
 			conn.commit()
 			await client.send_message(message.channel, "The new rates are, "+str(rs307)+"M RS3 = 1M 07  | 1M 07 = "+str(o7rs3)+"M RS3")
