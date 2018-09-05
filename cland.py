@@ -25,7 +25,7 @@ c.execute("""CREATE TABLE rsmoney (
 				)""")
 conn.commit()
 
-c.execute("DROP TABLE data")
+#c.execute("DROP TABLE data")
 c.execute("""CREATE TABLE data (
 				seedreset text,
 				serverseed text,
