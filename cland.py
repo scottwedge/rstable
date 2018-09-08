@@ -279,11 +279,11 @@ async def on_message(message):
 		await client.send_message(message.channel, embed=embed)
 	#####################################
 	elif message.content.startswith("!setseed"):
-		clientseed=str((message.content)[15:])
+		clientseed=str((message.content)[9:])
 		if len(clientseed)>20:
 			await client.send_message(message.channel, "That client seed is too long. Please try a shorter one. (20 Character Limit)")
 		else:
-			await client.send_message(message.channel, "Your client seed has been set to "+(message.content)[15:]+".")
+			await client.send_message(message.channel, "Your client seed has been set to "+(message.content)[9:]+".")
 			c.execute("UPDATE rsmoney SET clientseed={} WHERE id={}".format(clientseed, int(message.author.id)))
 	#####################################
 
@@ -336,6 +336,7 @@ async def on_message(message):
 			except:
 				member=message.server.get_member(message.content[6:24])
 
+		print(getvalue(int(member.id), "privacy"))
 		if getvalue(int(member.id), "privacy")==True:
 			await client.send_message(message.channel, "Sorry, that user has wallet privacy mode enabled.")
 		else:
