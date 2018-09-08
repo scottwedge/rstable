@@ -451,7 +451,7 @@ async def on_message(message):
 				if messagechecked is None:
 					await client.send_message(message.channel, "<@"+str(message.author.id)+">'s swap has timed out.")
 				elif str(messagechecked.content).lower()=="!confirm":
-					update_money(message.author.id, formatok(newamount), new)
+					update_money(message.author.id, formatok(newamount, new), new)
 					await client.send_message(message.channel, "The money has been swapped.")
 				elif str(messagechecked.content).lower()=="!abort":
 					update_money(message.author.id, amountink, old)
