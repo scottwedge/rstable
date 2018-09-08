@@ -189,7 +189,7 @@ async def my_background_task():
 		else:
 			nextgiveaway=random.randint(5,15)
 			await client.send_message(server.get_channel("473638693626970112"), "Bet any amount of money in the next "+str(nextgiveaway)+" minutes to be entered in a 100k 07 Giveaway!")
-		await asyncio.sleep(nextgiveaway*60)
+		await asyncio.sleep(nextgiveaway)#*60
 
 
 
@@ -417,54 +417,54 @@ async def on_message(message):
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `!update (rs3 or 07) (@user) (amount)`.")
 	###################################################
 	elif ((message.content).lower()).startswith("!swap"):
-		#try:
-		old=(message.content).split(" ")[1]
-		amountink=formatok(str(message.content).split(" ")[2], old)
-		enough=True
-		c.execute("SELECT rs3to07 FROM data")
-		rs307=float(c.fetchone()[0])
-		c.execute("SELECT o7tors3 FROM data")
-		o7rs3=float(c.fetchone()[0])
+		try:
+			old=(message.content).split(" ")[1]
+			amountink=formatok(str(message.content).split(" ")[2], old)
+			enough=True
+			c.execute("SELECT rs3to07 FROM data")
+			rs307=float(c.fetchone()[0])
+			c.execute("SELECT o7tors3 FROM data")
+			o7rs3=float(c.fetchone()[0])
 
-		if old=="07":
-			new="rs3"
-			if amountink<100:
-				enough=False
-			newamount=formatfromk(round((amountink*o7rs3), 2), "osrs")
-		elif old=="rs3":
-			new="07"
-			if amountink<1000:
-				enough=False
-			newamount=formatfromk(round((amountink/rs307), 2), "rs3")
+			if old=="07":
+				new="rs3"
+				if amountink<100:
+					enough=False
+				newamount=formatfromk(round((amountink*o7rs3), 2), "osrs")
+			elif old=="rs3":
+				new="07"
+				if amountink<1000:
+					enough=False
+				newamount=formatfromk(round((amountink/rs307), 2), "rs3")
 
-		current=getvalue(int(message.author.id), old)
+			current=getvalue(int(message.author.id), old)
 
-		if enough==True:
-			update_money(message.author.id, amountink*-1, old)
-			if current>=amountink:
-				words="For "+formatfromk(amountink, old)+" "+old+", you will get "+newamount+" "+new+".\n\nUse `!confirm` to confirm this swap or `!abort` to stop the swap."
-				embed = discord.Embed(description=words, color=16777215)
-				embed.set_author(name=(str(message.author))[:-5], icon_url=str(message.author.avatar_url))
-				await client.send_message(message.channel, embed=embed)
-				messagechecked = await client.wait_for_message(timeout=10, channel=message.channel, author=message.author)
+			if enough==True:
+				update_money(message.author.id, amountink*-1, old)
+				if current>=amountink:
+					words="For "+formatfromk(amountink, old)+" "+old+", you will get "+newamount+" "+new+".\n\nUse `!confirm` to confirm this swap or `!abort` to stop the swap."
+					embed = discord.Embed(description=words, color=16777215)
+					embed.set_author(name=(str(message.author))[:-5], icon_url=str(message.author.avatar_url))
+					await client.send_message(message.channel, embed=embed)
+					messagechecked = await client.wait_for_message(timeout=10, channel=message.channel, author=message.author)
 
-				if messagechecked is None:
-					await client.send_message(message.channel, "<@"+str(message.author.id)+">'s swap has timed out.")
-				elif str(messagechecked.content).lower()=="!confirm":
-					update_money(message.author.id, formatok(newamount, new), new)
-					await client.send_message(message.channel, "The money has been swapped.")
-				elif str(messagechecked.content).lower()=="!abort":
-					update_money(message.author.id, amountink, old)
-					await client.send_message(message.channel, "The swap has been aborted.")
+					if messagechecked is None:
+						await client.send_message(message.channel, "<@"+str(message.author.id)+">'s swap has timed out.")
+					elif str(messagechecked.content).lower()=="!confirm":
+						update_money(message.author.id, formatok(newamount, new), new)
+						await client.send_message(message.channel, "The money has been swapped.")
+					elif str(messagechecked.content).lower()=="!abort":
+						update_money(message.author.id, amountink, old)
+						await client.send_message(message.channel, "The swap has been aborted.")
+					else:
+						update_money(message.author.id, amountink, old)
+						await client.send_message(message.channel, "An **error** has occured. Swap has been aborted.")
 				else:
-					update_money(message.author.id, amountink, old)
-					await client.send_message(message.channel, "An **error** has occured. Swap has been aborted.")
+					await client.send_message(message.channel, "You don't have enough money to swap that amount!")
 			else:
-				await client.send_message(message.channel, "You don't have enough money to swap that amount!")
-		else:
-			await client.send_message(message.channel, "The minimum amount to swap is `100k 07` or `1m rs3`.")
-		#except:
-		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!swap (RS3 or 07) (amount you want to swap)`.")
+				await client.send_message(message.channel, "The minimum amount to swap is `100k 07` or `1m rs3`.")
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `!swap (RS3 or 07) (amount you want to swap)`.")
 	###########################################
 	elif ((message.content).lower()).startswith("!rates"):
 		c.execute("SELECT rs3to07 FROM data")
