@@ -430,19 +430,19 @@ async def on_message(message):
 			new="rs3"
 			if amountink<100:
 				enough=False
-			newamount=formatfromk(round((amountink*o7rs3), 2))
+			newamount=formatfromk(round((amountink*o7rs3), 2), "osrs")
 		elif old=="rs3":
 			new="07"
 			if amountink<1000:
 				enough=False
-			newamount=formatfromk(round((amountink/rs307), 2))
+			newamount=formatfromk(round((amountink/rs307), 2), "rs3")
 
 		current=getvalue(int(message.author.id), old)
 
 		if enough==True:
 			update_money(message.author.id, amountink*-1, old)
 			if current>=amountink:
-				words="For "+formatfromk(amountink)+" "+old+", you will get "+newamount+" "+new+".\n\nUse `!confirm` to confirm this swap or `!abort` to stop the swap."
+				words="For "+formatfromk(amountink, old)+" "+old+", you will get "+newamount+" "+new+".\n\nUse `!confirm` to confirm this swap or `!abort` to stop the swap."
 				embed = discord.Embed(description=words, color=16777215)
 				embed.set_author(name=(str(message.author))[:-5], icon_url=str(message.author.avatar_url))
 				await client.send_message(message.channel, embed=embed)
