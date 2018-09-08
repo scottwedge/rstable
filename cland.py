@@ -418,27 +418,23 @@ async def on_message(message):
 	###################################################
 	elif ((message.content).lower()).startswith("!swap"):
 		#try:
-		amountink=formatok(str(message.content).split(" ")[2])
+		old=(message.content).split(" ")[1]
+		amountink=formatok(str(message.content).split(" ")[2], old)
 		enough=True
 		c.execute("SELECT rs3to07 FROM data")
 		rs307=float(c.fetchone()[0])
 		c.execute("SELECT o7tors3 FROM data")
 		o7rs3=float(c.fetchone()[0])
 
-		if (message.content).split(" ")[1]=="07":
-			old="07"
+		if old=="07":
 			new="rs3"
 			if amountink<100:
 				enough=False
-		elif (message.content).split(" ")[1]=="rs3":
-			old="rs3"
+			newamount=formatfromk(round((amountink*o7rs3), 2))
+		elif old=="rs3":
 			new="07"
 			if amountink<1000:
 				enough=False
-
-		if ((message.content).lower()).startswith("!swap 07"):
-			newamount=formatfromk(round((amountink*o7rs3), 2))
-		elif ((message.content).lower()).startswith("!swap rs3"):
 			newamount=formatfromk(round((amountink/rs307), 2))
 
 		current=getvalue(int(message.author.id), old)
