@@ -965,7 +965,7 @@ async def on_message(message):
 	elif message.content==("!open"):
 		for i in message.author.roles:
 			if str(i)=="Host":
-				c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s)", (message.author.id, "", True))
+				c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s)", (int(message.author.id), "\n", True))
 				conn.commit()
 				await client.send_message("You are now open.")
 			else:
