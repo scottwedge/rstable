@@ -883,7 +883,7 @@ async def on_message(message):
 	# 			if current>=bet:
 	################################
 	elif message.content.startswith("!randint"):
-		maxium=int((message.content).split(" ")[1])
+		maximum=int((message.content).split(" ")[1])
 		if maximum>10000 or maximum<1:
 			await client.send_message(message.channel, "That is not a valid maximum number. Please try again.")
 		await client.send_message(message.channel, "**"+str(maximum)+"**")
@@ -895,7 +895,7 @@ async def on_message(message):
 			host=message.server.get_member(str(message.content).split(" ")[2][2:-1])
 		except:
 			host=message.server.get_member(str(message.content).split(" ")[2][3:-1])
-		c.execute("SELECT id FROM host")
+		c.execute("SELECT id FROM hosts")
 		hosts=c.fetchall()
 		if int(host.id) in hosts:
 			bet=formatok((message.content).split(" ")[3])
