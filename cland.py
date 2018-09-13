@@ -908,7 +908,7 @@ async def on_message(message):
 					tickets=getvalue(message.author.id, "tickets")
 					c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, message.author.id))
 					conn.commit()
-				c.execute("UPDATE host SET bets={} WHERE id={}".format("<@"+str(message.author.id)+"> - "+formatfromk(bet)+"|", host.id))
+				c.execute("UPDATE host SET bets={} WHERE id={}".format("<@"+str(message.author.id)+"> - "+formatfromk(bet)+"\n", host.id))
 				conn.commit()
 				await client.send_message(message.channel, "You have bet "+formatfromk(bet)+" "+currency+" on <@"+str(host.id)+">.")
 			else:
@@ -929,13 +929,7 @@ async def on_message(message):
 		if int(host.id) in hosts:
 			c.execute("SELECT bets FROM host WHERE id={}".format(host.id))
 			bets=str(c.fetchone()[0])
-			characters=[]
-			characters+=bets
-			for counter, i in characters:
-				if i=="|":
-					characters[counter]=="\n"
-
-			embed = discord.Embed(description="".join(characters), color=0)
+			embed = discord.Embed(description="bets", color=0)
 			embed.set_author(name="Bets On For "+str(host), icon_url=str(host.avatar_url))
 			await client.send_message(message.channel, embed=embed)	
 
@@ -957,7 +951,7 @@ async def on_message(message):
 				tickets=getvalue(bettor.id, "tickets")
 				c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, bettor.id))
 				conn.commit()
-			c.execute("UPDATE host SET bets={} WHERE id={}".format("<@"+str(bettor.id)+"> - "+formatfromk(bet)+"|", message.author.id))
+			c.execute("UPDATE host SET bets={} WHERE id={}".format("<@"+str(bettor.id)+"> - "+formatfromk(bet)+"\n", message.author.id))
 			conn.commit()
 		# except:
 		# 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!addbet (@USER) (Amount)`.")
@@ -965,7 +959,7 @@ async def on_message(message):
 	elif message.content==("!open"):
 		for i in message.author.roles:
 			if str(i)=="Host":
-				c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s)", (int(message.author.id), "\n", True))
+				c.execute("INSERT INTO host VALUES (%s, %s, %s)", (int(message.author.id), "", True))
 				conn.commit()
 				await client.send_message("You are now open.")
 			else:
