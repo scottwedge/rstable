@@ -42,7 +42,6 @@ c.execute("""CREATE TABLE hosts (
 				bets text,
 				open boolean
 				)""")
-host
 client = discord.Client()
 
 
