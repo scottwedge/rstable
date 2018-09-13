@@ -964,19 +964,21 @@ async def on_message(message):
 	###############################
 	elif message.content==("!open"):
 		for i in message.author.roles:
-			print (i)
-		if "Host" in message.author.roles:
-			c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s)", (message.author.id, "", True))
-			conn.commit()
-		else:
-			await client.send_message(message.channel, "You need the host role to open.")
+			if str(i)=="Host":
+				c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s)", (message.author.id, "", True))
+				conn.commit()
+				await client.send_message("You are now open.")
+			else:
+				await client.send_message(message.channel, "You need the host role to open.")
 
 	elif message.content==("!close"):
-		if "Host" in message.author.roles:
-			c.execute("DELETE FROM host WHERE id={}".format(message.author.id))
-			conn.commit()
-		else:
-			await client.send_message(message.channel, "You need the host role to close.")
+		for i in message.author.roles:
+			if str(i)=="Host":
+				c.execute("DELETE FROM host WHERE id={}".format(message.author.id))
+				conn.commit()
+				await client.send_message("You are now closed. See you later!")
+			else:
+				await client.send_message(message.channel, "You need the host role to close.")
 	###########################
 
 
