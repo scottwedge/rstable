@@ -959,6 +959,7 @@ async def on_message(message):
 	elif message.content==("!open"):
 		for i in message.author.roles:
 			if str(i)=="Host":
+				verified=True
 				c.execute("INSERT INTO host VALUES (%s, %s, %s)", (int(message.author.id), "", True))
 				conn.commit()
 				await client.send_message("You are now open.")
@@ -966,13 +967,17 @@ async def on_message(message):
 				await client.send_message(message.channel, "You need the host role to open.")
 
 	elif message.content==("!close"):
+		verified=False
 		for i in message.author.roles:
 			if str(i)=="Host":
-				c.execute("DELETE FROM host WHERE id={}".format(message.author.id))
-				conn.commit()
-				await client.send_message("You are now closed. See you later!")
-			else:
-				await client.send_message(message.channel, "You need the host role to close.")
+				verified=True
+
+		if verified:
+			c.execute("DELETE FROM host WHERE id={}".format(message.author.id))
+			conn.commit()
+			await client.send_message("You are now closed. See you later!")
+		else:
+			await client.send_message(message.channel, "You need the host role to close.")
 	###########################
 
 
