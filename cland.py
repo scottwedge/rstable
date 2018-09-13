@@ -963,14 +963,14 @@ async def on_message(message):
 		# 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!addbet (@USER) (Amount)`.")
 	###############################
 	elif message.content==("!open"):
-		if "host" in message.author.roles:
+		if "Host" in message.author.roles:
 			c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s)", (message.author.id, "", True))
 			conn.commit()
 		else:
 			await client.send_message(message.channel, "You need the host role to open.")
 
 	elif message.content==("!close"):
-		if "host" in message.author.roles:
+		if "Host" in message.author.roles:
 			c.execute("DELETE FROM host WHERE id={}".format(message.author.id))
 			conn.commit()
 		else:
