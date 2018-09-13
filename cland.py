@@ -42,7 +42,7 @@ c.execute("""CREATE TABLE hosts (
 				bets text,
 				open boolean
 				)""")
-
+host
 client = discord.Client()
 
 
@@ -908,7 +908,7 @@ async def on_message(message):
 					tickets=getvalue(message.author.id, "tickets")
 					c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, message.author.id))
 					conn.commit()
-				c.execute("UPDATE host SET bets={} WHERE id={}".format("<@"+str(message.author.id)+"> - "+formatfromk(bet)+"\n", host.id))
+				c.execute("UPDATE hosts SET bets={} WHERE id={}".format("<@"+str(message.author.id)+"> - "+formatfromk(bet)+"\n", host.id))
 				conn.commit()
 				await client.send_message(message.channel, "You have bet "+formatfromk(bet)+" "+currency+" on <@"+str(host.id)+">.")
 			else:
@@ -924,10 +924,10 @@ async def on_message(message):
 			host=message.server.get_member(str(message.content).split(" ")[1][2:-1])
 		except:
 			host=message.server.get_member(str(message.content).split(" ")[1][3:-1])
-		c.execute("SELECT id FROM host")
+		c.execute("SELECT id FROM hosts")
 		hosts=c.fetchall()
 		if int(host.id) in hosts:
-			c.execute("SELECT bets FROM host WHERE id={}".format(host.id))
+			c.execute("SELECT bets FROM hosts WHERE id={}".format(host.id))
 			bets=str(c.fetchone()[0])
 			embed = discord.Embed(description="bets", color=0)
 			embed.set_author(name="Bets On For "+str(host), icon_url=str(host.avatar_url))
@@ -938,7 +938,7 @@ async def on_message(message):
 	################################
 	elif message.content.startswith("!addbet"):
 		#try:
-		c.execute("SELECT id FROM host")
+		c.execute("SELECT id FROM hosts")
 		hosts=c.fetchall()
 		if int(message.author.id) in hosts:
 			try:
@@ -951,7 +951,7 @@ async def on_message(message):
 				tickets=getvalue(bettor.id, "tickets")
 				c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, bettor.id))
 				conn.commit()
-			c.execute("UPDATE host SET bets={} WHERE id={}".format("<@"+str(bettor.id)+"> - "+formatfromk(bet)+"\n", message.author.id))
+			c.execute("UPDATE hosts SET bets={} WHERE id={}".format("<@"+str(bettor.id)+"> - "+formatfromk(bet)+"\n", message.author.id))
 			conn.commit()
 		# except:
 		# 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!addbet (@USER) (Amount)`.")
@@ -960,7 +960,7 @@ async def on_message(message):
 		for i in message.author.roles:
 			if str(i)=="Host":
 				verified=True
-				c.execute("INSERT INTO host VALUES (%s, %s, %s)", (int(message.author.id), "", True))
+				c.execute("INSERT INTO hosts VALUES (%s, %s, %s)", (int(message.author.id), "", True))
 				conn.commit()
 				await client.send_message("You are now open.")
 			else:
@@ -973,7 +973,7 @@ async def on_message(message):
 				verified=True
 
 		if verified:
-			c.execute("DELETE FROM host WHERE id={}".format(message.author.id))
+			c.execute("DELETE FROM hosts WHERE id={}".format(message.author.id))
 			conn.commit()
 			await client.send_message("You are now closed. See you later!")
 		else:
