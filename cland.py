@@ -36,10 +36,11 @@ c=conn.cursor()
 # c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0))
 # conn.commit()
 
-# c.execute("DROP TABLE hosts")
+c.execute("DROP TABLE hosts")
 c.execute("""CREATE TABLE hosts (
 				id bigint,
 				bets text,
+				streaks text,
 				open boolean
 				)""")
 client = discord.Client()
