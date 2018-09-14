@@ -192,7 +192,7 @@ async def my_background_task():
 			embed.add_field(name="Yesterday's Server Seed Hashed", value=hasher.hash(yesterdayseed), inline=True)
 			embed.add_field(name="Today's Server Seed Hashed", value=hasher.hash(serverseed), inline=True)
 			embed.set_footer(text="Posted On:"+str(datetime.datetime.now())[:-7])
-			sent = await client.send_message(server.get_channel("478006035332988929"), embed=embed)
+			sent = await client.send_message(channel.get_channel("478006035332988929"), embed=embed)
 		else:
 			await client.send_message(server.get_channel("473638693626970112"), "Bet any amount of money in the next "+str(nextgiveaway)+" minutes to be entered in a 100k 07 Giveaway!")
 		nextgiveaway=random.randint(5,15)
@@ -215,7 +215,7 @@ async def on_message_delete(message):
 
 @client.event
 async def on_message(message):
-	global words, duel, server
+	global words, duel, channel
 	message.content=(message.content).lower()
 
 	channel=message.server
@@ -899,8 +899,8 @@ async def on_message(message):
 			host=message.server.get_member(str(message.content).split(" ")[2][3:-1])
 		c.execute("SELECT id FROM hosts")
 		hosts=c.fetchall()
-		print(hosts)
-		if int(host.id) in hosts:
+		print(hosts[0])
+		if int(host.id) in hosts[0]:
 			bet=formatok((message.content).split(" ")[3])
 			currency=(message.content).split(" ")[1]
 			current=getvalue(message.author.id, currency)
