@@ -910,7 +910,7 @@ async def on_message(message):
 					tickets=getvalue(message.author.id, "tickets")
 					c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, message.author.id))
 					conn.commit()
-				c.execute("UPDATE hosts SET bets={} WHERE id={}".format(str("<@"+str(message.author.id)+"> - "+formatfromk(bet, currency)+"\n"), host.id))
+				c.execute("UPDATE hosts SET bets = {} WHERE id={}".format(str("<@"+str(message.author.id)+"> - "+formatfromk(bet, currency)+"\n"), host.id))
 				conn.commit()
 				await client.send_message(message.channel, "You have bet "+formatfromk(bet, currency)+" "+currency+" on <@"+str(host.id)+">.")
 			else:
