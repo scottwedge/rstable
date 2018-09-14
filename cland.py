@@ -891,34 +891,34 @@ async def on_message(message):
 		await client.send_message(message.channel, "**"+str(maximum)+"**")
 	################################
 	elif message.content.startswith("!bet"):
-		#try:
 		try:
-			int(str(message.content).split(" ")[2][2:3])
-			host=message.server.get_member(str(message.content).split(" ")[2][2:-1])
-		except:
-			host=message.server.get_member(str(message.content).split(" ")[2][3:-1])
-		c.execute("SELECT id FROM hosts")
-		hosts=c.fetchall()
-		print(hosts[0])
-		if int(host.id) in hosts[0]:
-			currency=(message.content).split(" ")[1]
-			bet=formatok((message.content).split(" ")[3], currency)
-			current=getvalue(message.author.id, currency)
-			if current>=bet:
-				update_money(message.author.id, bet*-1, currency)
-				if bet>=5000:
-					tickets=getvalue(message.author.id, "tickets")
-					c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, message.author.id))
+			try:
+				int(str(message.content).split(" ")[2][2:3])
+				host=message.server.get_member(str(message.content).split(" ")[2][2:-1])
+			except:
+				host=message.server.get_member(str(message.content).split(" ")[2][3:-1])
+			c.execute("SELECT id FROM hosts")
+			hosts=c.fetchall()
+			print(hosts[0])
+			if int(host.id) in hosts[0]:
+				currency=(message.content).split(" ")[1]
+				bet=formatok((message.content).split(" ")[3], currency)
+				current=getvalue(message.author.id, currency)
+				if current>=bet:
+					update_money(message.author.id, bet*-1, currency)
+					if bet>=5000:
+						tickets=getvalue(message.author.id, "tickets")
+						c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, message.author.id))
+						conn.commit()
+					c.execute("UPDATE hosts SET bets='{}' WHERE id={}".format("<@"+str(message.author.id)+"> - "+formatfromk(bet, currency)+"\n", host.id))
 					conn.commit()
-				c.execute("UPDATE hosts SET bets='{}' WHERE id={}".format("<@"+str(message.author.id)+"> - "+formatfromk(bet, currency)+"\n", host.id))
-				conn.commit()
-				await client.send_message(message.channel, "You have bet "+formatfromk(bet, currency)+" "+currency+" on <@"+str(host.id)+">.")
+					await client.send_message(message.channel, "You have bet "+formatfromk(bet, currency)+" "+currency+" on <@"+str(host.id)+">.")
+				else:
+					await client.send_message(message.channel, "You do not have enough gold to bet that much.")
 			else:
-				await client.send_message(message.channel, "You do not have enough gold to bet that much.")
-		else:
-			await client.send_message(message.channel, "That is not an open host.")
-		# except:
-		# 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!bet (07 or rs3) (@HOST) (Amount)`.")
+				await client.send_message(message.channel, "That is not an open host.")
+		except:
+		 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!bet (07 or rs3) (@HOST) (Amount)`.")
 	###################################
 	elif message.content.startswith("!pot"):
 		try:
@@ -931,7 +931,8 @@ async def on_message(message):
 		if int(host.id) in hosts[0]:
 			c.execute("SELECT bets FROM hosts WHERE id={}".format(host.id))
 			bets=str(c.fetchone()[0])
-			embed = discord.Embed(description="bets", color=0)
+			embed = discord.Embed(color=0)
+			embed.add_field(name="Bets", value=bets)
 			embed.set_author(name="Bets On For "+str(host), icon_url=str(host.avatar_url))
 			await client.send_message(message.channel, embed=embed)	
 
@@ -939,24 +940,27 @@ async def on_message(message):
 			await client.send_message(message.channel, "That is not an open host.")
 	################################
 	elif message.content.startswith("!addbet"):
-		#try:
-		c.execute("SELECT id FROM hosts")
-		hosts=c.fetchall()
-		if int(message.author.id) in hosts[0]:
-			try:
-				int(str(message.content).split(" ")[1][2:3])
-				bettor=message.server.get_member(str(message.content).split(" ")[1][2:-1])
-			except:
-				bettor=message.server.get_member(str(message.content).split(" ")[1][3:-1])
-			bet=formatok((message.content).split(" ")[2], "None")
-			if bet>=5000:
-				tickets=getvalue(bettor.id, "tickets")
-				c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, bettor.id))
+		try:
+			c.execute("SELECT id FROM hosts")
+			hosts=c.fetchall()
+			if int(message.author.id) in hosts[0]:
+				try:
+					int(str(message.content).split(" ")[1][2:3])
+					bettor=message.server.get_member(str(message.content).split(" ")[1][2:-1])
+				except:
+					bettor=message.server.get_member(str(message.content).split(" ")[1][3:-1])
+				bet=formatok((message.content).split(" ")[2], "None")
+				if bet>=5000:
+					tickets=getvalue(bettor.id, "tickets")
+					c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, bettor.id))
+					conn.commit()
+				c.execute("UPDATE hosts SET bets='{}' WHERE id={}".format("<@"+str(bettor.id)+"> - "+formatfromk(bet, "rs3")+"\n", message.author.id))
 				conn.commit()
-			c.execute("UPDATE hosts SET bets={} WHERE id={}".format("<@"+str(bettor.id)+"> - "+formatfromk(bet, currency)+"\n", message.author.id))
-			conn.commit()
-		# except:
-		# 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!addbet (@USER) (Amount)`.")
+				await client.send_message(message.channel, "You have added a bet of "+formatfromk(bet, "rs3")+" for "+str(bettor)+".")
+			else:
+				await client.send_message(message.channel, "You must be an open host to add a bet to your pot.")
+		except:
+		 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!addbet (@USER) (Amount)`.")
 	###############################
 	elif message.content==("!open"):
 		verified=False
