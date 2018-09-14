@@ -928,7 +928,7 @@ async def on_message(message):
 			host=message.server.get_member(str(message.content).split(" ")[1][3:-1])
 		c.execute("SELECT id FROM hosts")
 		hosts=c.fetchall()
-		if int(host.id) in hosts:
+		if int(host.id) in hosts[0]:
 			c.execute("SELECT bets FROM hosts WHERE id={}".format(host.id))
 			bets=str(c.fetchone()[0])
 			embed = discord.Embed(description="bets", color=0)
@@ -936,13 +936,13 @@ async def on_message(message):
 			await client.send_message(message.channel, embed=embed)	
 
 		else:
-			await client.send_message(message.chanel, "That is not an open host.")
+			await client.send_message(message.channel, "That is not an open host.")
 	################################
 	elif message.content.startswith("!addbet"):
 		#try:
 		c.execute("SELECT id FROM hosts")
 		hosts=c.fetchall()
-		if int(message.author.id) in hosts:
+		if int(message.author.id) in hosts[0]:
 			try:
 				int(str(message.content).split(" ")[1][2:3])
 				bettor=message.server.get_member(str(message.content).split(" ")[1][2:-1])
