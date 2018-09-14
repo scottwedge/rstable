@@ -179,7 +179,7 @@ async def my_background_task():
 	while not client.is_closed:
 		c.execute("SELECT seedreset FROM data")
 		lastdate=str(c.fetchone()[0])
-		if str(time.strftime("%d"))!=lastdate:
+		if str(time.strftime("%d"))!="12":#lastdate
 
 			c.execute("SELECT serverseed FROM data")
 			serverseed=str(c.fetchone()[0])
@@ -290,8 +290,9 @@ async def on_message(message):
 		if len(clientseed)>20:
 			await client.send_message(message.channel, "That client seed is too long. Please try a shorter one. (20 Character Limit)")
 		else:
+			c.execute("UPDATE rsmoney SET clientseed={} WHERE id={}".format(str(clientseed), int(message.author.id)))
+			conn.commit()
 			await client.send_message(message.channel, "Your client seed has been set to "+(message.content)[9:]+".")
-			c.execute("UPDATE rsmoney SET clientseed={} WHERE id={}".format(clientseed, int(message.author.id)))
 	#####################################
 
 
@@ -963,7 +964,7 @@ async def on_message(message):
 				verified=True
 
 		if verified:
-			c.execute("INSERT INTO hosts VALUES (%s, %s, %s)", (int(message.author.id), "", True))
+			c.execute("INSERT INTO hosts VALUES (%s, %s, %s, %s)", (int(message.author.id), "", "", True))
 			conn.commit()
 			await client.send_message(message.channel, "You are now open.")
 		else:
