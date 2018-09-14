@@ -901,8 +901,8 @@ async def on_message(message):
 		hosts=c.fetchall()
 		print(hosts[0])
 		if int(host.id) in hosts[0]:
-			bet=formatok((message.content).split(" ")[3])
 			currency=(message.content).split(" ")[1]
+			bet=formatok((message.content).split(" ")[3], currency)
 			current=getvalue(message.author.id, currency)
 			if current>=bet:
 				update_money(message.author.id, bet*-1, currency)
@@ -910,9 +910,9 @@ async def on_message(message):
 					tickets=getvalue(message.author.id, "tickets")
 					c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, message.author.id))
 					conn.commit()
-				c.execute("UPDATE hosts SET bets={} WHERE id={}".format("<@"+str(message.author.id)+"> - "+formatfromk(bet)+"\n", host.id))
+				c.execute("UPDATE hosts SET bets={} WHERE id={}".format("<@"+str(message.author.id)+"> - "+formatfromk(bet, currency)+"\n", host.id))
 				conn.commit()
-				await client.send_message(message.channel, "You have bet "+formatfromk(bet)+" "+currency+" on <@"+str(host.id)+">.")
+				await client.send_message(message.channel, "You have bet "+formatfromk(bet, currency)+" "+currency+" on <@"+str(host.id)+">.")
 			else:
 				await client.send_message(message.channel, "You do not have enough gold to bet that much.")
 		else:
@@ -948,12 +948,12 @@ async def on_message(message):
 				bettor=message.server.get_member(str(message.content).split(" ")[1][2:-1])
 			except:
 				bettor=message.server.get_member(str(message.content).split(" ")[1][3:-1])
-			bet=formatok((message.content).split(" ")[2])
+			bet=formatok((message.content).split(" ")[2], "None")
 			if bet>=5000:
 				tickets=getvalue(bettor.id, "tickets")
 				c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, bettor.id))
 				conn.commit()
-			c.execute("UPDATE hosts SET bets={} WHERE id={}".format("<@"+str(bettor.id)+"> - "+formatfromk(bet)+"\n", message.author.id))
+			c.execute("UPDATE hosts SET bets={} WHERE id={}".format("<@"+str(bettor.id)+"> - "+formatfromk(bet, currency)+"\n", message.author.id))
 			conn.commit()
 		# except:
 		# 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!addbet (@USER) (Amount)`.")
@@ -984,8 +984,8 @@ async def on_message(message):
 		else:
 			await client.send_message(message.channel, "You need the host role to close.")
 	###########################
-
-
+	elif message.content==("!oldpoet"):
+		await client.send_message(message.channel, "<@199630284906430465><@199630284906430465><@199630284906430465><@199630284906430465> GET OFF OF YOUTUBE AND START CODING!")
 
 
 client.loop.create_task(my_background_task())
