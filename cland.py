@@ -194,8 +194,8 @@ async def my_background_task():
 			embed.set_footer(text="Posted On:"+str(datetime.datetime.now())[:-7])
 			sent = await client.send_message(server.get_channel("478006035332988929"), embed=embed)
 		else:
-			nextgiveaway=random.randint(5,15)
 			await client.send_message(server.get_channel("473638693626970112"), "Bet any amount of money in the next "+str(nextgiveaway)+" minutes to be entered in a 100k 07 Giveaway!")
+		nextgiveaway=random.randint(5,15)
 		await asyncio.sleep(nextgiveaway)#*60
 
 
@@ -899,6 +899,7 @@ async def on_message(message):
 			host=message.server.get_member(str(message.content).split(" ")[2][3:-1])
 		c.execute("SELECT id FROM hosts")
 		hosts=c.fetchall()
+		print(hosts)
 		if int(host.id) in hosts:
 			bet=formatok((message.content).split(" ")[3])
 			currency=(message.content).split(" ")[1]
