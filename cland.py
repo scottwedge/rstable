@@ -877,11 +877,11 @@ async def on_message(message):
 				bettorrole=random.randint(2,12)
 				botrole=random.randint(2,12)
 				if bettorrole>botrole:
-					words="Congratulations! You won "+formatfromk(bet+(bet*1.8), currency)+"!"
+					words=":game_die: Congratulations! You won "+formatfromk(bet*1.8, currency)+"!"
 					sidecolor=3997475
-					update_money(message.author.id, bet*1.8, currency)
+					update_money(message.author.id, (bet*1.8)-bet, currency)
 				elif botrole>bettorrole:
-					words="You lost "+formatfromk(bet, currency)+"."
+					words=":game_die: You lost "+formatfromk(bet, currency)+"."
 					sidecolor=16718121
 					update_money(message.author.id, bet*-1, currency)
 				elif botrole==bettorrole:
@@ -891,9 +891,9 @@ async def on_message(message):
 				ticketbets(message.author.id, bet, currency)
 
 				embed = discord.Embed(description=words, color=sidecolor)
-				embed.set_author(name=(str(message.author))[:-5]+"'s Dice Duel :game_die: ", icon_url=str(message.author.avatar_url))
-				embed.add_field(name="Bot Role", value=str(botrole))
-				embed.add_field(name="Your Role", value=str(bettorrole))
+				embed.set_author(name=(str(message.author))[:-5]+"'s Dice Duel", icon_url=str(message.author.avatar_url))
+				embed.add_field(name="Bot Roll", value=str(botrole))
+				embed.add_field(name="Your Roll", value=str(bettorrole))
 				embed.set_footer(text="Gambled on: "+str(datetime.datetime.now())[:-7])
 				await client.send_message(message.channel, embed=embed)
 		# except:
