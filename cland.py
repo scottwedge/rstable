@@ -657,12 +657,12 @@ async def on_message(message):
 					roll=random.randint(1,100)
 
 					if roll in range(1,odds):
-						win=False
+						words="Rolled **"+str(roll)+"** out of **100**. You lost **"+str(formatfromk(bet, game))+"** "+str(game)+"."
 						sidecolor=16718121
 						gains=bet*-1
 						winnings=bet*-1
 					else:
-						win=True
+						words="Rolled **"+str(roll)+"** out of **100**. You won **"+str(winnings)+"** "+str(game)+"."	
 						sidecolor=3997475
 						gains=(bet*multiplier)-(bet)
 						winnings=(bet*multiplier)
@@ -673,11 +673,6 @@ async def on_message(message):
 
 					winnings=formatfromk(winnings, game)
 					update_money(int(message.author.id), gains, game)
-
-					if win==False:
-						words="Rolled **"+str(roll)+"** out of **100**. You lost **"+str(formatfromk(bet, game))+"** "+str(game)+"."
-					elif win==True:
-						words="Rolled **"+str(roll)+"** out of **100**. You won **"+str(winnings)+"** "+str(game)+"."	
 
 					embed = discord.Embed(color=sidecolor)
 					embed.set_author(name=str(message.author), icon_url=str(message.author.avatar_url))
@@ -757,7 +752,7 @@ async def on_message(message):
 					embed = discord.Embed(description=words, color=sidecolor)
 					embed.set_author(name=(str(message.author))[:-5]+"'s Gamble", icon_url=str(message.author.avatar_url))
 					embed.set_footer(text="Gambled on: "+str(datetime.datetime.now())[:-7])
-					await client.send_message(message.channel, embed=embed)	
+					await client.send_message(message.channel, embed=embed)
 
 					ticketbets(message.author.id, bet, currency)
 
@@ -871,24 +866,44 @@ async def on_message(message):
 		else:
 			await client.send_message(message.channel, "You do not have permissions to change the swap rates.")
 	##################################
-	# elif message.content.startswith("!botdd"):
-	# 	try:
-	# 		currency=(message.content).split(" ")[1]
-	# 		bet=formatok((message.content).split(" ")[2], currency)
-	# 		current=getvalue(int(message.author.id), currency)
-	# 		commission=0
-	# 		index=random.randint(0,5)
-	# 		flower=flowers[index]
-	# 		sidecolor=sidecolors[index]
+	elif message.content.startswith("!botdd"):
+		#try:
+		currency=(message.content).split(" ")[1]
+		bet=formatok((message.content).split(" ")[2], currency)
+		current=getvalue(int(message.author.id), currency)
 
-	# 		if isenough(bet, currency)[0]:	
-	# 			if current>=bet:
+		if isenough(bet, currency)[0]:	
+			if current>=bet:
+				bettorrole=random.randint(2,12)
+				botrole=random.randint(2,12)
+				if bettorrole>botrole:
+					words="Congratulations! You won "+formatfromk(bet+(bet*1.8), currency)+"!"
+					sidecolor=3997475
+					update_money(message.author.id, bet*1.8, currency)
+				elif botrole>bettorrole:
+					words="You lost "+formatfromk(bet, currency)+"."
+					sidecolor=16718121
+					update_money(message.author.id, bet*-1, currency)
+				elif botrole==bettorrole:
+					words="Tie. Money Back."
+
+				ticketbets(message.author.id, bet, currency)
+
+				embed = discord.Embed(description=words, color=sidecolor)
+				embed.set_author(name=(str(message.author))[:-5]+"'s Dice Duel :game_die: ", icon_url=str(message.author.avatar_url))
+				embed.add_field(title="Bot Role", value=str(botrole))
+				embed.add_field(title="Your Role", value=str(bettorrole))
+				embed.set_footer(text="Gambled on: "+str(datetime.datetime.now())[:-7])
+				await client.send_message(message.channel, embed=embed)
+		# except:
+		# 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!botdd (07 or rs3) (Bet Amount)`.")
 	################################
 	elif message.content.startswith("!randint"):
 		maximum=int((message.content).split(" ")[1])
 		if maximum>10000 or maximum<1:
 			await client.send_message(message.channel, "That is not a valid maximum number. Please try again.")
-		await client.send_message(message.channel, "**"+str(maximum)+"**")
+		else:
+			await client.send_message(message.channel, "**"+str(random.randint(1,maximum))+"**")
 	################################
 	elif message.content.startswith("!bet"):
 		try:
@@ -933,9 +948,8 @@ async def on_message(message):
 			bets=str(c.fetchone()[0])
 			embed = discord.Embed(color=0)
 			embed.add_field(name="Bets", value=bets)
-			embed.set_author(name="Bets On For "+str(host), icon_url=str(host.avatar_url))
+			embed.set_author(name="Bets On "+str(host), icon_url=str(host.avatar_url))
 			await client.send_message(message.channel, embed=embed)	
-
 		else:
 			await client.send_message(message.channel, "That is not an open host.")
 	################################
@@ -956,7 +970,7 @@ async def on_message(message):
 					conn.commit()
 				c.execute("UPDATE hosts SET bets='{}' WHERE id={}".format("<@"+str(bettor.id)+"> - "+formatfromk(bet, "rs3")+"\n", message.author.id))
 				conn.commit()
-				await client.send_message(message.channel, "You have added a bet of "+formatfromk(bet, "rs3")+" for "+str(bettor)+".")
+				await client.send_message(message.channel, "You have added a bet of "+formatfromk(bet, "rs3")+" from "+str(bettor)+" on yourself.")
 			else:
 				await client.send_message(message.channel, "You must be an open host to add a bet to your pot.")
 		except:
@@ -990,8 +1004,15 @@ async def on_message(message):
 	###########################
 	elif message.content==("!oldpoet"):
 		await client.send_message(message.channel, "<@199630284906430465><@199630284906430465><@199630284906430465><@199630284906430465> GET OFF OF YOUTUBE AND START CODING!")
+	##########################
+	elif message.content.startswith("!bj"):
+		cards=['aC', 'aS', 'aH', 'aD', '2C', '2S', '2H', '2D', '3C', '3S', '3H', '3D', '4C', '4S', '4H', '4D', '5C', '5S', '5H', '5D', '6C', '6S', '6H', '6D', '7C', '7S', '7H', '7D', '8C', '8S', '8H', '8D', '9C', '9S', '9H', '9D', '10C', '10S', '10H', '10D', 'jC', 'jS', 'jH', 'jD', 'qC', 'qS', 'qH', 'qD', 'kC', 'kS', 'kH', 'kD']
 
 
+
+
+
+		
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
 client.run(str(Bot_Token))
