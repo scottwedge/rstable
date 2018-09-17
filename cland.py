@@ -885,14 +885,15 @@ async def on_message(message):
 					sidecolor=16718121
 					update_money(message.author.id, bet*-1, currency)
 				elif botrole==bettorrole:
+					sidecolor=16777035
 					words="Tie. Money Back."
 
 				ticketbets(message.author.id, bet, currency)
 
 				embed = discord.Embed(description=words, color=sidecolor)
 				embed.set_author(name=(str(message.author))[:-5]+"'s Dice Duel :game_die: ", icon_url=str(message.author.avatar_url))
-				embed.add_field(title="Bot Role", value=str(botrole))
-				embed.add_field(title="Your Role", value=str(bettorrole))
+				embed.add_field(name="Bot Role", value=str(botrole))
+				embed.add_field(name="Your Role", value=str(bettorrole))
 				embed.set_footer(text="Gambled on: "+str(datetime.datetime.now())[:-7])
 				await client.send_message(message.channel, embed=embed)
 		# except:
@@ -1012,7 +1013,7 @@ async def on_message(message):
 
 
 
-		
+
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
 client.run(str(Bot_Token))
