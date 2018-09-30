@@ -45,6 +45,13 @@ c.execute("""CREATE TABLE hosts (
 				)""")
 client = discord.Client()
 
+c.execute("DROP TABLE bj")
+c.execute("""CREATE TABLE bj (
+				cards text,
+				botscore integer,
+				playerscore integer
+				)""")
+client = discord.Client()
 
 
 def add_member(userid,rs3,osrs,usd):
@@ -324,9 +331,12 @@ async def on_message(message):
 		embed.set_author(name=(str(message.author))[:-5]+"'s Wallet", icon_url=str(message.author.avatar_url))
 		embed.add_field(name="07 Balance", value=osrs, inline=True)
 		embed.add_field(name="RS3 Balance", value=rs3, inline=True)
-		embed.add_field(name="Tickets", value=tickets, inline=True)
+		embed.add_field(name="Tickets", value=tickets, inline=True)	
 		embed.set_footer(text="Wallet checked on: "+str(datetime.datetime.now())[:-7])
-		await client.send_message(message.channel, embed=embed)
+		if getvalue(int(member.id), "privacy")==True:
+			await client.send_message(message.author, embed=embed)
+		else:
+			awiat client.send_message(message.channel, embed=embed)
 
 
 
@@ -510,50 +520,49 @@ async def on_message(message):
 		await client.send_message(message.channel, "The commands have been sent to your private messages.")
 	###################################
 	elif ((message.content).lower()).startswith("!cashin") or ((message.content).lower()).startswith("!cashout"):
-		#try:
-		enough=True
-		cashing=formatok(str(message.content).split(" ")[2], str(message.content).split(" ")[1])
-	
-		if message.content.startswith("!cashout"):
-			way="out"
-			if str(message.content).split(" ")[1]=="rs3":
-				if cashing<10000:
-					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must cash out atleast **10m** rs3.")
-					enough=False
-			elif str(message.content).split(" ")[1]=="07":
-				if cashing<2000:
-					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must cash out atleast **2m** 07.")
-					enough=False
+		try:
+			enough=True
+			cashing=formatok(str(message.content).split(" ")[2], str(message.content).split(" ")[1])
+		
+			if message.content.startswith("!cashout"):
+				way="out"
+				if str(message.content).split(" ")[1]=="rs3":
+					if cashing<10000:
+						await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must cash out atleast **10m** rs3.")
+						enough=False
+				elif str(message.content).split(" ")[1]=="07":
+					if cashing<2000:
+						await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must cash out atleast **2m** 07.")
+						enough=False
 
-			current=getvalue(int(message.author.id), str(message.content).split(" ")[1])
+				current=getvalue(int(message.author.id), str(message.content).split(" ")[1])
 
-			if cashing>current:
-				await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much money to cash out!")
-				enough=False
-				
-		else:
-			way="in"
-			if str(message.content).split(" ")[1]=="rs3":
-				if cashing<5000:
-					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must cash in atleast **5m** rs3.")
+				if cashing>current:
+					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much money to cash out!")
 					enough=False
-			elif str(message.content).split(" ")[1]=="07":
-				if cashing<1000:
-					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must cash in atleast **1m** 07.")
-					enough=False
-
-		if (str(message.content).split(" ")[1]).lower()=="rs3" or (str(message.content).split(" ")[1]).lower()=="07":
-			if enough==True:
-				await client.send_message(message.channel, "Remember that fake cash-ins are kickable.")
-				await client.send_message(message.server.get_channel("459923177376579596"), "<@&459899438643675136>, <@"+str(message.author.id)+"> wants to cash "+way+" **"+str(message.content).split(" ")[2]+"** "+str(message.content).split(" ")[1]+".")
-				await client.send_message(message.channel, "A message has been sent to a cashier. Your request will be processed and you will be messaged soon. :D")
+					
 			else:
-				None
-		else:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `"+str(message.content).split(" ")[0]+" (rs3 or 07) (Amount you want to cash in/out)`.")
-		#except:
-		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `"+str(message.content).split(" ")[0]+" (rs3 or 07) (Amount you want to cash in/out)`.")
+				way="in"
+				if str(message.content).split(" ")[1]=="rs3":
+					if cashing<5000:
+						await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must cash in atleast **5m** rs3.")
+						enough=False
+				elif str(message.content).split(" ")[1]=="07":
+					if cashing<1000:
+						await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must cash in atleast **1m** 07.")
+						enough=False
 
+			if (str(message.content).split(" ")[1]).lower()=="rs3" or (str(message.content).split(" ")[1]).lower()=="07":
+				if enough==True:
+					await client.send_message(message.channel, "Remember that fake cash-ins are kickable.")
+					await client.send_message(message.server.get_channel("493890953753657345"), "<@&493890985764585485>, <@"+str(message.author.id)+"> wants to cash "+way+" **"+str(message.content).split(" ")[2]+"** "+str(message.content).split(" ")[1]+".")
+					await client.send_message(message.channel, "A message has been sent to a cashier. Your request will be processed and you will be messaged soon. :D")
+				else:
+					None
+			else:
+				await client.send_message(message.channel, "An **error** has occured. Make sure you use `"+str(message.content).split(" ")[0]+" (rs3 or 07) (Amount you want to cash in/out)`.")
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `"+str(message.content).split(" ")[0]+" (rs3 or 07) (Amount you want to cash in/out)`.")
 	###########################3
 	elif ((message.content).lower()).startswith("!transfer rs3") or ((message.content).lower()).startswith("!transfer 07"):
 		#try:
@@ -612,15 +621,6 @@ async def on_message(message):
 		embed.set_footer(text="Total Wallet checked on: "+str(datetime.datetime.now())[:-7])
 		await client.send_message(message.channel, embed=embed)
 	################################
-
-# def starts_w(content, starts):
-# 		for s in starts:
-# 			if content.startswith(s):
-# 				return True
-# 			else:
-# 				return False
-	
-	# elif starts_w(message.content):
 	elif message.content.startswith("!54") or message.content.startswith("!50") or message.content.startswith("!75") or message.content.startswith("!45") or message.content.startswith("!90") or message.content.startswith("!95"):
 		try:
 			game=str(message.content).split(" ")[1]
@@ -630,27 +630,27 @@ async def on_message(message):
 			if isenough(bet, game)[0]:
 				if message.content.startswith("!54x2") or message.content.startswith("!54"):
 					title="54x2"
-					odds=56
+					odds=55
 					multiplier=2
 				elif message.content.startswith("!75x3") or message.content.startswith("!75"):
 					title="75x3"
-					odds=77
+					odds=76
 					multiplier=3
 				elif message.content.startswith("!50x2") or message.content.startswith("!50"):
 					title="50x2"
-					odds=52
+					odds=51
 					multiplier=1.9
 				elif message.content.startswith("!45x1.5") or message.content.startswith("!45"):
 					title="45x1.5"
-					odds=47
+					odds=46
 					multiplier=1.5
 				elif message.content.startswith("!90x7") or message.content.startswith("!90"):
 					title="90x7"
-					odds=92
+					odds=91
 					multiplier=7
 				elif message.content.startswith("!95x10") or message.content.startswith("!95"):
 					title="95x10"
-					odds=97
+					odds=96
 					multiplier=10
 
 				if current>=bet:
@@ -763,7 +763,7 @@ async def on_message(message):
 		except:
 		 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!flower (rs3 or 07) (Amount) (hot, cold, red, orange, yellow, green, blue, or purple)`.")
 	#############################
-	# elif message.content.startswith("!dd"):
+	# elif message.content.startswith("!dd"):  IN PROGRESS TO CHANGE SO MULTIPLE CAN HAPPEN AT ONCE
 	# 	#try:
 	# 	currency=(message.content).split(" ")[1]
 	# 	bet=formatok((message.content).split(" ")[2], currency)
@@ -1006,7 +1006,7 @@ async def on_message(message):
 	elif message.content==("!oldpoet"):
 		await client.send_message(message.channel, "<@199630284906430465><@199630284906430465><@199630284906430465><@199630284906430465> GET OFF OF YOUTUBE AND START CODING!")
 	##########################
-	elif message.content.startswith("!bj"):
+	elif message.content.startswith("!bj"): #A work in progress...
 		cards=['aC', 'aS', 'aH', 'aD', '2C', '2S', '2H', '2D', '3C', '3S', '3H', '3D', '4C', '4S', '4H', '4D', '5C', '5S', '5H', '5D', '6C', '6S', '6H', '6D', '7C', '7S', '7H', '7D', '8C', '8S', '8H', '8D', '9C', '9S', '9H', '9D', '10C', '10S', '10H', '10D', 'jC', 'jS', 'jH', 'jD', 'qC', 'qS', 'qH', 'qD', 'kC', 'kS', 'kH', 'kD']
 
 
