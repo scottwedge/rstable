@@ -336,7 +336,7 @@ async def on_message(message):
 		if getvalue(int(member.id), "privacy")==True:
 			await client.send_message(message.author, embed=embed)
 		else:
-			awiat client.send_message(message.channel, embed=embed)
+			await client.send_message(message.channel, embed=embed)
 
 
 
