@@ -333,7 +333,7 @@ async def on_message(message):
 		embed.add_field(name="RS3 Balance", value=rs3, inline=True)
 		embed.add_field(name="Tickets", value=tickets, inline=True)	
 		embed.set_footer(text="Wallet checked on: "+str(datetime.datetime.now())[:-7])
-		if getvalue(int(member.id), "privacy")==True:
+		if getvalue(int(message.author.id), "privacy")==True:
 			await client.send_message(message.author, embed=embed)
 		else:
 			await client.send_message(message.channel, embed=embed)
