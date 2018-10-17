@@ -45,13 +45,13 @@ c.execute("""CREATE TABLE hosts (
 				)""")
 client = discord.Client()
 
-c.execute("DROP TABLE bj")
-c.execute("""CREATE TABLE bj (
-				cards text,
-				botscore integer,
-				playerscore integer
-				)""")
-client = discord.Client()
+# c.execute("DROP TABLE bj")
+# c.execute("""CREATE TABLE bj (
+# 				cards text,
+# 				botscore integer,
+# 				playerscore integer
+# 				)""")
+# client = discord.Client()
 
 
 def add_member(userid,rs3,osrs,usd):
