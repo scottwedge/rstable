@@ -657,15 +657,15 @@ async def on_message(message):
 				roll=random.randint(1,100)
 
 				if roll in range(1,odds):
+					winnings=bet*-1
 					words="Rolled **"+str(roll)+"** out of **100**. You lost **"+str(formatfromk(bet, game))+"** "+str(game)+"."
 					sidecolor=16718121
 					gains=bet*-1
-					winnings=bet*-1
 				else:
+					winnings=(bet*multiplier)
 					words="Rolled **"+str(roll)+"** out of **100**. You won **"+str(winnings)+"** "+str(game)+"."	
 					sidecolor=3997475
 					gains=(bet*multiplier)-(bet)
-					winnings=(bet*multiplier)
 
 				if isinstance(winnings, float):
 					if (winnings).is_integer():
