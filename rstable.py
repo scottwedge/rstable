@@ -353,9 +353,9 @@ async def my_background_task():
 async def on_ready():
 	print("Bot Logged In!")
 
-@client.event
-async def on_message_delete(message):
-	await client.send_message(client.get_channel("473944352427868170"), str(message.author)+" said: \""+str(message.content)+"\"")
+# @client.event
+# async def on_message_delete(message):
+# 	await client.send_message(client.get_channel("473944352427868170"), str(message.author)+" said: \""+str(message.content)+"\"")
 
 @client.event
 async def on_message(message):
@@ -456,7 +456,7 @@ async def on_message(message):
 
 
 	###################################################
-	elif (message.content).lower()==("!wallet") or (message.content).lower()==("!w") or message.content=="!$":
+	elif (message.content).lower()==("!wallet") or (message.content).lower()==("!w"):
 		osrs=getvalue(int(message.author.id),"07","rsmoney")
 		rs3=getvalue(int(message.author.id),"rs3","rsmoney")
 
@@ -483,7 +483,7 @@ async def on_message(message):
 
 
 
-	elif  ((message.content).lower()).startswith("!wallet <@") or ((message.content).lower()).startswith("!w <@") or message.content.startswith("!$ <@"):
+	elif  ((message.content).lower()).startswith("!wallet <@") or ((message.content).lower()).startswith("!w <@"):
 		if message.content.startswith("!wallet <@"):
 			try:
 				int(str(message.content[10:11]))
