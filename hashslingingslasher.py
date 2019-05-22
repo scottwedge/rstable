@@ -6,7 +6,7 @@ def create_seed():
 	characters=["a","b","c","d","e","f","0","1","2","3","4","5","6","7","8","9"]
 	seed=""
 
-	for i in range(32):
+	for i in range(64):
 		seed+=random.choice(characters)
 
 	return str(seed)
@@ -32,3 +32,39 @@ def getrandint(server, client, nonce):
 	if randint==0:
 		randint=100
 	return randint
+
+
+# serverseed=create_seed()
+# print(hash(serverseed))
+# print(serverseed)
+# print(getrandint(serverseed, "hi", 0))
+
+# d={}
+# for i in range(1, 101):
+# 	d[i]=1
+# for i in range(100000):
+# 	number=(getrandint(hash("hi"), create_seed(), str(i)))
+# 	d[number]+=1
+# print(d)
+
+# smallest=100000
+# greatest=0
+
+# for i in d:
+# 	if d[i]<smallest:
+# 		smallest=d[i]
+# 	elif d[i]>greatest:
+# 		greatest=d[i]
+
+# print(smallest)
+# print(greatest)
+
+# under=0
+# over=0
+# for i in d:
+# 	if i<51:
+# 		under+=d[i]
+# 	else:
+# 		over+=d[i]
+# print(under)
+# print(over)
