@@ -24,7 +24,7 @@ c.execute("""CREATE TABLE rsmoney (
 				clientseed text,
 				privacy boolean
 				)""")
-c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False))
+c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False))
 conn.commit()
 
 # c.execute("DROP TABLE data")
@@ -74,7 +74,7 @@ client = discord.Client()
 
 
 def add_member(userid,rs3,osrs,usd):
-	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False))
 	conn.commit()
 
 def getvalue(userid,value,table):
