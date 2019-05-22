@@ -1,1 +1,1 @@
-worker: python cland.py
+worker: python rstable.py
