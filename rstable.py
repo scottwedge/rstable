@@ -13,33 +13,33 @@ conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 c=conn.cursor()
 
 # c.execute("DROP TABLE rsmoney")
-# c.execute("""CREATE TABLE rsmoney (
-# 				id bigint,
-# 				rs3 integer,
-# 				osrs integer,
-# 				rs3total bigint,
-# 				osrstotal bigint,
-# 				rs3week bigint,
-# 				osrsweek bigint,
-# 				clientseed text,
-# 				privacy boolean
-# 				)""")
-# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False))
-# conn.commit()
+c.execute("""CREATE TABLE rsmoney (
+				id bigint,
+				rs3 integer,
+				osrs integer,
+				rs3total bigint,
+				osrstotal bigint,
+				rs3week bigint,
+				osrsweek bigint,
+				clientseed text,
+				privacy boolean
+				)""")
+c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False))
+conn.commit()
 
 # c.execute("DROP TABLE data")
-# c.execute("""CREATE TABLE data (
-# 				seedreset text,
-# 				serverseed text,
-# 				yesterdayseed text,
-# 				nonce integer,
-# 				rs3profit bigint,
-# 				osrsprofit bigint
-# 				)""")
-# c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0, 0))
-# conn.commit()
+c.execute("""CREATE TABLE data (
+				seedreset text,
+				serverseed text,
+				yesterdayseed text,
+				nonce integer,
+				rs3profit bigint,
+				osrsprofit bigint
+				)""")
+c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0, 0))
+conn.commit()
 
-c.execute("DROP TABLE bj")
+#c.execute("DROP TABLE bj")
 c.execute("""CREATE TABLE bj (
 				id bigint,
 				deck text,
@@ -1201,4 +1201,4 @@ client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
 client.run(str(Bot_Token))
 #https://discordapp.com/oauth2/authorize?client_id=580511336598077511&scope=bot&permissions=8
-#heroku pg:psql postgresql-closed-65108 --app rstable
+#heroku pg:psql postgresql-adjacent-85932 --app rstable
