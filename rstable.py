@@ -368,26 +368,26 @@ async def on_message(message):
 	if message.server.id!="518832231532331018":
 		None
 	#############################################
-	elif message.content.startswith("!input"):
+	elif message.content.startswith("$input"):
 		print(message.content)
     ###########################################
-	elif message.content==("!log"):
+	elif message.content==("$log"):
 		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 			await client.send_message(message.channel, "Goodbye!")
 			await client.logout()
 		else:
 			None
 	################################################
-	elif message.content.startswith('!colorpicker') or message.content.startswith('!colourpicker'):
+	elif message.content.startswith('$colorpicker') or message.content.startswith('$colourpicker'):
 		color=('')
 		for i in range(6):
 			color+=random.choice(colors)
-		if message.content.startswith("!colorpicker"):
+		if message.content.startswith("$colorpicker"):
 			await client.send_message(message.channel, "Your random color is https://www.colorhexa.com/"+color)
-		elif message.content.startswith("!colourpicker"):
+		elif message.content.startswith("$colourpicker"):
 			await client.send_message(message.channel, "Your random colour is https://www.colorhexa.com/"+color)
 	# ###############################################
-	# elif message.content.startswith("!emoji"):
+	# elif message.content.startswith("$emoji"):
 	# 	try:
 	# 		await client.delete_message(message)
 	# 	except:
@@ -400,11 +400,11 @@ async def on_message(message):
 	# 			finalmessage+=":white_small_square: "
 	# 		elif i in "abcdefghijklmnopqrstuvwxyz":
 	# 			finalmessage+=":regional_indicator_"+i+": "
-	# 		elif i=="!":
+	# 		elif i=="$":
 	# 			finalmessage+=":grey_exclamation: "
 	# 	await client.send_message(message.channel, finalmessage)
 	# ############################################
-	elif message.content.startswith("!poll"):
+	elif message.content.startswith("$poll"):
 		message.content=(message.content).title()
 		embed = discord.Embed(description="Respond below with 👍 for YES, 👎 for NO, or 🤔 for UNSURE/NEUTRAL", color=16724721)
 		embed.set_author(name=str(message.content[6:]), icon_url=str(message.server.icon_url))
@@ -414,7 +414,7 @@ async def on_message(message):
 		await client.add_reaction(sent,"👎")
 		await client.add_reaction(sent,"🤔")
 	#############################################
-	elif message.content.startswith("!userinfo"):
+	elif message.content.startswith("$userinfo"):
 		try:
 			int(str(message.content[12:13]))
 			member=message.server.get_member(message.content[12:30])
@@ -435,7 +435,7 @@ async def on_message(message):
 		embed.set_footer(text="Spying on people's information isn't very nice...")
 		await client.send_message(message.channel, embed=embed)
 	###############################################
-	elif message.content.startswith("!setseed"):
+	elif message.content.startswith("$setseed"):
 		if str(message.channel.id)=="559182875316977694":
 			clientseed=str((message.content)[9:])
 			if len(clientseed)>20:
@@ -456,7 +456,7 @@ async def on_message(message):
 
 
 	###################################################
-	elif (message.content).lower()==("!wallet") or (message.content).lower()==("!w"):
+	elif (message.content).lower()==("$wallet") or (message.content).lower()==("$w"):
 		osrs=getvalue(int(message.author.id),"07","rsmoney")
 		rs3=getvalue(int(message.author.id),"rs3","rsmoney")
 
@@ -483,8 +483,8 @@ async def on_message(message):
 
 
 
-	elif  ((message.content).lower()).startswith("!wallet <@") or ((message.content).lower()).startswith("!w <@"):
-		if message.content.startswith("!wallet <@"):
+	elif  ((message.content).lower()).startswith("$wallet <@") or ((message.content).lower()).startswith("$w <@"):
+		if message.content.startswith("$wallet <@"):
 			try:
 				int(str(message.content[10:11]))
 				member=message.server.get_member(message.content[10:28])
@@ -522,7 +522,7 @@ async def on_message(message):
 		elif getvalue(int(member.id), "privacy","rsmoney")==True:
 			await client.send_message(message.channel, "Sorry, that user has wallet privacy mode enabled.")
 	##########################################
-	elif message.content.startswith("!clear"):
+	elif message.content.startswith("$clear"):
 		try:
 			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 				try:
@@ -545,28 +545,31 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, "Admin Command Only!")
 		except:
-			await client.send_message(message.channel, "An **error** occured. Make sure you use `!clear (rs3 or 07) (@user)`")
+			await client.send_message(message.channel, "An **error** occured. Make sure you use `$clear (rs3 or 07) (@user)`")
 	###########################################
-	elif (message.content).startswith("!update 07") or (message.content).startswith("!update rs3"):
+	elif (message.content).startswith("$deposit") or message.content.startswith("$withdraw"):
 		try:
 			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 				maximum=False
-				if (str(message.content).split(" ")[3][-1:]).lower()=="b":
-					if int(str(message.content).split(" ")[3][:-1])>100:
+				if (str(message.content).split(" ")[2][-1:]).lower()=="b":
+					if int(str(message.content).split(" ")[2][:-1])>100:
 						await client.send_message(message.channel, "You can only give up to 100b at one time for...reasons.")
 						maximum=True
 
 				if maximum==False:
-					game=(message.content).split(" ")[1]
-					amount=formatok(str(message.content).split(" ")[3], game)
+					game=(message.content).split(" ")[3]
+					amount=formatok(str(message.content).split(" ")[2], game)
 
 					try:
-						int(str(message.content).split(" ")[2][2:3])
-						member=message.server.get_member(str(message.content).split(" ")[2][2:-1])
+						int(str(message.content).split(" ")[1][2:3])
+						member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
 					except:
-						member=message.server.get_member(str(message.content).split(" ")[2][3:-1])
+						member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
 
-					update_money(int(member.id), amount, game)
+					if message.content.startswith("$deposit"):
+						update_money(int(member.id), amount, game)
+					elif message.content.startswith("$withdraw"):
+						update_money(int(member.id), amount*-1, game)
 	
 					embed = discord.Embed(description="<@"+str(member.id)+">'s wallet has been updated.", color=5174318)
 					embed.set_author(name="Update Request", icon_url=str(message.author.avatar_url))
@@ -576,59 +579,59 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, "Admin Command Only!")
 		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `!update (rs3 or 07) (@user) (amount)`.")
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$update (@user) (amount) (rs3 or 07)`.")
 	############################################
-	elif message.content.startswith("!help") or message.content.startswith("!commands"):
-		embed = discord.Embed(description=  #"\n `!colorpicker` - Shows a random color\n" +
-											#"\n `!start unscramble` - Starts a game where you unscramble a word\n" +
-											#"\n `!start hangman` - Starts a game of hangman\n" +
-											#"\n `!random (SIZE)` - Starts a game where you guess a number between 1 and the given size\n" +
-											#"\n `!poll (QUESTION)` - Starts a Yes/No poll with the given question\n" +
-											"\n `!w`, `!wallet`, or `!$` - Checks your own wallet\n" +
-											"\n `!w (@USER)`, `!wallet (@USER)`, or `!$ (@USER)` - Checks that user's wallet\n" +
-											#"\n `!flower (AMOUNT) (hot or cold)` - Hot or cold gives x2, 5% \\of auto loss\n" +
-											"\n `!50 (rs3 or 07) (BET)` - Must roll above 50, x1.8 payout\n" +
-											"\n `!53 (rs3 or 07) (BET)` - Must roll above 53, x2 payout\n" +
-											"\n `!75 (rs3 or 07) (BET)` - Must roll above 75, x3 payout\n" +
-											"\n `!95 (rs3 or 07) (BET)` - Must roll above 95, x7 payout\n" +
-											#"\n `!swap (rs3 or 07) (AMOUNT)` - Swaps that amount of gold to the other game" +
-											#"\n `!rates` - Shows the swapping rates between currencies" +
-											"\n `!bj (rs3 or 07) (AMOUNT)` - Starts a game of blackjack with the bot\n" +
-											#"\n `!deposit (rs3 or 07) (AMOUNT)` - Notifes a cashier that you want to deposit the amount to your wallet\n" +
-											#"\n `!withdraw (rs3 or 07) (AMOUNT)` - Notifes a cashier that you want to withdraw the amount from your wallet\n" +
-											"\n `!transfer (rs3 or 07) (@USER) (AMOUNT)` - Transfers that amount from your wallet to the user's wallet\n" +
-											"\n `!wager`, or `!total bet` or `!tb` - Shows your total amount bet for rs3 and 07\n" +
-											"\n `!thisweek` - Shows your total amount bet for rs3 and 07 this week\n", color=16771099)
+	elif message.content.startswith("$help") or message.content.startswith("$commands"):
+		embed = discord.Embed(description=  #"\n `$colorpicker` - Shows a random color\n" +
+											#"\n `$start unscramble` - Starts a game where you unscramble a word\n" +
+											#"\n `$start hangman` - Starts a game of hangman\n" +
+											#"\n `$random (SIZE)` - Starts a game where you guess a number between 1 and the given size\n" +
+											#"\n `$poll (QUESTION)` - Starts a Yes/No poll with the given question\n" +
+											"\n `$w` or `$wallet` - Checks your own wallet\n" +
+											"\n `$w (@USER)` or `$wallet (@USER)` - Checks that user's wallet\n" +
+											#"\n `$flower (AMOUNT) (hot or cold)` - Hot or cold gives x2, 5% \\of auto loss\n" +
+											"\n `$50 (BET) (rs3 or 07)` - Must roll above 50, x1.8 payout\n" +
+											"\n `$53 (BET) (rs3 or 07)` - Must roll above 53, x2 payout\n" +
+											"\n `$75 (BET) (rs3 or 07)` - Must roll above 75, x3 payout\n" +
+											"\n `$95 (BET) (rs3 or 07)` - Must roll above 95, x7 payout\n" +
+											#"\n `$swap (rs3 or 07) (AMOUNT)` - Swaps that amount of gold to the other game" +
+											#"\n `$rates` - Shows the swapping rates between currencies" +
+											"\n `$bj (BET) (rs3 or 07)` - Starts a game of blackjack with the bot\n" +
+											#"\n `$deposit (rs3 or 07) (AMOUNT)` - Notifes a cashier that you want to deposit the amount to your wallet\n" +
+											#"\n `$withdraw (rs3 or 07) (AMOUNT)` - Notifes a cashier that you want to withdraw the amount from your wallet\n" +
+											"\n `$transfer (@USER) (AMOUNT) (rs3 or 07)` - Transfers that amount from your wallet to the user's wallet\n" +
+											"\n `$wager`, `$total bet` or `$tb` - Shows your total amount bet for rs3 and 07\n" +
+											"\n `$thisweek` - Shows your total amount bet for rs3 and 07 this week\n", color=16771099)
 
 		embed.set_author(name="Bot Commands", icon_url=str(message.server.icon_url))
 		await client.send_message(message.channel, embed=embed)
 		# await client.send_message(message.channel, "The commands have been sent to your private messages.")
 	###################################
-	elif ((message.content).lower()).startswith("!transfer rs3") or ((message.content).lower()).startswith("!transfer 07"):
+	elif ((message.content).lower()).startswith("$transfer"):
 		try:
-			transfered=formatok((str(message.content).split(" ")[3]), str(message.content).split(" ")[1])
+			transfered=formatok((str(message.content).split(" ")[2]), str(message.content).split(" ")[3])
 			enough=True
 
-			if str(message.content).split(" ")[1]=="rs3":
+			if str(message.content).split(" ")[3]=="rs3":
 				if transfered<1:
 					await client.send_message(message.channel, "You must transfer at least **1k** 07.")
 					enough=False
 
-			elif str(message.content).split(" ")[1]=="07":
+			elif str(message.content).split(" ")[3]=="07":
 				if transfered<1:
 					await client.send_message(message.channel, "You must transfer at least **1k** RS3.")
 					enough=False
 
-			currency=str(message.content).split(" ")[1]
+			currency=str(message.content).split(" ")[3]
 			current=getvalue(int(message.author.id),currency,"rsmoney")
 
 			if enough==True:
 				if current>=transfered:
 					try:
-						int(str(message.content).split(" ")[2][2:3])
-						member=message.server.get_member(str(message.content).split(" ")[2][2:-1])
+						int(str(message.content).split(" ")[1][2:3])
+						member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
 					except:
-						member=message.server.get_member(str(message.content).split(" ")[2][3:-1])
+						member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
 					
 					taker=getvalue(int(member.id),currency,"rsmoney")
 			
@@ -648,16 +651,16 @@ async def on_message(message):
 			else:
 				None
 		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `!transfer (rs3 or 07) (@user) (Amount you want to give)`.")
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$transfer (@user) (Amount you want to give) (rs3 or 07)`.")
 	###################################
-	# elif ((message.content).lower()).startswith("!withdraw") or ((message.content).lower()).startswith("!deposit"):
+	# elif ((message.content).lower()).startswith("$withdraw") or ((message.content).lower()).startswith("$deposit"):
 	# 	try:
 	# 		enough=True
 	# 		cashing=formatok(str(message.content).split(" ")[2], str(message.content).split(" ")[1])
 	# 		currency=str(message.content).split(" ")[1]
 	# 		current=getvalue(int(message.author.id), currency, "rsmoney")
 
-	# 		if message.content.startswith("!withdraw"):
+	# 		if message.content.startswith("$withdraw"):
 	# 			way="withdraw"
 	# 			if currency=="rs3":
 	# 				if cashing<10000:
@@ -699,7 +702,7 @@ async def on_message(message):
 	# 						break
 	# 				c.execute("INSERT INTO cash VALUES (%s, %s, %s)", (str(message.author.id), way, code))
 	# 				conn.commit()
-	# 				await client.send_message(message.server.get_channel("459923177376579596"), "<@&459899438643675136>, <@"+str(message.author.id)+"> wants to "+way+" **"+cashing+"** "+currency+". Use `!accept "+str(code)+"`.")
+	# 				await client.send_message(message.server.get_channel("459923177376579596"), "<@&459899438643675136>, <@"+str(message.author.id)+"> wants to "+way+" **"+cashing+"** "+currency+". Use `$accept "+str(code)+"`.")
 	# 				embed = discord.Embed(description="A message has been sent to a cashier. Your request will be processed and you will be messaged soon.", color=5174318)
 	# 				embed.set_author(name=way.title(), icon_url=str(message.server.icon_url))
 	# 				await client.send_message(message.channel, embed=embed)
@@ -710,22 +713,22 @@ async def on_message(message):
 	# 	except:
 	# 		await client.send_message(message.channel, "An **error** has occured. Make sure you use `"+str(message.content).split(" ")[0]+" (rs3 or 07) (Amount you want to cash in/out)`.")
 	###################################
-	elif message.content.startswith("!53") or message.content.startswith("!50") or message.content.startswith("!75") or message.content.startswith("!95"):
+	elif message.content.startswith("$53") or message.content.startswith("$50") or message.content.startswith("$75") or message.content.startswith("$95"):
 		try:
-			game=str(message.content).split(" ")[1]
-			bet=formatok(str(message.content).split(" ")[2], game)
+			game=str(message.content).split(" ")[2]
+			bet=formatok(str(message.content).split(" ")[1], game)
 			current=getvalue(message.author.id, game,"rsmoney")
 
 			if isenough(bet, game)[0]:
-				if message.content.startswith("!53x2") or message.content.startswith("!53"):
+				if message.content.startswith("$53x2") or message.content.startswith("$53"):
 					title="53x2"
 					odds=54
 					multiplier=2
-				elif message.content.startswith("!50x1.8") or message.content.startswith("!50"):
+				elif message.content.startswith("$50x1.8") or message.content.startswith("$50"):
 					title="50x1.8"
 					odds=51
 					multiplier=1.8
-				elif message.content.startswith("!75x3") or message.content.startswith("!75"):
+				elif message.content.startswith("$75x3") or message.content.startswith("$75"):
 					title="75x3"
 					odds=76
 					multiplier=3
@@ -774,7 +777,7 @@ async def on_message(message):
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$(50, 53, 75, or 95) (rs3 or 07) (BET)`.")
 	#############################
-	elif ((message.content).lower()).startswith("!wager") or ((message.content).lower()).startswith("!total bet") or ((message.content).lower()).startswith("!tb"):
+	elif ((message.content).lower())==("$wager") or ((message.content).lower())==("$total bet") or ((message.content).lower())==("$tb"):
 		rs3total=getvalue(message.author.id, "rs3total","rsmoney")
 		osrstotal=getvalue(message.author.id, "osrstotal","rsmoney")
 
@@ -787,7 +790,7 @@ async def on_message(message):
 		embed.add_field(name="07 Total Bets", value=osrs, inline=True)
 		await client.send_message(message.channel, embed=embed)
 	###############################
-	elif message.content=="!thisweek":
+	elif message.content=="$thisweek":
 		rs3week=getvalue(message.author.id, "rs3week","rsmoney")
 		osrsweek=getvalue(message.author.id, "osrsweek","rsmoney")
 
@@ -800,7 +803,7 @@ async def on_message(message):
 		embed.add_field(name="07 Weekly Bets", value=osrs, inline=True)
 		await client.send_message(message.channel, embed=embed)
 	################################
-	elif message.content=="!reset thisweek":
+	elif message.content=="$reset thisweek":
 		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 			c.execute("UPDATE rsmoney SET rs3week={}".format(0))
 			c.execute("UPDATE rsmoney SET osrsweek={}".format(0))
@@ -811,14 +814,14 @@ async def on_message(message):
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
 	###############################
-	elif message.content=="!privacy on":
+	elif message.content=="$privacy on":
 		c.execute("UPDATE rsmoney SET privacy=True WHERE id={}".format(message.author.id))
 		conn.commit()
 		embed = discord.Embed(description="<@"+str(message.author.id)+">'s wallet privacy is now enabled.", color=5174318)
 		embed.set_author(name="Privacy Mode", icon_url=str(message.author.avatar_url))
 		await client.send_message(message.channel, embed=embed)
 	#################################
-	elif message.content=="!privacy off":
+	elif message.content=="$privacy off":
 		c.execute("UPDATE rsmoney SET privacy=False WHERE id={}".format(message.author.id))
 		conn.commit()
 		embed = discord.Embed(description="<@"+str(message.author.id)+">'s wallet privacy is now disabled.", color=5174318)
@@ -834,11 +837,11 @@ async def on_message(message):
 	# elif message.content==("!roll"):
 	# 	await client.send_message(message.channel, "**"+str(random.randint(1, 100))+"**")
 	#################################
-	elif message.content.startswith("!bj"):
+	elif message.content.startswith("$bj"):
 		try:
 			deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
-			currency=(message.content).split(" ")[1]
-			bet=formatok((message.content).split(" ")[2], currency)
+			currency=(message.content).split(" ")[2]
+			bet=formatok((message.content).split(" ")[1], currency)
 			current=getvalue(int(message.author.id), currency,"rsmoney")
 			if isenough(bet, currency)[0]:
 				if current>=bet:
@@ -866,7 +869,7 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, (isenough(bet, game))[1])
 		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `!bj (rs3 or 07) (Amount)`.")
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bj (Amount) (rs3 or 07)`.")
 	################################
 	elif message.content==("hit"):
 		drawcard(message.author.id,True)
@@ -923,7 +926,7 @@ async def on_message(message):
 		c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 		conn.commit()
 	################################
-	# elif message.content.startswith("!accept"):
+	# elif message.content.startswith("$accept"):
 	# 	if str(message.channel.id)=="459923177376579596":
 	# 		code=int((message.content).split(" ")[1])
 	# 		c.execute("SELECT code FROM cash")
@@ -947,7 +950,7 @@ async def on_message(message):
 	# 	else:
 	# 		None
 	#################################
-	# elif message.content.startswith("!top"):
+	# elif message.content.startswith("$top"):
 	# 	game=(message.content).split(" ")[1]
 	# 	if game=="rs3" or game=="osrs" or game=="07":
 	# 		if game=="rs3":
@@ -975,7 +978,7 @@ async def on_message(message):
 	# 	else:
 	# 		None
 	###################################
-	# elif message.content.startswith("!flower"):
+	# elif message.content.startswith("$flower"):
 	# 	try:
 	# 		currency=(message.content).split(" ")[1]
 	# 		bet=formatok((message.content).split(" ")[2], currency)
@@ -1041,9 +1044,9 @@ async def on_message(message):
 	# 		else:
 	# 			await client.send_message(message.channel, (isenough(bet, currency))[1])
 	# 	except:
-	# 	 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!flower (rs3 or 07) (Amount) (hot or cold)`.")
+	# 	 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$flower (rs3 or 07) (Amount) (hot or cold)`.")
 	##########################
-	# elif message.content=="!profit":
+	# elif message.content=="$profit":
 	# 	if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 	# 		c.execute("SELECT osrsprofit FROM data")
 	# 		osrsprofit=int(c.fetchone()[0])
@@ -1064,7 +1067,7 @@ async def on_message(message):
 	# 	else:
 	# 		None
 	# ###########################
-	# elif message.content=="!reset profit":
+	# elif message.content=="$reset profit":
 	# 	if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 	# 		c.execute("UPDATE data SET osrsprofit=0")
 	# 		c.execute("UPDATE data SET rs3profit=0")
@@ -1073,16 +1076,16 @@ async def on_message(message):
 	# 	else:
 	# 		None
 	##########################
-	# elif message.content=="!claim 07":
+	# elif message.content=="$claim 07":
 	# 	claimed=getvalue(message.author.id, "claimed", "rsmoney")
 	# 	if claimed==False:
 	# 		c.execute("UPDATE rsmoney SET claimed={}".format(True))
 	# 		update_money(message.author.id, 100, "07")
-	# 		await client.send_message(message.channel, "Claimed! Use `!w` to view your wallet.")
+	# 		await client.send_message(message.channel, "Claimed! Use `$w` to view your wallet.")
 	# 	else:
 	# 		await client.send_message(message.channel, "You have already claimed your free 100k 07!")
 	# ###########################
-	# elif message.content.startswith("!bet"):
+	# elif message.content.startswith("$bet"):
 	# 	try:
 	# 		try:
 	# 			int(str(message.content).split(" ")[2][2:3])
@@ -1110,9 +1113,9 @@ async def on_message(message):
 	# 		else:
 	# 			await client.send_message(message.channel, "That is not an open host.")
 	# 	except:
-	# 	 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!bet (07 or rs3) (@HOST) (Amount)`.")
+	# 	 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bet (07 or rs3) (@HOST) (Amount)`.")
 	###################################
-	# elif message.content.startswith("!bets"):
+	# elif message.content.startswith("$bets"):
 	# 	try:
 	# 		int(str(message.content).split(" ")[1][2:3])
 	# 		host=message.server.get_member(str(message.content).split(" ")[1][2:-1])
@@ -1130,7 +1133,7 @@ async def on_message(message):
 	# 	else:
 	# 		await client.send_message(message.channel, "That is not an open host.")
 	# ################################
-	# elif message.content.startswith("!addbet"):
+	# elif message.content.startswith("$addbet"):
 	# 	try:
 	# 		c.execute("SELECT id FROM hosts")
 	# 		hosts=c.fetchall()
@@ -1148,9 +1151,9 @@ async def on_message(message):
 	# 		else:
 	# 			await client.send_message(message.channel, "You must be an open host to add a bet to your pot.")
 	# 	except:
-	# 	 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `!addbet (@USER) (Amount)`.")
+	# 	 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$addbet (@USER) (Amount)`.")
 	# ###############################
-	# elif message.content==("!open"):
+	# elif message.content==("$open"):
 	# 	host=get(message.server.roles, name="Host")
 	# 	if host in message.author.roles:
 	# 		c.execute("INSERT INTO hosts VALUES (%s, %s, %s)", (int(message.author.id), "", ":fresh: "))
@@ -1159,7 +1162,7 @@ async def on_message(message):
 	# 	else:
 	# 		await client.send_message(message.channel, "You need the host role to open.")
 
-	# elif message.content==("!close"):
+	# elif message.content==("$close"):
 	# 	host=get(message.server.roles, name="Host")
 	# 	if host in message.author.roles:
 	# 		c.execute("DELETE FROM hosts WHERE id={}".format(message.author.id))
@@ -1168,7 +1171,7 @@ async def on_message(message):
 	# 	else:
 	# 		await client.send_message(message.channel, "You need the host role to close.")
 	# ###########################
-	# elif message.content.startswith("!streak"):
+	# elif message.content.startswith("$streak"):
 	# 	try:
 	# 		int(str(message.content[10:11]))
 	# 		host=message.server.get_member(message.content[10:28])
@@ -1184,7 +1187,7 @@ async def on_message(message):
 	# 	else:
 	# 		await client.send_message(message.channel, "That is not an open host.")
 	# #########################
-	# elif message.content==("!win") or message.content==("!loss"):
+	# elif message.content==("$win") or message.content==("$loss"):
 	# 	turnout=str(message.content)[1:]
 	# 	c.execute("SELECT id FROM hosts")
 	# 	hosts=c.fetchall()
