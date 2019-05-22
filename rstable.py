@@ -54,13 +54,13 @@ c.execute("""CREATE TABLE bj (
 				)""")
 conn.commit()
 
-c.execute("DROP TABLE cash")
-c.execute("""CREATE TABLE cash (
-				id text,
-				way text,
-				code integer
-				)""")
-conn.commit()
+# c.execute("DROP TABLE cash")
+# c.execute("""CREATE TABLE cash (
+# 				id text,
+# 				way text,
+# 				code integer
+# 				)""")
+# conn.commit()
 
 # c.execute("DROP TABLE hosts")
 # c.execute("""CREATE TABLE hosts (
@@ -596,7 +596,7 @@ async def on_message(message):
 											"\n `!bj (rs3 or 07) (AMOUNT)` - Starts a game of blackjack with the bot\n" +
 											#"\n `!deposit (rs3 or 07) (AMOUNT)` - Notifes a cashier that you want to deposit the amount to your wallet\n" +
 											#"\n `!withdraw (rs3 or 07) (AMOUNT)` - Notifes a cashier that you want to withdraw the amount from your wallet\n" +
-											"\n `!transfer (rs3 or 07) (@USER) (AMOUNT)` - Transfers that amount from your wallet to the user's wallet\n", color=16771099)
+											"\n `!transfer (rs3 or 07) (@USER) (AMOUNT)` - Transfers that amount from your wallet to the user's wallet\n" +
 											"\n `!wager`, or `!total bet` or `!tb` - Shows your total amount bet for rs3 and 07\n" +
 											"\n `!thisweek` - Shows your total amount bet for rs3 and 07 this week\n", color=16771099)
 
