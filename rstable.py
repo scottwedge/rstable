@@ -22,9 +22,12 @@ c=conn.cursor()
 # 				rs3week bigint,
 # 				osrsweek bigint,
 # 				clientseed text,
-# 				privacy boolean
+# 				privacy boolean,
+#				bronze integer,
+#				silver integer,
+#				gold integer
 # 				)""")
-# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False))
+# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0))
 # conn.commit()
 
 # c.execute("DROP TABLE data")
@@ -74,7 +77,7 @@ client = discord.Client()
 
 
 def add_member(userid,rs3,osrs,usd):
-	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0))
 	conn.commit()
 
 def getvalue(userid,value,table):
@@ -926,30 +929,61 @@ async def on_message(message):
 		c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 		conn.commit()
 	################################
-	# elif message.content.startswith("$accept"):
-	# 	if str(message.channel.id)=="459923177376579596":
-	# 		code=int((message.content).split(" ")[1])
-	# 		c.execute("SELECT code FROM cash")
-	# 		codelist=c.fetchall()
-	# 		codes=[]
-	# 		for i in codelist:
-	# 			codes.append(int(i[0]))
-	# 		if code in codes:
-	# 			c.execute("SELECT id FROM cash WHERE code={}".format(code))
-	# 			userid=str(c.fetchone()[0])
-	# 			c.execute("SELECT way FROM cash WHERE code={}".format(code))
-	# 			way=str(c.fetchone()[0])
-	# 			embed = discord.Embed(description="<@"+userid+">, <@"+str(message.author.id)+"> will perform your "+way+".", color=5174318)
-	# 			embed.set_author(name=way.title(), icon_url=str(message.server.icon_url))
-	# 			await client.send_message(message.server.get_channel("476760411707015168"), embed=embed)
-	# 			await client.send_message(message.channel, "Accepted. Please DM them now.")
-	# 			c.execute("DELETE FROM cash WHERE code={}".format(code))
-	# 			conn.commit()
+	elif message.content.startswith("$buykey"):
+		amount=int((message.content).split(" ")[1])
+		kind=(message.content).split(" ")[2]
+		bronze=getvalue(message.author.id, "bronze", "rsmoney")
+		silver=getvalue(message.author.id, "silver", "rsmoney")
+		gold=getvalue(message.author.id, "gold", "rsmoney")
+		buyer=getvalue(message.author.id "07", "rsmoney")
+		if kind=="bronze":
+			if buyer<250:
+				await client.send_message(message.channel, "You don't have enough to buy a bronze key.")
+			else:
+				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+1, message.author.id))
+				update_money(message.author.id, -250, "07")
+		elif kind=="silver":
+			if buyer<750:
+				await client.send_message(message.channel, "You don't have enough to buy a silver key.")
+			else:
+				c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+1, message.author.id))
+				update_money(message.author.id, -750, "07")
+		elif kind=="gold":
+			if buyer<2000:
+				await client.send_message(message.channel, "You don't have enough to buy a gold key.")
+			else:
+				c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold+1, message.author.id))
+				update_money(message.author.id, -2000, "07")
+		conn.commit()
+
+		embed = discord.Embed(description="You successfully purchased **"+str(amount)+"** key(s)!", color=5174318)
+		embed.set_author(name="Purchase Complete", icon_url=str(message.author.avatar_url))
+		await client.send_message(message.channel, embed=embed)
+	# ###############################
+	# elif message.content.startswith("$open"):
+	# 	roll=round(random.uniform(0,100), 1)
+	# 	kind=(message.content).split(" ")[1]
+	# 	bronze=getvalue(message.author.id, "bronze", "rsmoney")
+	# 	silver=getvalue(message.author.id, "silver", "rsmoney")
+	# 	gold=getvalue(message.author.id, "gold", "rsmoney")
+	# 	if kind=="bronze":
+	# 		if bronze>=1:
+	# 			c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze-1, message.author.id))
+	# 			if roll in range(0,0.1)
 	# 		else:
-	# 			await client.send_message(message.channel, "There is no deposit/withdraw request with that code.")
-	# 	else:
-	# 		None
-	#################################
+	# 			await client.send_message(message.channel, "You don't have any bronze keys to open!")
+	# 	elif kind=="silver":
+	# 		if silver>=1:
+	# 			c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver-1, message.author.id))
+	# 		else:
+	# 			await client.send_message(message.channel, "You don't have any silver keys to open!")
+	# 	elif kind=="gold":
+	# 		if gold>=1:
+	# 			c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold-1, message.author.id))
+	# 		else:
+	# 			await client.send_message(message.channel, "You don't have any gold keys to open!")
+	# #silver 13226456
+	# ###############################
 	# elif message.content.startswith("$top"):
 	# 	game=(message.content).split(" ")[1]
 	# 	if game=="rs3" or game=="osrs" or game=="07":
@@ -977,228 +1011,7 @@ async def on_message(message):
 	# 		await client.send_message(message.channel, embed=embed)
 	# 	else:
 	# 		None
-	###################################
-	# elif message.content.startswith("$flower"):
-	# 	try:
-	# 		currency=(message.content).split(" ")[1]
-	# 		bet=formatok((message.content).split(" ")[2], currency)
-	# 		current=getvalue(message.author.id, currency, "rsmoney")
-	# 		number=random.randint(0,100)
-	# 		if number in range(96,101):
-	# 			index=6
-	# 		elif number in range(0,16):
-	# 			index=0
-	# 		elif number in range(16,32):
-	# 			index=1
-	# 		elif number in range(32,48):
-	# 			index=2
-	# 		elif number in range(48,64):
-	# 			index=3
-	# 		elif number in range(64,80):
-	# 			index=4
-	# 		elif number in range(80,96):
-	# 			index=5
-	# 		flower=flowers[index]
-	# 		sidecolor=sidecolors[index]
-	# 		picture=pictures[index]
-
-	# 		if isenough(bet, currency)[0]:	
-	# 			if current>=bet:
-	# 				win=False
-	# 				if (message.content).split(" ")[3]=="hot":
-	# 					if flower=="Red" or flower=="Orange" or flower=="Yellow":
-	# 						multiplier=2
-	# 						win=True
-	# 					else:
-	# 						multiplier=0
-	# 				elif (message.content).split(" ")[3]=="cold":
-	# 					if flower=="Blue" or flower=="Pastel" or flower=="Purple":
-	# 						multiplier=2
-	# 						win=True
-	# 					else:
-	# 						multiplier=0
-
-	# 				winnings=(bet*multiplier)
-	# 				if isinstance(winnings, float):
-	# 					if (winnings).is_integer():
-	# 						winnings=int(winnings)
-	# 				winnings=formatfromk(winnings, currency)
-
-	# 				if win==True:
-	# 					words=("Congratulations! The color of the flower was **"+flower+"**. "+str(message.author)+" won **"+winnings+"** "+currency+".")
-	# 					update_money(int(message.author.id), bet, currency)
-	# 				else:
-	# 					words=("Sorry, the color the flower was **"+flower+"**. "+str(message.author)+" lost **"+formatfromk(bet, currency)+"** "+currency+".")
-	# 					update_money(int(message.author.id), bet*-1, currency)
-
-	# 				embed = discord.Embed(description=words, color=sidecolor)
-	# 				embed.set_author(name=(str(message.author))[:-5]+"'s Gamble", icon_url=str(message.author.avatar_url))
-	# 				embed.set_thumbnail(url=picture)
-	# 				await client.send_message(message.channel, embed=embed)
-
-	# 				ticketbets(message.author.id, bet, currency)
-	# 				profit(win, currency, bet)
-
-	# 			else:
-	# 				await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much gold!")
-	# 		else:
-	# 			await client.send_message(message.channel, (isenough(bet, currency))[1])
-	# 	except:
-	# 	 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$flower (rs3 or 07) (Amount) (hot or cold)`.")
-	##########################
-	# elif message.content=="$profit":
-	# 	if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-	# 		c.execute("SELECT osrsprofit FROM data")
-	# 		osrsprofit=int(c.fetchone()[0])
-	# 		if osrsprofit<0:
-	# 			osrsprofit=0
-	# 		c.execute("SELECT rs3profit FROM data")
-	# 		rs3profit=int(c.fetchone()[0])
-	# 		if rs3profit<0:
-	# 			rs3profit=0
-	# 		total=formatfromk(rs3profit+(osrsprofit*6.5), "rs3")
-
-	# 		embed = discord.Embed(color=16773410)
-	# 		embed.add_field(name="RS3 Profit", value=formatfromk(rs3profit, "rs3"), inline=True)
-	# 		embed.add_field(name="07 Profit", value=formatfromk(osrsprofit, "07"), inline=True)
-	# 		embed.add_field(name="Total Profit (RS3)", value=total, inline=True)
-	# 		embed.set_author(name="Casino King Bot Profit", icon_url=str(message.server.icon_url))
-	# 		await client.send_message(message.channel, embed=embed)
-	# 	else:
-	# 		None
-	# ###########################
-	# elif message.content=="$reset profit":
-	# 	if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-	# 		c.execute("UPDATE data SET osrsprofit=0")
-	# 		c.execute("UPDATE data SET rs3profit=0")
-	# 		conn.commit()
-	# 		await client.send_message(message.channel, "Reset.")
-	# 	else:
-	# 		None
-	##########################
-	# elif message.content=="$claim 07":
-	# 	claimed=getvalue(message.author.id, "claimed", "rsmoney")
-	# 	if claimed==False:
-	# 		c.execute("UPDATE rsmoney SET claimed={}".format(True))
-	# 		update_money(message.author.id, 100, "07")
-	# 		await client.send_message(message.channel, "Claimed! Use `$w` to view your wallet.")
-	# 	else:
-	# 		await client.send_message(message.channel, "You have already claimed your free 100k 07!")
-	# ###########################
-	# elif message.content.startswith("$bet"):
-	# 	try:
-	# 		try:
-	# 			int(str(message.content).split(" ")[2][2:3])
-	# 			host=message.server.get_member(str(message.content).split(" ")[2][2:-1])
-	# 		except:
-	# 			host=message.server.get_member(str(message.content).split(" ")[2][3:-1])
-	# 		c.execute("SELECT id FROM hosts")
-	# 		hosts=c.fetchall()
-	# 		print(hosts[0])
-	# 		if int(host.id) in hosts[0]:
-	# 			currency=(message.content).split(" ")[1]
-	# 			bet=formatok((message.content).split(" ")[3], currency)
-	# 			current=getvalue(message.author.id, currency)
-	# 			if current>=bet:
-	# 				update_money(message.author.id, bet*-1, currency)
-	# 				if bet>=5000:
-	# 					tickets=getvalue(message.author.id, "tickets")
-	# 					c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+5, message.author.id))
-	# 					conn.commit()
-	# 				c.execute("UPDATE hosts SET bets='{}' WHERE id={}".format("<@"+str(message.author.id)+"> - "+formatfromk(bet, currency)+"\n", host.id))
-	# 				conn.commit()
-	# 				await client.send_message(message.channel, "You have bet "+formatfromk(bet, currency)+" "+currency+" on <@"+str(host.id)+">.")
-	# 			else:
-	# 				await client.send_message(message.channel, "You do not have enough gold to bet that much.")
-	# 		else:
-	# 			await client.send_message(message.channel, "That is not an open host.")
-	# 	except:
-	# 	 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bet (07 or rs3) (@HOST) (Amount)`.")
-	###################################
-	# elif message.content.startswith("$bets"):
-	# 	try:
-	# 		int(str(message.content).split(" ")[1][2:3])
-	# 		host=message.server.get_member(str(message.content).split(" ")[1][2:-1])
-	# 	except:
-	# 		host=message.server.get_member(str(message.content).split(" ")[1][3:-1])
-	# 	c.execute("SELECT id FROM hosts")
-	# 	hosts=c.fetchall()
-	# 	if int(host.id) in hosts[0]:
-	# 		c.execute("SELECT bets FROM hosts WHERE id={}".format(host.id))
-	# 		bets=str(c.fetchone()[0])
-	# 		embed = discord.Embed(color=0)
-	# 		embed.add_field(name="Bets", value=bets)
-	# 		embed.set_author(name="Bets On "+str(host), icon_url=str(host.avatar_url))
-	# 		await client.send_message(message.channel, embed=embed)	
-	# 	else:
-	# 		await client.send_message(message.channel, "That is not an open host.")
-	# ################################
-	# elif message.content.startswith("$addbet"):
-	# 	try:
-	# 		c.execute("SELECT id FROM hosts")
-	# 		hosts=c.fetchall()
-	# 		if int(message.author.id) in hosts[0]:
-	# 			try:
-	# 				int(str(message.content).split(" ")[1][2:3])
-	# 				bettor=message.server.get_member(str(message.content).split(" ")[1][2:-1])
-	# 			except:
-	# 				bettor=message.server.get_member(str(message.content).split(" ")[1][3:-1])
-	# 			bet=formatok((message.content).split(" ")[2], "rs3")
-	# 			bets=getvalue(message.author.id,"bets","hosts")
-	# 			c.execute("UPDATE hosts SET bets='{}' WHERE id={}".format(str(bets)+"<@"+str(bettor.id)+"> - "+formatfromk(bet, "rs3")+"\n", message.author.id))
-	# 			conn.commit()
-	# 			await client.send_message(message.channel, "You have added a bet of "+formatfromk(bet, "rs3")+" from "+str(bettor)+" on yourself.")
-	# 		else:
-	# 			await client.send_message(message.channel, "You must be an open host to add a bet to your pot.")
-	# 	except:
-	# 	 	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$addbet (@USER) (Amount)`.")
-	# ###############################
-	# elif message.content==("$open"):
-	# 	host=get(message.server.roles, name="Host")
-	# 	if host in message.author.roles:
-	# 		c.execute("INSERT INTO hosts VALUES (%s, %s, %s)", (int(message.author.id), "", ":fresh: "))
-	# 		conn.commit()
-	# 		await client.send_message(message.channel, "You are now open.")
-	# 	else:
-	# 		await client.send_message(message.channel, "You need the host role to open.")
-
-	# elif message.content==("$close"):
-	# 	host=get(message.server.roles, name="Host")
-	# 	if host in message.author.roles:
-	# 		c.execute("DELETE FROM hosts WHERE id={}".format(message.author.id))
-	# 		conn.commit()
-	# 		await client.send_message(message.channel, "You are now closed. See you later!")
-	# 	else:
-	# 		await client.send_message(message.channel, "You need the host role to close.")
-	# ###########################
-	# elif message.content.startswith("$streak"):
-	# 	try:
-	# 		int(str(message.content[10:11]))
-	# 		host=message.server.get_member(message.content[10:28])
-	# 	except:
-	# 		host=message.server.get_member(message.content[11:29])
-	# 	c.execute("SELECT id FROM hosts")
-	# 	hosts=c.fetchall()
-	# 	if int(host.id) in hosts[0]:
-	# 		streak=str(getvalue(host.id,"streak","hosts"))
-	# 		embed = discord.Embed(color=0, description=streak)
-	# 		embed.set_author(name=str(message.author)[:-5]+"'s Wallet", icon_url=str(host.avatar_url))
-	# 		await client.send_message(message.channel, embed=embed)	
-	# 	else:
-	# 		await client.send_message(message.channel, "That is not an open host.")
-	# #########################
-	# elif message.content==("$win") or message.content==("$loss"):
-	# 	turnout=str(message.content)[1:]
-	# 	c.execute("SELECT id FROM hosts")
-	# 	hosts=c.fetchall()
-	# 	if int(message.author.id) in hosts[0]:
-	# 		streak=getvalue(message.author.id,"streak","hosts")
-	# 		c.execute("UPDATE hosts SET streak={} WHERE id={}".format(streak+":"+turnout+": ", message.author.id))
-	# 		conn.commit()
-	# 		await client.send_message(message.channel, "Added a "+turnout+" to your streak!")
-	# 	else:
-	# 		await client.send_message(message.channel, "You are not an open host.")
-	# #############################
+	###########################################
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
