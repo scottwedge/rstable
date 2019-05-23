@@ -27,7 +27,7 @@ c.execute("""CREATE TABLE rsmoney (
 				silver integer,
 				gold integer
 				)""")
-c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0))
+c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0))
 conn.commit()
 
 # c.execute("DROP TABLE data")
