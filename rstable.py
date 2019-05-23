@@ -935,7 +935,7 @@ async def on_message(message):
 		bronze=getvalue(message.author.id, "bronze", "rsmoney")
 		silver=getvalue(message.author.id, "silver", "rsmoney")
 		gold=getvalue(message.author.id, "gold", "rsmoney")
-		buyer=getvalue(message.author.id "07", "rsmoney")
+		buyer=getvalue(message.author.id, "07", "rsmoney")
 		if kind=="bronze":
 			if buyer<250:
 				await client.send_message(message.channel, "You don't have enough to buy a bronze key.")
