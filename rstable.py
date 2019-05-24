@@ -604,7 +604,8 @@ async def on_message(message):
 											#"\n `$withdraw (rs3 or 07) (AMOUNT)` - Notifes a cashier that you want to withdraw the amount from your wallet\n" +
 											"\n `$transfer (@USER) (AMOUNT) (rs3 or 07)` - Transfers that amount from your wallet to the user's wallet\n" +
 											"\n `$wager`, `$total bet` or `$tb` - Shows your total amount bet for rs3 and 07\n" +
-											"\n `$thisweek` - Shows your total amount bet for rs3 and 07 this week\n", color=16771099)
+											"\n `$thisweek` - Shows your total amount bet for rs3 and 07 this week\n" +
+											"\n `$setseed (SEED)` - Sets your client seed for provably fair gambling\n", color=16771099)
 
 		embed.set_author(name="Bot Commands", icon_url=str(message.server.icon_url))
 		await client.send_message(message.channel, embed=embed)
@@ -655,66 +656,6 @@ async def on_message(message):
 				None
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$transfer (@user) (Amount you want to give) (rs3 or 07)`.")
-	###################################
-	# elif ((message.content).lower()).startswith("$withdraw") or ((message.content).lower()).startswith("$deposit"):
-	# 	try:
-	# 		enough=True
-	# 		cashing=formatok(str(message.content).split(" ")[2], str(message.content).split(" ")[1])
-	# 		currency=str(message.content).split(" ")[1]
-	# 		current=getvalue(int(message.author.id), currency, "rsmoney")
-
-	# 		if message.content.startswith("$withdraw"):
-	# 			way="withdraw"
-	# 			if currency=="rs3":
-	# 				if cashing<10000:
-	# 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must withdraw at least **10m** rs3.")
-	# 					enough=False
-	# 			elif currency=="07":
-	# 				if cashing<2000:
-	# 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must withdraw at least **2m** 07.")
-	# 					enough=False
-
-	# 			if cashing>current:
-	# 				await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much money to withdraw!")
-	# 				enough=False
-					
-	# 		else:
-	# 			way="deposit"
-	# 			if currency=="rs3":
-	# 				if cashing<5000:
-	# 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must deposit atleast **5m** rs3.")
-	# 					enough=False
-	# 			elif currency=="07":
-	# 				if cashing<1000:
-	# 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You must deposit atleast **1m** 07.")
-	# 					enough=False
-
-	# 		if currency=="rs3" or currency=="07":
-	# 			if enough==True:
-	# 				cashing=formatfromk(cashing, currency)
-	# 				c.execute("SELECT code FROM cash")
-	# 				codelist=c.fetchall()
-	# 				codes=[]
-	# 				for i in codelist:
-	# 					codes.append(int(i[0]))
-	# 				while True:
-	# 					code=random.randint(1,999)
-	# 					if code in codes:
-	# 						continue
-	# 					else:
-	# 						break
-	# 				c.execute("INSERT INTO cash VALUES (%s, %s, %s)", (str(message.author.id), way, code))
-	# 				conn.commit()
-	# 				await client.send_message(message.server.get_channel("459923177376579596"), "<@&459899438643675136>, <@"+str(message.author.id)+"> wants to "+way+" **"+cashing+"** "+currency+". Use `$accept "+str(code)+"`.")
-	# 				embed = discord.Embed(description="A message has been sent to a cashier. Your request will be processed and you will be messaged soon.", color=5174318)
-	# 				embed.set_author(name=way.title(), icon_url=str(message.server.icon_url))
-	# 				await client.send_message(message.channel, embed=embed)
-	# 			else:
-	# 				None
-	# 		else:
-	# 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `"+str(message.content).split(" ")[0]+" (rs3 or 07) (Amount you want to cash in/out)`.")
-	# 	except:
-	# 		await client.send_message(message.channel, "An **error** has occured. Make sure you use `"+str(message.content).split(" ")[0]+" (rs3 or 07) (Amount you want to cash in/out)`.")
 	###################################
 	elif message.content.startswith("$53") or message.content.startswith("$50") or message.content.startswith("$75") or message.content.startswith("$95"):
 		try:
@@ -937,23 +878,23 @@ async def on_message(message):
 		gold=getvalue(message.author.id, "gold", "rsmoney")
 		buyer=getvalue(message.author.id, "07", "rsmoney")
 		if kind=="bronze":
-			if buyer<250:
-				await client.send_message(message.channel, "You don't have enough to buy a bronze key.")
+			if buyer<250*amount:
+				await client.send_message(message.channel, "You don't have enough to buy that many bronze keys.")
 			else:
-				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+1, message.author.id))
-				update_money(message.author.id, -250, "07")
+				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+amount, message.author.id))
+				update_money(message.author.id, -250*amount, "07")
 		elif kind=="silver":
-			if buyer<750:
-				await client.send_message(message.channel, "You don't have enough to buy a silver key.")
+			if buyer<750*amount:
+				await client.send_message(message.channel, "You don't have enough to buy that many silver keys.")
 			else:
-				c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+1, message.author.id))
-				update_money(message.author.id, -750, "07")
+				c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+amount, message.author.id))
+				update_money(message.author.id, -750*amount, "07")
 		elif kind=="gold":
-			if buyer<2000:
-				await client.send_message(message.channel, "You don't have enough to buy a gold key.")
+			if buyer<2000*amount:
+				await client.send_message(message.channel, "You don't have enough to buy that many gold keys.")
 			else:
-				c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold+1, message.author.id))
-				update_money(message.author.id, -2000, "07")
+				c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold+amount, message.author.id))
+				update_money(message.author.id, -2000*amount, "07")
 		conn.commit()
 
 		embed = discord.Embed(description="You successfully purchased **"+str(amount)+"** key(s)!", color=5174318)
