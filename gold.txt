@@ -1,25 +1,25 @@
 Primordial Boots|32000|https://cdn.discordapp.com/attachments/580840009834168320/581246073478316048/Primordial_boots_detail.png
-Armadyl Crossbow|27200|
-3rd Age Robe Bottom|16399|
-Zamorak Spear|14699|
-Bandos Godsword|10004|
-Archers Ring|6000|
-Zamorak Godsword|5200|
-OSRS Bond|3900|
-Monk's Robe (g)|3000|
-Uncut Onyx|2800|
-2500 Platinum Tokens|2500|
-Karil's Armor Set|2354|
-Ancient Statuette|1988|
-Thammaron's Sceptre (u)|1820|
-Blessed Spirit Shield|1380|
-Gilded Kiteshield|1100|
-Obsidian Platelegs|977|
-Obsidian Cape|775|
-Devout Boots|685|
-Gnome Scarf|652|
-Heavy Ballista|627|
-2 Silver Keys|400|
-2 Bronze Keys|300|
-Ancient D'hide Set|393|
-Monk's Robe Top (t)|326|
+Armadyl Crossbow|27200|https://cdn.discordapp.com/attachments/580840009834168320/581246264692178983/latest.png
+3rd Age Robe Bottom|16399|https://cdn.discordapp.com/attachments/580840009834168320/581246411111137283/latest.png
+Zamorak Spear|14699|https://cdn.discordapp.com/attachments/580840009834168320/581246547748978698/latest.png
+Bandos Godsword|10004|https://cdn.discordapp.com/attachments/580840009834168320/581246888293040155/latest.png
+Archers Ring|6000|https://cdn.discordapp.com/attachments/580840009834168320/581247104467599375/latest.png
+Zamorak Godsword|5200|https://cdn.discordapp.com/attachments/580840009834168320/581247197396598807/latest.png
+OSRS Bond|3900|https://cdn.discordapp.com/attachments/580840009834168320/581247410773164042/Old_school_bond_detail.png
+Monk's Robe (g)|3000|https://cdn.discordapp.com/attachments/580840009834168320/581247606697623552/202.png
+Uncut Onyx|2800|https://cdn.discordapp.com/attachments/580840009834168320/581247908368744571/latest.png
+2500 Platinum Tokens|2500|https://cdn.discordapp.com/attachments/580840009834168320/581248067752165385/latest.png
+Karil's Armor Set|2354|https://cdn.discordapp.com/attachments/580840009834168320/581248469558099999/Karil27s_armour_set_detail.png
+Ancient Statuette|1988|https://cdn.discordapp.com/attachments/580840009834168320/581248663129554964/latest.png
+Thammaron's Sceptre (u)|1820|https://cdn.discordapp.com/attachments/580840009834168320/581248798567956490/latest.png
+Blessed Spirit Shield|1380|https://cdn.discordapp.com/attachments/580840009834168320/581248948031848464/latest.png
+Gilded Kiteshield|1100|https://cdn.discordapp.com/attachments/580840009834168320/581249361963384838/latest.png
+Obsidian Platelegs|977|https://cdn.discordapp.com/attachments/580840009834168320/581249441269547008/latest.png
+Obsidian Cape|775|https://cdn.discordapp.com/attachments/580840009834168320/581249526942400533/latest.png
+Devout Boots|685|https://cdn.discordapp.com/attachments/580840009834168320/581249614183923712/Devout_boots_detail.png
+Gnome Scarf|652|https://cdn.discordapp.com/attachments/580840009834168320/581249679438643260/Gnome_scarf_detail.png
+Heavy Ballista|627|https://cdn.discordapp.com/attachments/580840009834168320/581249747969638400/latest.png
+2 Silver Keys|400|https://cdn.discordapp.com/attachments/580840009834168320/581249827346579458/Silver_key_28H.png
+2 Bronze Keys|300|https://cdn.discordapp.com/attachments/580840009834168320/581249861979078667/latest.png
+Ancient D'hide Set|393|https://cdn.discordapp.com/attachments/580840009834168320/581249988772888617/latest.png
+Monk's Robe Top (t)|326|https://cdn.discordapp.com/attachments/580840009834168320/581250076425453578/1200px-Monk27s_robe_top_28t29_detail.png
