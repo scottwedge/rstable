@@ -11,7 +11,7 @@ Dharok's Helm|364|https://cdn.discordapp.com/attachments/580787390520492062/5807
 Dragon Sq. Shield|300|https://cdn.discordapp.com/attachments/580787390520492062/580787704002772993/unknown.png
 Purple Sweets|250|https://cdn.discordapp.com/attachments/580787390520492062/580787817047654405/unknown.png
 Golden Apron|197|https://cdn.discordapp.com/attachments/580787390520492062/580787752337932339/unknown.png
-Noted Items|100|
+Noted Items|100|https://cdn.discordapp.com/attachments/580787390520492062/581921686086221835/100.png
 Zamorak Platebody|78|https://cdn.discordapp.com/attachments/580787390520492062/580787832986271759/unknown.png
 Dragon Scimitar|59|https://cdn.discordapp.com/attachments/580787390520492062/580787690010574890/unknown.png
 Dragon Dagger|43|https://cdn.discordapp.com/attachments/580787390520492062/580787636197916677/unknown.png

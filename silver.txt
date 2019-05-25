@@ -13,7 +13,7 @@ Occult Necklace|936|https://cdn.discordapp.com/attachments/580791377424678919/58
 New Crystal Bow|909|https://cdn.discordapp.com/attachments/580791377424678919/580791744505839647/unknown.png
 Obsidian Helmet|836|https://cdn.discordapp.com/attachments/580791377424678919/580791766156967936/unknown.png
 New Crystal Shield|754|https://cdn.discordapp.com/attachments/580791377424678919/580791783814987789/unknown.png
-Dargon Harpoon|661|https://cdn.discordapp.com/attachments/580791377424678919/580791798625206314/unknown.png
+Dragon Harpoon|661|https://cdn.discordapp.com/attachments/580791377424678919/580791798625206314/unknown.png
 Ancient Dragon Hide Set|637|https://cdn.discordapp.com/attachments/580791377424678919/580791816614313984/unknown.png
 Dragon Sq. Shield|300|https://cdn.discordapp.com/attachments/580791377424678919/580791827880214539/unknown.png
 Gilded Med Helm|288|https://cdn.discordapp.com/attachments/580791377424678919/580791843164389377/unknown.png
