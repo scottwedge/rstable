@@ -955,7 +955,7 @@ async def on_message(message):
 
 		embed = discord.Embed(description="You recieved a **"+str(item)+"**!", color=13226456)
 		embed.add_field(name="Price", value=str(price), inline=True)
-		embed.set_author(name=title(kind)+" Key Prize", icon_url=str(message.author.avatar_url))
+		embed.set_author(name=kind.title()+" Key Prize", icon_url=str(message.author.avatar_url))
 		embed.set_thumbnail(url=str(url))
 		await client.send_message(message.channel, embed=embed)
 	# ###############################
