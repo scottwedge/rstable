@@ -877,9 +877,9 @@ async def on_message(message):
 
 		embed = discord.Embed(color=13226456)
 		embed.set_author(name=(str(message.author))[:-5]+"'s Keys", icon_url=str(message.author.avatar_url))
-		embed.add_field(name="Bronze", value="**"+bronze+"**", inline=True)
-		embed.add_field(name="Silver", value="**"+silver+"**", inline=True)
-		embed.add_field(name="Gold", value="**"+gold+"**", inline=True)
+		embed.add_field(name="Bronze", value="**"+str(bronze)+"**", inline=True)
+		embed.add_field(name="Silver", value="**"+str(silver)+"**", inline=True)
+		embed.add_field(name="Gold", value="**"+str(gold)+"**", inline=True)
 		await client.send_message(message.channel, embed=embed)
 	###############################
 	elif message.content.startswith("$buykey"):
