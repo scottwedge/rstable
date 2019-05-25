@@ -938,7 +938,7 @@ async def on_message(message):
 		elif kind=="gold":
 			if gold>=1:
 				c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold-1, message.author.id))
-				ranges=[range(0,1), range(1,3), range(3,6), range(6,10), range(10,21), range(21,41), range(41,63), range(63,88), range(88,114), range(114,141), range(141,181), range(181,233), range(233,293), range(293,373), range(363,443), range(443,493), range(493,545), range(545,599), range(599,655), range(655,709), range(709,761), range(761,861), range(861,930), range(930,966), range(966,1000)]
+				ranges=[range(0,1), range(1,3), range(3,6), range(6,10), range(10,18), range(18,28), range(28,50), range(50,75), range(75,101), range(101,129), range(129,169), range(169,229), range(229,279), range(279,354), range(354,419), range(419,479), range(479,531), range(531,585), range(585,641), range(641,706), range(706,761), range(761,861), range(861,930), range(930,966), range(966,1000)]
 				sidecolor=16759822
 			else:
 				await client.send_message(message.channel, "You don't have any gold keys to open!")
