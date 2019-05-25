@@ -1,21 +1,21 @@
-OSRS Bond|3157
-Infinity Boots|1259
-Dragon Chainbody|956
-Black Armor Set (g)|797
-Darkbow|600
-Seers Ring|580
-Steam Battle Staff|506
-Dragon Boots|490
-Golden Chef's Hat|494
-Dharok's Helm|364
-Dragon Sq. Shield|300
-Purple Sweets|250
-Golden Apron|197
-Noted Items|100
-Zamorak Platebody|78
-Dragon Scimitar|59
-Dragon Dagger|43
-Granite Body|67
-Bandos Mitre|26
-3000 Feathers|6
-The Evil Golden Keg|1
+OSRS Bond|3157|https://cdn.discordapp.com/attachments/580787390520492062/580787479104192521/unknown.png
+Infinity Boots|1259|https://cdn.discordapp.com/attachments/580787390520492062/580787496388919325/unknown.png
+Dragon Chainbody|956|https://cdn.discordapp.com/attachments/580787390520492062/580787527921827850/unknown.png
+Black Armor Set (g)|797|https://cdn.discordapp.com/attachments/580787390520492062/580787564605210644/unknown.png
+Darkbow|600|https://cdn.discordapp.com/attachments/580787390520492062/580787601649434631/unknown.png
+Seers Ring|580|https://cdn.discordapp.com/attachments/580787390520492062/580787786295279616/unknown.png
+Steam Battle Staff|506|https://cdn.discordapp.com/attachments/580787390520492062/580787801017024544/unknown.png
+Dragon Boots|490|https://cdn.discordapp.com/attachments/580787390520492062/580787653931171861/unknown.png
+Golden Chef's Hat|494|https://cdn.discordapp.com/attachments/580787390520492062/580787582741250058/unknown.png
+Dharok's Helm|364|https://cdn.discordapp.com/attachments/580787390520492062/580787619961765889/unknown.png
+Dragon Sq. Shield|300|https://cdn.discordapp.com/attachments/580787390520492062/580787704002772993/unknown.png
+Purple Sweets|250|https://cdn.discordapp.com/attachments/580787390520492062/580787817047654405/unknown.png
+Golden Apron|197|https://cdn.discordapp.com/attachments/580787390520492062/580787752337932339/unknown.png
+Noted Items|100|
+Zamorak Platebody|78|https://cdn.discordapp.com/attachments/580787390520492062/580787832986271759/unknown.png
+Dragon Scimitar|59|https://cdn.discordapp.com/attachments/580787390520492062/580787690010574890/unknown.png
+Dragon Dagger|43|https://cdn.discordapp.com/attachments/580787390520492062/580787636197916677/unknown.png
+Granite Body|67|https://cdn.discordapp.com/attachments/580787390520492062/580787772084977677/unknown.png
+Bandos Mitre|26|https://cdn.discordapp.com/attachments/580787390520492062/580787547349712926/unknown.png
+3000 Feathers|6|https://cdn.discordapp.com/attachments/580787390520492062/580787736886247475/unknown.png
+The Evil Golden Keg|1|https://cdn.discordapp.com/attachments/580787390520492062/580787722659168304/unknown.png

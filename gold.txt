@@ -1,25 +1,25 @@
-Primordial Boots|32000
-Armadyl Crossbow|27200
-3rd Age Robe Bottom|16399
-Zamorak Spear|14699
-Bandos Godsword|10004
-Archers Ring|6000
-Zamorak Godsword|5200
-OSRS Bond|3900
-Monk's Robe (g)|3000
-Uncut Onyx|2800
-2500 Platinum Tokens|2500
-Karil's Armor Set|2354
-Ancient Statuette|1988
-Thammaron's Sceptre (u)|1820
-Blessed Spirit Shield|1380
-Gilded Kiteshield|1100
-Obsidian Platelegs|977
-Obsidian Cape|775
-Devout Boots|685
-Gnome Scarf|652
-Heavy Ballista|627
-2 Silver Keys|400
-2 Bronze Keys|300
-Ancient D'hide Set|393
-Monk's Robe Top (t)|326
+Primordial Boots|32000|https://cdn.discordapp.com/attachments/580840009834168320/581246073478316048/Primordial_boots_detail.png
+Armadyl Crossbow|27200|
+3rd Age Robe Bottom|16399|
+Zamorak Spear|14699|
+Bandos Godsword|10004|
+Archers Ring|6000|
+Zamorak Godsword|5200|
+OSRS Bond|3900|
+Monk's Robe (g)|3000|
+Uncut Onyx|2800|
+2500 Platinum Tokens|2500|
+Karil's Armor Set|2354|
+Ancient Statuette|1988|
+Thammaron's Sceptre (u)|1820|
+Blessed Spirit Shield|1380|
+Gilded Kiteshield|1100|
+Obsidian Platelegs|977|
+Obsidian Cape|775|
+Devout Boots|685|
+Gnome Scarf|652|
+Heavy Ballista|627|
+2 Silver Keys|400|
+2 Bronze Keys|300|
+Ancient D'hide Set|393|
+Monk's Robe Top (t)|326|
