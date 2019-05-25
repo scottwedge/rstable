@@ -923,18 +923,21 @@ async def on_message(message):
 			if bronze>=1:
 				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze-1, message.author.id))
 				ranges=[range(0,7), range(7,15), range(15,24), range(24,40), range(40,59), range(59,80), range(80,103), range(103,128), range(128,157), range(157,192), range(192,248), range(248,340), range(340,493), range(493,594), range(594,685), range(685,763), range(763,829), range(829,891), range(891,946), range(946,994), range(994,1000)]
+				sidecolor=11880979
 			else:
 				await client.send_message(message.channel, "You don't have any bronze keys to open!")
 		elif kind=="silver":
 			if silver>=1:
 				c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver-1, message.author.id))
 				ranges=[range(0,1), range(1,2), range(2,12), range(12,27), range(27,45), range(45,65), range(65,100), range(100,140), range(140,180), range(180,221), range(221,264), range(264,308), range(308,354), range(354,407), range(407,463), range(463,519), range(519,574), range(574,628), range(628,679), range(679,717), range(717,765), range(765,813), range(864,920), range(920,955), range(955,1000)]	
+				sidecolor=13226456
 			else:
 				await client.send_message(message.channel, "You don't have any silver keys to open!")
 		elif kind=="gold":
 			if gold>=1:
 				c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold-1, message.author.id))
 				ranges=[range(0,1000)]
+				sidecolor=16759822
 			else:
 				await client.send_message(message.channel, "You don't have any gold keys to open!")
 
@@ -953,8 +956,8 @@ async def on_message(message):
 
 		update_money(message.author.id, int(price), "07")
 
-		embed = discord.Embed(description="You recieved item: **"+str(item)+"**!", color=13226456)
-		embed.add_field(name="Price", value="*"+formatfromk(price, "07")+"*", inline=True)
+		embed = discord.Embed(description="You recieved item: **"+str(item)+"**!", color=sidecolor)
+		embed.add_field(name="Price", value="*"+formatfromk(int(price), "07")+"*", inline=True)
 		embed.set_author(name=kind.title()+" Key Prize", icon_url=str(message.author.avatar_url))
 		embed.set_thumbnail(url=str(url))
 		await client.send_message(message.channel, embed=embed)
