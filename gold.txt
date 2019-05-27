@@ -19,7 +19,7 @@ Obsidian Cape|775|https://cdn.discordapp.com/attachments/580840009834168320/5812
 Devout Boots|685|https://cdn.discordapp.com/attachments/580840009834168320/581249614183923712/Devout_boots_detail.png
 Gnome Scarf|652|https://cdn.discordapp.com/attachments/580840009834168320/581249679438643260/Gnome_scarf_detail.png
 Heavy Ballista|627|https://cdn.discordapp.com/attachments/580840009834168320/581249747969638400/latest.png
-Silver Key|400|https://cdn.discordapp.com/attachments/580840009834168320/581249827346579458/Silver_key_28H.png
-Bronze Key|300|https://cdn.discordapp.com/attachments/580840009834168320/581249861979078667/latest.png
+2 Silver Keys|0|https://cdn.discordapp.com/attachments/580840009834168320/581249827346579458/Silver_key_28H.png
+2 Bronze Keys|0|https://cdn.discordapp.com/attachments/580840009834168320/581249861979078667/latest.png
 Ancient D'hide Set|393|https://cdn.discordapp.com/attachments/580840009834168320/581249988772888617/latest.png
 Monk's Robe Top (t)|326|https://cdn.discordapp.com/attachments/580840009834168320/581250076425453578/1200px-Monk27s_robe_top_28t29_detail.png
