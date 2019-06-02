@@ -306,6 +306,7 @@ def pickflower():
 
 def scorefp(hand):
 	pairs=0
+	three=False
 	for i in hand:
 		if hand.count(i)==5:
 			return 6
