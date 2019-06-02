@@ -282,6 +282,51 @@ def profit(win, currency, bet):
 		elif win==False:
 			c.execute("UPDATE data SET osrsprofit={}".format(osrsprofit+bet))
 	conn.commit()
+
+def pickflower():
+	roll=random.randint(0,9990)
+	if roll in range(0,10):
+		return 8#"White"
+	elif roll in range(10,20):
+		return 7#"Black"
+	elif roll in range(20,1486):
+		return 6#"Mixed"
+	elif roll in range(1486,2564):
+		return 5#"Assorted"
+	elif roll in range(2564,4102):
+		return 4#"Orange"
+	elif roll in range(4102,5587):
+		return 3#"Purple"
+	elif roll in range(5587,7052):
+		return 2#"Yellow"
+	elif roll in range(7052,8582):
+		return 1#"Blue"
+	elif roll in range(8582,9990):
+		return 0#"Red"
+
+def scorefp(hand):
+	pairs=0
+	for i in hand:
+		if hand.count(i)==5:
+			return 6
+		elif hand.count(i)==4:
+			return 5
+
+		if hand.count(i)==3:
+			three=True
+		if hand.count(i)==2:
+			pairs+=1
+
+		if pairs>=1 and three==True:
+			return 4
+		elif three==True:
+			return 3
+		elif pairs>=3:
+			return 2
+		elif pairs==1 or pairs==2:
+			return 1
+
+	return 0
 ######################################################################################
 
 #Predefined Variables
@@ -289,7 +334,7 @@ def profit(win, currency, bet):
 colors=["A","B","C","D","E","F","0","1","2","3","4","5","6","7","8","9"]
 nextgiveaway=1
 participants=[]
-flowers=["Red","Orange","Yellow","Pastel","Blue","Purple","Mixed"]
+flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
 sidecolors=[16711680, 16743712, 16776960, 7399068, 1275391, 16730111, 16777215]
 pictures=["https://vignette.wikia.nocookie.net/2007scape/images/8/8d/Red_flowers.png/revision/latest?cb=20151223232624",
 			"https://vignette.wikia.nocookie.net/2007scape/images/f/f9/Orange_flowers.png/revision/latest?cb=20151223232623",
@@ -957,6 +1002,14 @@ async def on_message(message):
 				price=(i.strip("\n")).split("|")[1]
 				url=(i.strip("\n")).split("|")[2]
 
+		bronze=getvalue(message.author.id, "bronze", "rsmoney")
+		silver=getvalue(message.author.id, "silver", "rsmoney")
+		if item=="2 Bronze Keys":
+			c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, message.author.id))
+		elif item=="2 Silver Keys":
+			c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, message.author.id))
+		conn.commit()
+
 		update_money(message.author.id, int(price), "07")
 
 		embed = discord.Embed(description="You recieved item: **"+str(item)+"**!", color=sidecolor)
@@ -965,6 +1018,46 @@ async def on_message(message):
 		embed.set_thumbnail(url=str(url))
 		await client.send_message(message.channel, embed=embed)
 	# ###############################
+	elif message.content.startswith("$fp"):
+		game=str(message.content).split(" ")[2]
+		bet=formatok(str(message.content).split(" ")[1], game)
+		current=getvalue(message.author.id, game,"rsmoney")
+
+		if isenough(bet, game)[0]:
+			if current>=bet:
+				botflowers=[]
+				playerflowers=[]
+				for i in range(5):
+					botflowers.append(pickflower())
+					playerflowers.append(pickflower())
+
+				pprint=""
+				bprint=""
+				for i in playerflowers:
+					pprint+=get(client.get_all_emojis(), name=emojis[i])
+				for i in botflowers:
+					bprint+=get(client.get_all_emojis(), name=emojis[i])
+
+				if scorefp(playerflowers)==scorefp(botflowers):
+					embed = discord.Embed(description="Tie! 10% \\commission taken.", color=16776960)
+					update_money(message.author.id, bet*-0.1, game)
+				elif scorefp(playerflowers)>scorefp(botflowers):
+					embed = discord.Embed(description="Congratulations! You won "+formatfromk(bet*2, game)+"!", color=3997475)
+					update_money(message.author.id, bet, game)
+				elif scorefp(playerflowers)<scorefp(botflowers):
+					embed = discord.Embed(description="House wins. You lost "+formatfromk(bet, game)+".", color=16718121)
+					update_money(message.author.id, bet*-1, game)
+
+				embed.add_field(name="Player Hand", value=fprint, inline=True)
+				embed.add_field(name="House Hand", value=bprint, inline=True)
+				embed.set_author(name="Flower Poker", icon_url=str(message.author.avatar_url))
+				await client.send_message(message.channel, embed=embed)
+
+			else:
+				await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+		else:
+			await client.send_message(message.channel, (isenough(bet, game))[1])
+	###############################
 	# elif message.content.startswith("$top"):
 	# 	game=(message.content).split(" ")[1]
 	# 	if game=="rs3" or game=="osrs" or game=="07":
