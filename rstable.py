@@ -1044,7 +1044,7 @@ async def on_message(message):
 					embed = discord.Embed(description="House wins. You lost "+formatfromk(bet, game)+".", color=16718121)
 					update_money(message.author.id, bet*-1, game)
 
-				embed.add_field(name="Player Hand", value=fprint, inline=True)
+				embed.add_field(name="Player Hand", value=pprint, inline=True)
 				embed.add_field(name="House Hand", value=bprint, inline=True)
 				embed.set_author(name="Flower Poker", icon_url=str(message.author.avatar_url))
 				await client.send_message(message.channel, embed=embed)
