@@ -334,15 +334,8 @@ def scorefp(hand):
 colors=["A","B","C","D","E","F","0","1","2","3","4","5","6","7","8","9"]
 nextgiveaway=1
 participants=[]
-flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
-sidecolors=[16711680, 16743712, 16776960, 7399068, 1275391, 16730111, 16777215]
-pictures=["https://vignette.wikia.nocookie.net/2007scape/images/8/8d/Red_flowers.png/revision/latest?cb=20151223232624",
-			"https://vignette.wikia.nocookie.net/2007scape/images/f/f9/Orange_flowers.png/revision/latest?cb=20151223232623",
-			"https://vignette.wikia.nocookie.net/2007scape/images/b/b8/Yellow_flowers.png/revision/latest?cb=20151223232627",
-			"https://vignette.wikia.nocookie.net/2007scape/images/8/8f/Assorted_flowers.png/revision/latest?cb=20151223232621",
-			"https://vignette.wikia.nocookie.net/2007scape/images/5/59/Blue_flowers.png/revision/latest?cb=20151223232622",
-			"https://vignette.wikia.nocookie.net/2007scape/images/c/c3/Purple_flowers.png/revision/latest?cb=20151223232623",
-			"https://vignette.wikia.nocookie.net/2007scape/images/e/ec/Mixed_flowers.png/revision/latest?cb=20151223232622"]
+
+
 
 
 async def my_background_task():
@@ -1033,6 +1026,8 @@ async def on_message(message):
 
 				pprint=""
 				bprint=""
+				#flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
+				emojis=["rf","bf","yf","pf","of","af","mf","bf","wf"]
 				for i in playerflowers:
 					pprint+=get(client.get_all_emojis(), name=emojis[i])
 				for i in botflowers:
