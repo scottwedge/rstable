@@ -1028,14 +1028,14 @@ async def on_message(message):
 				pprint=""
 				bprint=""
 				#flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
-				emojis=["rf","bf","yf","pf","of","af","mf","bf","wf"]
+				emojis=["rf","bf","yf","pf~1","of","pf","raf","bf","wf"]
 				for i in playerflowers:
 					pprint+=str(get(client.get_all_emojis(), name=emojis[i]))
 				for i in botflowers:
 					bprint+=str(get(client.get_all_emojis(), name=emojis[i]))
 
 				if scorefp(playerflowers)==scorefp(botflowers):
-					embed = discord.Embed(description="Tie! 10% \\commission taken.", color=16776960)
+					embed = discord.Embed(description="Tie! 10% commission taken.", color=16776960)
 					update_money(message.author.id, bet*-0.1, game)
 				elif scorefp(playerflowers)>scorefp(botflowers):
 					embed = discord.Embed(description="Congratulations! You won "+formatfromk(bet*2, game)+"!", color=3997475)
