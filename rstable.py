@@ -339,6 +339,8 @@ def scorefp(hand):
 			return 3
 		else:
 			return returned+1
+
+	return returned
 ######################################################################################
 
 #Predefined Variables
