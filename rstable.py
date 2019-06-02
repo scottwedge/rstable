@@ -307,11 +307,12 @@ def pickflower():
 def scorefp(hand):
 	pairs=0
 	three=False
+	returned=0
 	for i in hand:
 		if hand.count(i)==5:
-			return 6
+			returned=6
 		elif hand.count(i)==4:
-			return 5
+			returned=5
 
 		if hand.count(i)==3:
 			three=True
@@ -319,15 +320,25 @@ def scorefp(hand):
 			pairs+=1
 
 		if pairs>=1 and three==True:
-			return 4
+			returned=4
 		elif three==True:
-			return 3
+			returned=3
 		elif pairs>=3:
-			return 2
+			returned=2
 		elif pairs==1 or pairs==2:
-			return 1
+			returned=1
 
-	return 0
+	if 7 in hand and 8 in hand:
+		return 7
+	elif 7 in hand or 8 in hand:
+		if returned==3:
+			return 5
+		elif returned==2:
+			return 4
+		elif returned==1:
+			return 3
+		else:
+			return returned+1
 ######################################################################################
 
 #Predefined Variables
