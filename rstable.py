@@ -1028,7 +1028,7 @@ async def on_message(message):
 				pprint=""
 				bprint=""
 				#flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
-				emojis=["rf","bf","yf","pf~1","of","pf","raf","bf","wf"]
+				emojis=["rf","blf","yf","pf~1","of","pf","raf","bf","wf"]
 				for i in playerflowers:
 					pprint+=str(get(client.get_all_emojis(), name=emojis[i]))
 				for i in botflowers:
