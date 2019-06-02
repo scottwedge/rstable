@@ -1029,6 +1029,7 @@ async def on_message(message):
 		game=str(message.content).split(" ")[2]
 		bet=formatok(str(message.content).split(" ")[1], game)
 		current=getvalue(message.author.id, game,"rsmoney")
+		ticketbets(message.author.id, bet, game)
 
 		if isenough(bet, game)[0]:
 			if current>=bet:
@@ -1041,7 +1042,7 @@ async def on_message(message):
 				pprint=""
 				bprint=""
 				#flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
-				emojis=["rf","blf","yf","pf~1","of","pf","raf","bf","wf"]
+				emojis=["rf","blf","yf","puf","of","pf","raf","bf","wf"]
 				for i in playerflowers:
 					pprint+=str(get(client.get_all_emojis(), name=emojis[i]))
 				for i in botflowers:
