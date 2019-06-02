@@ -1029,9 +1029,9 @@ async def on_message(message):
 				#flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
 				emojis=["rf","bf","yf","pf","of","af","mf","bf","wf"]
 				for i in playerflowers:
-					pprint+=get(client.get_all_emojis(), name=emojis[i])
+					pprint+=str(get(client.get_all_emojis(), name=emojis[i]))
 				for i in botflowers:
-					bprint+=get(client.get_all_emojis(), name=emojis[i])
+					bprint+=str(get(client.get_all_emojis(), name=emojis[i]))
 
 				if scorefp(playerflowers)==scorefp(botflowers):
 					embed = discord.Embed(description="Tie! 10% \\commission taken.", color=16776960)
