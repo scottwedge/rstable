@@ -12,35 +12,35 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 c=conn.cursor()
 
-c.execute("DROP TABLE rsmoney")
-c.execute("""CREATE TABLE rsmoney (
-				id bigint,
-				rs3 integer,
-				osrs integer,
-				rs3total bigint,
-				osrstotal bigint,
-				rs3week bigint,
-				osrsweek bigint,
-				clientseed text,
-				privacy boolean,
-				bronze integer,
-				silver integer,
-				gold integer
-				)""")
-c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0))
-conn.commit()
+# c.execute("DROP TABLE rsmoney")
+# c.execute("""CREATE TABLE rsmoney (
+# 				id bigint,
+# 				rs3 integer,
+# 				osrs integer,
+# 				rs3total bigint,
+# 				osrstotal bigint,
+# 				rs3week bigint,
+# 				osrsweek bigint,
+# 				clientseed text,
+# 				privacy boolean,
+# 				bronze integer,
+# 				silver integer,
+# 				gold integer
+# 				)""")
+# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0))
+# conn.commit()
 
-c.execute("DROP TABLE data")
-c.execute("""CREATE TABLE data (
-				seedreset text,
-				serverseed text,
-				yesterdayseed text,
-				nonce integer,
-				rs3profit bigint,
-				osrsprofit bigint
-				)""")
-c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0, 0))
-conn.commit()
+# c.execute("DROP TABLE data")
+# c.execute("""CREATE TABLE data (
+# 				seedreset text,
+# 				serverseed text,
+# 				yesterdayseed text,
+# 				nonce integer,
+# 				rs3profit bigint,
+# 				osrsprofit bigint
+# 				)""")
+# c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0, 0))
+# conn.commit()
 
 c.execute("DROP TABLE bj")
 c.execute("""CREATE TABLE bj (
