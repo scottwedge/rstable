@@ -12,35 +12,35 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 c=conn.cursor()
 
-# c.execute("DROP TABLE rsmoney")
-# c.execute("""CREATE TABLE rsmoney (
-# 				id bigint,
-# 				rs3 integer,
-# 				osrs integer,
-# 				rs3total bigint,
-# 				osrstotal bigint,
-# 				rs3week bigint,
-# 				osrsweek bigint,
-# 				clientseed text,
-# 				privacy boolean,
-# 				bronze integer,
-# 				silver integer,
-# 				gold integer
-# 				)""")
-# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0))
-# conn.commit()
+c.execute("DROP TABLE rsmoney")
+c.execute("""CREATE TABLE rsmoney (
+				id bigint,
+				rs3 integer,
+				osrs integer,
+				rs3total bigint,
+				osrstotal bigint,
+				rs3week bigint,
+				osrsweek bigint,
+				clientseed text,
+				privacy boolean,
+				bronze integer,
+				silver integer,
+				gold integer
+				)""")
+c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0))
+conn.commit()
 
-# c.execute("DROP TABLE data")
-# c.execute("""CREATE TABLE data (
-# 				seedreset text,
-# 				serverseed text,
-# 				yesterdayseed text,
-# 				nonce integer,
-# 				rs3profit bigint,
-# 				osrsprofit bigint
-# 				)""")
-# c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0, 0))
-# conn.commit()
+c.execute("DROP TABLE data")
+c.execute("""CREATE TABLE data (
+				seedreset text,
+				serverseed text,
+				yesterdayseed text,
+				nonce integer,
+				rs3profit bigint,
+				osrsprofit bigint
+				)""")
+c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0, 0))
+conn.commit()
 
 c.execute("DROP TABLE bj")
 c.execute("""CREATE TABLE bj (
@@ -57,21 +57,7 @@ c.execute("""CREATE TABLE bj (
 				)""")
 conn.commit()
 
-# c.execute("DROP TABLE cash")
-# c.execute("""CREATE TABLE cash (
-# 				id text,
-# 				way text,
-# 				code integer
-# 				)""")
-# conn.commit()
 
-# c.execute("DROP TABLE hosts")
-# c.execute("""CREATE TABLE hosts (
-# 				id bigint,
-# 				bets text,
-# 				streak text
-# 				)""")
-# conn.commit()
 
 client = discord.Client()
 
@@ -356,7 +342,7 @@ async def my_background_task():
 	global nextgiveaway,participants,winner
 	await client.wait_until_ready()
 	while not client.is_closed:
-		channel = discord.Object(id='566165744954638346')
+		channel = discord.Object(id='585098599172538380')
 		c.execute("SELECT seedreset FROM data")
 		lastdate=str(c.fetchone()[0])
 		today=str(time.gmtime()[2])
@@ -420,7 +406,7 @@ async def on_message(message):
 	# 	if str(message.author.id) not in participants and str(message.author.id)!="456484773783928843":
 	# 		participants.append(str(message.author.id))
 
-	if message.server.id!="518832231532331018":
+	if message.server.id!="512158131674152973":
 		None
 	#############################################
 	elif message.content.startswith("$input"):
@@ -491,7 +477,7 @@ async def on_message(message):
 		await client.send_message(message.channel, embed=embed)
 	###############################################
 	elif message.content.startswith("$setseed"):
-		if str(message.channel.id)=="559182875316977694":
+		if str(message.channel.id)=="585098613152153600":
 			clientseed=str((message.content)[9:])
 			if len(clientseed)>20:
 				await client.send_message(message.channel, "That client seed is too long. Please try a shorter one. (20 Character Limit)")
@@ -500,7 +486,7 @@ async def on_message(message):
 				conn.commit()
 				await client.send_message(message.channel, "Your client seed has been set to "+(message.content)[9:]+".")
 		else:
-			await client.send_message(message.channel, "This command can only be used in <#559182875316977694> to prevent spam.")
+			await client.send_message(message.channel, "This command can only be used in <#585098613152153600> to prevent spam.")
 	# #####################################
 
 
@@ -644,6 +630,8 @@ async def on_message(message):
 											#"\n `$poll (QUESTION)` - Starts a Yes/No poll with the given question\n" +
 											"\n `$w` or `$wallet` - Checks your own wallet\n" +
 											"\n `$w (@USER)` or `$wallet (@USER)` - Checks that user's wallet\n" +
+											"\n `$k` or `$keys` - Checks how many keys of each kind you have\n" +
+											"\n `$open (KEY TYPE)` - Opens that type of chest\n" +
 											#"\n `$flower (AMOUNT) (hot or cold)` - Hot or cold gives x2, 5% \\of auto loss\n" +
 											"\n `$50 (BET) (rs3 or 07)` - Must roll above 50, x1.8 payout\n" +
 											"\n `$53 (BET) (rs3 or 07)` - Must roll above 53, x2 payout\n" +
@@ -657,6 +645,7 @@ async def on_message(message):
 											"\n `$transfer (@USER) (AMOUNT) (rs3 or 07)` - Transfers that amount from your wallet to the user's wallet\n" +
 											"\n `$wager`, `$total bet` or `$tb` - Shows your total amount bet for rs3 and 07\n" +
 											"\n `$thisweek` - Shows your total amount bet for rs3 and 07 this week\n" +
+											"\n `$fp (AMOUNT) (rs3 or 07)` - Starts flower poker against the bot\n" +
 											"\n `$setseed (SEED)` - Sets your client seed for provably fair gambling\n", color=16771099)
 
 		embed.set_author(name="Bot Commands", icon_url=str(message.server.icon_url))
@@ -1026,47 +1015,50 @@ async def on_message(message):
 		await client.send_message(message.channel, embed=embed)
 	# ###############################
 	elif message.content.startswith("$fp"):
-		game=str(message.content).split(" ")[2]
-		bet=formatok(str(message.content).split(" ")[1], game)
-		current=getvalue(message.author.id, game,"rsmoney")
-		ticketbets(message.author.id, bet, game)
+		try:
+			game=str(message.content).split(" ")[2]
+			bet=formatok(str(message.content).split(" ")[1], game)
+			current=getvalue(message.author.id, game,"rsmoney")
+			ticketbets(message.author.id, bet, game)
 
-		if isenough(bet, game)[0]:
-			if current>=bet:
-				botflowers=[]
-				playerflowers=[]
-				for i in range(5):
-					botflowers.append(pickflower())
-					playerflowers.append(pickflower())
+			if isenough(bet, game)[0]:
+				if current>=bet:
+					botflowers=[]
+					playerflowers=[]
+					for i in range(5):
+						botflowers.append(pickflower())
+						playerflowers.append(pickflower())
 
-				pprint=""
-				bprint=""
-				#flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
-				emojis=["rf","blf","yf","puf","of","pf","raf","bf","wf"]
-				for i in playerflowers:
-					pprint+=str(get(client.get_all_emojis(), name=emojis[i]))
-				for i in botflowers:
-					bprint+=str(get(client.get_all_emojis(), name=emojis[i]))
+					pprint=""
+					bprint=""
+					#flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
+					emojis=["rf","blf","yf","puf","of","pf","raf","bf","wf"]
+					for i in playerflowers:
+						pprint+=str(get(client.get_all_emojis(), name=emojis[i]))
+					for i in botflowers:
+						bprint+=str(get(client.get_all_emojis(), name=emojis[i]))
 
-				if scorefp(playerflowers)==scorefp(botflowers):
-					embed = discord.Embed(description="Tie! 10% commission taken.", color=16776960)
-					update_money(message.author.id, bet*-0.1, game)
-				elif scorefp(playerflowers)>scorefp(botflowers):
-					embed = discord.Embed(description="Congratulations! You won "+formatfromk(bet*2, game)+"!", color=3997475)
-					update_money(message.author.id, bet, game)
-				elif scorefp(playerflowers)<scorefp(botflowers):
-					embed = discord.Embed(description="House wins. You lost "+formatfromk(bet, game)+".", color=16718121)
-					update_money(message.author.id, bet*-1, game)
+					if scorefp(playerflowers)==scorefp(botflowers):
+						embed = discord.Embed(description="Tie! 10% commission taken.", color=16776960)
+						update_money(message.author.id, bet*-0.1, game)
+					elif scorefp(playerflowers)>scorefp(botflowers):
+						embed = discord.Embed(description="Congratulations! You won "+formatfromk(bet*2, game)+"!", color=3997475)
+						update_money(message.author.id, bet, game)
+					elif scorefp(playerflowers)<scorefp(botflowers):
+						embed = discord.Embed(description="House wins. You lost "+formatfromk(bet, game)+".", color=16718121)
+						update_money(message.author.id, bet*-1, game)
 
-				embed.add_field(name="Player Hand", value=pprint, inline=True)
-				embed.add_field(name="House Hand", value=bprint, inline=True)
-				embed.set_author(name="Flower Poker", icon_url=str(message.author.avatar_url))
-				await client.send_message(message.channel, embed=embed)
+					embed.add_field(name="Player Hand", value=pprint, inline=True)
+					embed.add_field(name="House Hand", value=bprint, inline=True)
+					embed.set_author(name="Flower Poker", icon_url=str(message.author.avatar_url))
+					await client.send_message(message.channel, embed=embed)
 
+				else:
+					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 			else:
-				await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
-		else:
-			await client.send_message(message.channel, (isenough(bet, game))[1])
+				await client.send_message(message.channel, (isenough(bet, game))[1])
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$fp (Amount) (rs3 or 07)`.")
 	###############################
 	# elif message.content.startswith("$top"):
 	# 	game=(message.content).split(" ")[1]
