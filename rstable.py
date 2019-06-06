@@ -1061,33 +1061,33 @@ async def on_message(message):
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$fp (Amount) (rs3 or 07)`.")
 	###############################
-	# elif message.content.startswith("$top"):
-	# 	game=(message.content).split(" ")[1]
-	# 	if game=="rs3" or game=="osrs" or game=="07":
-	# 		if game=="rs3":
-	# 			c.execute("SELECT * From rsmoney ORDER BY rs3week DESC LIMIT 4")
-	# 			number=5
-	# 			prizes=["500m", "250m", "100m", "50m"]
-	# 		elif game=="osrs" or game=="07":
-	# 			c.execute("SELECT * From rsmoney ORDER BY osrsweek DESC LIMIT 4")
-	# 			number=6
-	# 			prizes=["100m", "50m", "25m", "10m"]
+	elif message.content.startswith("$top"):
+		game=(message.content).split(" ")[1]
+		if game=="rs3" or game=="osrs" or game=="07":
+			if game=="rs3":
+				c.execute("SELECT * From rsmoney ORDER BY rs3week DESC LIMIT 8")
+				number=5
+				prizes=["None", "None", "None", "None", "None", "None", "None", "None"]
+			elif game=="osrs" or game=="07":
+				c.execute("SELECT * From rsmoney ORDER BY osrsweek DESC LIMIT 8")
+				number=6
+				prizes=["5 Silver Keys", "3 Silver Keys", "1 Silver Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key"]
 				
-	# 		top=c.fetchall()
-	# 		words=""
-	# 		for counter, i in enumerate(top):
-	# 			userid=i[0]
-	# 			total=i[number]
-	# 			total=formatfromk(int(total),game)
-	# 			words+=(str(counter+1)+". <@"+str(userid)+"> - **"+total+"** - **"+prizes[counter]+"**\n\n")
+			top=c.fetchall()
+			words=""
+			for counter, i in enumerate(top):
+				userid=i[0]
+				total=i[number]
+				total=formatfromk(int(total),game)
+				words+=(str(counter+1)+". <@"+str(userid)+"> - **"+total+"** - **"+prizes[counter]+"**\n\n")
 
-	# 		embed = discord.Embed(color=557823, description=words)
-	# 		embed.set_author(name="Top "+game.upper()+" Thisweek Wager", icon_url=str(message.server.icon_url))
-	# 		days=abs(time.gmtime()[6]-4)
-	# 		embed.set_footer(text="Days Until Reset: "+str(days))
-	# 		await client.send_message(message.channel, embed=embed)
-	# 	else:
-	# 		None
+			embed = discord.Embed(color=557823, description=words)
+			embed.set_author(name="Top "+game.upper()+" Thisweek Wager", icon_url=str(message.server.icon_url))
+			# days=abs(time.gmtime()[6]-4)
+			# embed.set_footer(text="Days Until Reset: "+str(days))
+			await client.send_message(message.channel, embed=embed)
+		else:
+			None
 	###########################################
 
 client.loop.create_task(my_background_task())
