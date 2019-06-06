@@ -296,9 +296,9 @@ def scorefp(hand):
 	returned=0
 	for i in hand:
 		if hand.count(i)==5:
-			returned=6
+			returned=6, "Five Of A Kind"
 		elif hand.count(i)==4:
-			returned=5
+			returned=5, "Four Of A Kind"
 
 		if hand.count(i)==3:
 			three=True
@@ -306,25 +306,27 @@ def scorefp(hand):
 			pairs+=1
 
 		if pairs>=1 and three==True:
-			returned=4
+			returned=4, "Full House"
 		elif three==True:
-			returned=3
+			returned=3, "Three Of A Kind"
 		elif pairs>=3:
-			returned=2
+			returned=2, "Two Pairs"
 		elif pairs==1 or pairs==2:
-			returned=1
+			returned=1, "One Pair"
 
 	if 7 in hand and 8 in hand:
-		return 7
+		return 7, "Five Of A Kind"
 	elif 7 in hand or 8 in hand:
-		if returned==3:
-			return 5
+		if returnd==6 or returned==5:
+			return 6, "Five Of A Kind"
+		elif returned==4 or returned==3:
+			return 5, "Four Of A Kind"
 		elif returned==2:
-			return 4
+			return 4, "Full House"
 		elif returned==1:
-			return 3
-		else:
-			return returned+1
+			return 3, "Three Of A Kind"
+		elif returned==0:
+			return 1, "One Pair"
 
 	return returned
 ######################################################################################
@@ -1038,18 +1040,18 @@ async def on_message(message):
 					for i in botflowers:
 						bprint+=str(get(client.get_all_emojis(), name=emojis[i]))
 
-					if scorefp(playerflowers)==scorefp(botflowers):
+					if scorefp(playerflowers)[0]==scorefp(botflowers)[0]:
 						embed = discord.Embed(description="Tie! 10% commission taken.", color=16776960)
 						update_money(message.author.id, bet*-0.1, game)
-					elif scorefp(playerflowers)>scorefp(botflowers):
+					elif scorefp(playerflowers)[0]>scorefp(botflowers)[0]:
 						embed = discord.Embed(description="Congratulations! You won "+formatfromk(bet*2, game)+"!", color=3997475)
 						update_money(message.author.id, bet, game)
-					elif scorefp(playerflowers)<scorefp(botflowers):
+					elif scorefp(playerflowers)[0]<scorefp(botflowers)[0]:
 						embed = discord.Embed(description="House wins. You lost "+formatfromk(bet, game)+".", color=16718121)
 						update_money(message.author.id, bet*-1, game)
 
-					embed.add_field(name="Player Hand", value=pprint, inline=True)
-					embed.add_field(name="House Hand", value=bprint, inline=True)
+					embed.add_field(name="Player Hand", value=pprint+" Result: "+scorefp(playerflowers)[1], inline=True)
+					embed.add_field(name="House Hand", value=bprint+" Result: "+scorefp(botflowers)[1], inline=True)
 					embed.set_author(name="Flower Poker", icon_url=str(message.author.avatar_url))
 					await client.send_message(message.channel, embed=embed)
 
