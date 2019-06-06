@@ -327,7 +327,9 @@ def scorefp(hand):
 			return 3, "Three Of A Kind"
 		elif returned==0:
 			return 1, "One Pair"
-
+	else:
+		return returned
+		
 	return 0, "None"
 ######################################################################################
 
