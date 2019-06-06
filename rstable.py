@@ -1017,50 +1017,50 @@ async def on_message(message):
 		await client.send_message(message.channel, embed=embed)
 	# ###############################
 	elif message.content.startswith("$fp"):
-		try:
-			game=str(message.content).split(" ")[2]
-			bet=formatok(str(message.content).split(" ")[1], game)
-			current=getvalue(message.author.id, game,"rsmoney")
-			ticketbets(message.author.id, bet, game)
+		#try:
+		game=str(message.content).split(" ")[2]
+		bet=formatok(str(message.content).split(" ")[1], game)
+		current=getvalue(message.author.id, game,"rsmoney")
+		ticketbets(message.author.id, bet, game)
 
-			if isenough(bet, game)[0]:
-				if current>=bet:
-					botflowers=[]
-					playerflowers=[]
-					for i in range(5):
-						botflowers.append(pickflower())
-						playerflowers.append(pickflower())
+		if isenough(bet, game)[0]:
+			if current>=bet:
+				botflowers=[]
+				playerflowers=[]
+				for i in range(5):
+					botflowers.append(pickflower())
+					playerflowers.append(pickflower())
 
-					pprint=""
-					bprint=""
-					#flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
-					emojis=["rf","blf","yf","puf","of","pf","raf","bf","wf"]
-					for i in playerflowers:
-						pprint+=str(get(client.get_all_emojis(), name=emojis[i]))
-					for i in botflowers:
-						bprint+=str(get(client.get_all_emojis(), name=emojis[i]))
+				pprint=""
+				bprint=""
+				#flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
+				emojis=["rf","blf","yf","puf","of","pf","raf","bf","wf"]
+				for i in playerflowers:
+					pprint+=str(get(client.get_all_emojis(), name=emojis[i]))
+				for i in botflowers:
+					bprint+=str(get(client.get_all_emojis(), name=emojis[i]))
 
-					if scorefp(playerflowers)[0]==scorefp(botflowers)[0]:
-						embed = discord.Embed(description="Tie! 10% commission taken.", color=16776960)
-						update_money(message.author.id, bet*-0.1, game)
-					elif scorefp(playerflowers)[0]>scorefp(botflowers)[0]:
-						embed = discord.Embed(description="Congratulations! You won "+formatfromk(bet*2, game)+"!", color=3997475)
-						update_money(message.author.id, bet, game)
-					elif scorefp(playerflowers)[0]<scorefp(botflowers)[0]:
-						embed = discord.Embed(description="House wins. You lost "+formatfromk(bet, game)+".", color=16718121)
-						update_money(message.author.id, bet*-1, game)
+				if scorefp(playerflowers)[0]==scorefp(botflowers)[0]:
+					embed = discord.Embed(description="Tie! 10% commission taken.", color=16776960)
+					update_money(message.author.id, bet*-0.1, game)
+				elif scorefp(playerflowers)[0]>scorefp(botflowers)[0]:
+					embed = discord.Embed(description="Congratulations! You won "+formatfromk(bet*2, game)+"!", color=3997475)
+					update_money(message.author.id, bet, game)
+				elif scorefp(playerflowers)[0]<scorefp(botflowers)[0]:
+					embed = discord.Embed(description="House wins. You lost "+formatfromk(bet, game)+".", color=16718121)
+					update_money(message.author.id, bet*-1, game)
 
-					embed.add_field(name="Player Hand", value=pprint+"\nResult: "+scorefp(playerflowers)[1], inline=True)
-					embed.add_field(name="House Hand", value=bprint+"\nResult: "+scorefp(botflowers)[1], inline=True)
-					embed.set_author(name="Flower Poker", icon_url=str(message.author.avatar_url))
-					await client.send_message(message.channel, embed=embed)
+				embed.add_field(name="Player Hand", value=pprint+"\nResult: "+scorefp(playerflowers)[1], inline=True)
+				embed.add_field(name="House Hand", value=bprint+"\nResult: "+scorefp(botflowers)[1], inline=True)
+				embed.set_author(name="Flower Poker", icon_url=str(message.author.avatar_url))
+				await client.send_message(message.channel, embed=embed)
 
-				else:
-					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 			else:
-				await client.send_message(message.channel, (isenough(bet, game))[1])
-		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$fp (Amount) (rs3 or 07)`.")
+				await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+		else:
+			await client.send_message(message.channel, (isenough(bet, game))[1])
+		#except:
+		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$fp (Amount) (rs3 or 07)`.")
 	###############################
 	# elif message.content.startswith("$top"):
 	# 	game=(message.content).split(" ")[1]
