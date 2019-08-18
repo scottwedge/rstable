@@ -416,7 +416,7 @@ async def my_background_task():
 				if roll==37:
 					roll='00'
 				embed = discord.Embed(description="The roulette wheel landed on **"+str(roll)+"**! Winners have been paid out!", color=3800857)
-				embed.set_author(name="Roulette Results", icon_url=str(message.server.icon_url))
+				embed.set_author(name="Roulette Results", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
 				embed.add_field(name="Winners", value="The winners are:\n"+winnerids, inline=True)
 				embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/580436923756314624/611235470478802955/unknown.png')
 				await client.edit_message(roulettemsg, embed=embed)
@@ -434,7 +434,7 @@ async def my_background_task():
 			elif roulette!=121:
 				roulette-=15
 				embed = discord.Embed(description="A game of roulette is going on! Use `$bet (Amount) (rs3 or 07) (0-36, High/Low, Black/Red/Green, or Odd/Even)` to place a bet on the wheel.", color=3800857)
-				embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
+				embed.set_author(name="Roulette Game", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
 				embed.add_field(name="Seconds Left", value=str(roulette), inline=True)
 				embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
 				await client.edit_message(roulettemsg, embed=embed)
@@ -575,7 +575,7 @@ async def on_message(message):
 		embed.set_author(name=(str(message.author))[:-5]+"'s Wallet", icon_url=str(message.author.avatar_url))
 		embed.add_field(name="RS3 Balance", value=rs3, inline=True)
 		embed.add_field(name="07 Balance", value=osrs, inline=True)
-		embed.set_footer(text="Support us on Patreon: https://www.patreon.com/EvilBob")
+		embed.set_footer(text="Need to load up on weekly keys? Check out our [Patreon](https://www.patreon.com/EvilBob)")
 		if getvalue(int(message.author.id), "privacy","rsmoney")==True:
 			await client.send_message(message.channel, embed=embed)
 		else:
