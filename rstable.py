@@ -58,13 +58,13 @@ c.execute("""CREATE TABLE bj (
 conn.commit()
 
 #c.execute("DROP TABLE roulette")
-c.execute("""CREATE TABLE roulette (
-				id bigint,
-				bet integer,
-				currency text,
-				area text
-				)""")
-conn.commit()
+# c.execute("""CREATE TABLE roulette (
+# 				id bigint,
+# 				bet integer,
+# 				currency text,
+# 				area text
+# 				)""")
+# conn.commit()
 
 client = discord.Client()
 
@@ -474,6 +474,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+	global roulette,roulettemsg
 	message.content=(message.content).lower()
 
 	# if nextgiveaway==1 and message.channel.id=="444569488948461569" and message.server.id=="444569488491413506":
