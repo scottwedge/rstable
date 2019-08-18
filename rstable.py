@@ -57,14 +57,14 @@ c.execute("""CREATE TABLE bj (
 				)""")
 conn.commit()
 
-#c.execute("DROP TABLE roulette")
-# c.execute("""CREATE TABLE roulette (
-# 				id bigint,
-# 				bet integer,
-# 				currency text,
-# 				area text
-# 				)""")
-# conn.commit()
+c.execute("DROP TABLE roulette")
+c.execute("""CREATE TABLE roulette (
+				id bigint,
+				bet integer,
+				currency text,
+				area text
+				)""")
+conn.commit()
 
 client = discord.Client()
 
@@ -572,10 +572,9 @@ async def on_message(message):
 		if osrs=="0k":
 			osrs="0 k"
 		embed = discord.Embed(color=sidecolor)
-		embed.set_author(name=(str(message.author))[:-5]+"'s Wallet", icon_url=str(message.author.avatar_url))
+		embed.set_author(name=(str(message.author))[:-5]+"'s Wallet\nNeed to load up on weekly keys? Check out our [Patreon](https://www.patreon.com/EvilBob)", icon_url=str(message.author.avatar_url))
 		embed.add_field(name="RS3 Balance", value=rs3, inline=True)
 		embed.add_field(name="07 Balance", value=osrs, inline=True)
-		embed.set_footer(text="Need to load up on weekly keys? Check out our [Patreon](https://www.patreon.com/EvilBob)")
 		if getvalue(int(message.author.id), "privacy","rsmoney")==True:
 			await client.send_message(message.channel, embed=embed)
 		else:
