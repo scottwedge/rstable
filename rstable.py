@@ -57,7 +57,14 @@ c.execute("""CREATE TABLE bj (
 				)""")
 conn.commit()
 
-
+#c.execute("DROP TABLE roulette")
+c.execute("""CREATE TABLE roulette (
+				id bigint,
+				bet integer,
+				currency text,
+				area text
+				)""")
+conn.commit()
 
 client = discord.Client()
 
@@ -190,7 +197,7 @@ def scorebj(userid,cards,player):
 		else:
 			score+=int(i[0])
 	for i in range(aces):
-		if score>10:
+		if aces>1 or score>10:
 			score+=1
 		else:
 			score+=11
@@ -333,14 +340,14 @@ def scorefp(hand):
 #Predefined Variables
 
 colors=["A","B","C","D","E","F","0","1","2","3","4","5","6","7","8","9"]
-nextgiveaway=1
+#nextgiveaway=1
 participants=[]
-
-
+roulette=121
+roulettemsg=0
 
 
 async def my_background_task():
-	global nextgiveaway,participants,winner
+	global roulette,participants,winner,roulettemsg
 	await client.wait_until_ready()
 	while not client.is_closed:
 		channel = discord.Object(id='585098599172538380')
@@ -366,7 +373,73 @@ async def my_background_task():
 			#embed.add_field(name="Today's Server Seed Unhashed", value=newseed, inline=True)
 			await client.send_message(channel, embed=embed)
 		else:
-			None
+			if roulette<1:
+				roll=random.randint(0,37)
+
+				winnerids=""
+				c.execute("SELECT * from roulette")
+				bets=c.fetchall()
+				print(bets)
+				for counter, i in enumerate(bets):
+					win=False
+
+					if i[3].isdigit():
+						if i[3]==roll:
+							update_money(int(i[0]), int(i[1])*35, str(i[2]))
+							winnerids+=("<@"+str(i[0])+">\n")
+					elif i[3]=='even':
+						if roll % 2 == 0:
+							win=True
+					elif i[3]=='odd':
+						if roll % 2 != 0:
+							win=True
+					elif i[3]=='green':
+						if roll==0 or roll==37:
+							win=True
+					elif i[3]=='black':
+						if roll in [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]:
+							win=True
+					elif i[3]=='red':
+						if roll in [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]:
+							win=True
+					elif i[3]=='low':
+						if 19>roll>0:
+							win=True
+					elif i[3]=='high':
+						if 37>roll>18:
+							win=True
+
+					if win:
+						update_money(int(i[0]), int(i[1])*2, str(i[2]))
+						winnerids+=("<@"+str((i[0]))+">\n")
+
+				if roll==37:
+					roll='00'
+				embed = discord.Embed(description="The roulette wheel landed on **"+str(roll)+"**! Winners have been paid out!", color=3800857)
+				embed.set_author(name="Roulette Results", icon_url=str(message.server.icon_url))
+				embed.add_field(name="Winners", value="The winners are:\n"+winnerids, inline=True)
+				embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/580436923756314624/611235470478802955/unknown.png')
+				await client.edit_message(roulettemsg, embed=embed)
+
+				roulette=121
+				c.execute("DROP TABLE roulette")
+				c.execute("""CREATE TABLE roulette (
+								id bigint,
+								bet integer,
+								currency text,
+								area text
+								)""")
+				conn.commit()
+
+			elif roulette!=121:
+				roulette-=15
+				embed = discord.Embed(description="A game of roulette is going on! Use `$bet (Amount) (rs3 or 07) (0-36, High/Low, Black/Red/Green, or Odd/Even)` to place a bet on the wheel.", color=3800857)
+				embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
+				embed.add_field(name="Seconds Left", value=str(roulette), inline=True)
+				embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
+				await client.edit_message(roulettemsg, embed=embed)
+			else:
+				None
 		# channel = discord.Object(id='444569488948461569')
 		# if nextgiveaway==1:
 		# 	if len(participants)<1:
@@ -386,7 +459,7 @@ async def my_background_task():
 		# 	embed = discord.Embed(description="Say something in the next minute to be entered in a **100k** 07 Giveaway!", color=557823)
 		# 	embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
 		# 	await client.send_message(channel, embed=embed)
-		await asyncio.sleep(nextgiveaway*60)
+		await asyncio.sleep(15)
 
 
 
@@ -501,6 +574,7 @@ async def on_message(message):
 		embed.set_author(name=(str(message.author))[:-5]+"'s Wallet", icon_url=str(message.author.avatar_url))
 		embed.add_field(name="RS3 Balance", value=rs3, inline=True)
 		embed.add_field(name="07 Balance", value=osrs, inline=True)
+		embed.set_footer(text="Support us on Patreon: https://www.patreon.com/EvilBob")
 		if getvalue(int(message.author.id), "privacy","rsmoney")==True:
 			await client.send_message(message.channel, embed=embed)
 		else:
@@ -542,6 +616,7 @@ async def on_message(message):
 			embed.set_author(name=(str(member))[:-5]+"'s Wallet", icon_url=str(member.avatar_url))
 			embed.add_field(name="RS3 Balance", value=rs3, inline=True)
 			embed.add_field(name="07 Balance", value=osrs, inline=True)
+			embed.set_footer(text="Support us on Patreon: https://www.patreon.com/EvilBob")
 			await client.send_message(message.channel, embed=embed)
 			
 		elif getvalue(int(member.id), "privacy","rsmoney")==True:
@@ -941,62 +1016,65 @@ async def on_message(message):
 		conn.commit()
 	###############################
 	elif message.content.startswith("$open"):
-		roll=(round(random.uniform(0,100), 1))*10
-		kind=(message.content).split(" ")[1]
-		bronze=getvalue(message.author.id, "bronze", "rsmoney")
-		silver=getvalue(message.author.id, "silver", "rsmoney")
-		gold=getvalue(message.author.id, "gold", "rsmoney")
-		if kind=="bronze":
-			if bronze>=1:
-				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze-1, message.author.id))
-				ranges=[range(0,7), range(7,15), range(15,24), range(24,40), range(40,59), range(59,80), range(80,103), range(103,128), range(128,157), range(157,192), range(192,248), range(248,340), range(340,493), range(493,594), range(594,685), range(685,763), range(763,829), range(829,891), range(891,946), range(946,994), range(994,1000)]
-				sidecolor=11880979
-			else:
-				await client.send_message(message.channel, "You don't have any bronze keys to open!")
-		elif kind=="silver":
-			if silver>=1:
-				c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver-1, message.author.id))
-				ranges=[range(0,1), range(1,2), range(2,12), range(12,27), range(27,45), range(45,65), range(65,100), range(100,140), range(140,180), range(180,221), range(221,264), range(264,308), range(308,354), range(354,407), range(407,463), range(463,519), range(519,574), range(574,628), range(628,679), range(679,717), range(717,765), range(765,813), range(864,920), range(920,955), range(955,1000)]	
-				sidecolor=13226456
-			else:
-				await client.send_message(message.channel, "You don't have any silver keys to open!")
-		elif kind=="gold":
-			if gold>=1:
-				c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold-1, message.author.id))
-				ranges=[range(0,1), range(1,3), range(3,6), range(6,10), range(10,18), range(18,28), range(28,50), range(50,75), range(75,101), range(101,129), range(129,169), range(169,229), range(229,279), range(279,354), range(354,419), range(419,479), range(479,531), range(531,585), range(585,641), range(641,706), range(706,761), range(761,861), range(861,930), range(930,966), range(966,1000)]
-				sidecolor=16759822
-			else:
-				await client.send_message(message.channel, "You don't have any gold keys to open!")
-		conn.commit()
+		try:
+			roll=(round(random.uniform(0,100), 1))*10
+			kind=(message.content).split(" ")[1]
+			bronze=getvalue(message.author.id, "bronze", "rsmoney")
+			silver=getvalue(message.author.id, "silver", "rsmoney")
+			gold=getvalue(message.author.id, "gold", "rsmoney")
+			if kind=="bronze":
+				if bronze>=1:
+					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze-1, message.author.id))
+					ranges=[range(0,7), range(7,15), range(15,24), range(24,40), range(40,59), range(59,80), range(80,103), range(103,128), range(128,157), range(157,192), range(192,248), range(248,340), range(340,493), range(493,594), range(594,685), range(685,763), range(763,829), range(829,891), range(891,946), range(946,994), range(994,1000)]
+					sidecolor=11880979
+				else:
+					await client.send_message(message.channel, "You don't have any bronze keys to open!")
+			elif kind=="silver":
+				if silver>=1:
+					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver-1, message.author.id))
+					ranges=[range(0,1), range(1,2), range(2,12), range(12,27), range(27,45), range(45,65), range(65,100), range(100,140), range(140,180), range(180,221), range(221,264), range(264,308), range(308,354), range(354,407), range(407,463), range(463,519), range(519,574), range(574,628), range(628,679), range(679,717), range(717,765), range(765,813), range(864,920), range(920,955), range(955,1000)]	
+					sidecolor=13226456
+				else:
+					await client.send_message(message.channel, "You don't have any silver keys to open!")
+			elif kind=="gold":
+				if gold>=1:
+					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold-1, message.author.id))
+					ranges=[range(0,1), range(1,3), range(3,6), range(6,10), range(10,18), range(18,28), range(28,50), range(50,75), range(75,101), range(101,129), range(129,169), range(169,229), range(229,279), range(279,354), range(354,419), range(419,479), range(479,531), range(531,585), range(585,641), range(641,706), range(706,761), range(761,861), range(861,930), range(930,966), range(966,1000)]
+					sidecolor=16759822
+				else:
+					await client.send_message(message.channel, "You don't have any gold keys to open!")
+			conn.commit()
 
-		for counter, i in enumerate(ranges):
-			if roll in i:
-				index=counter
-			else:
-				continue
+			for counter, i in enumerate(ranges):
+				if roll in i:
+					index=counter
+				else:
+					continue
 
-		f=open(kind+".txt")
-		for counter, i in enumerate(f):
-			if counter==index:
-				item=(i.strip("\n")).split("|")[0]
-				price=(i.strip("\n")).split("|")[1]
-				url=(i.strip("\n")).split("|")[2]
+			f=open(kind+".txt")
+			for counter, i in enumerate(f):
+				if counter==index:
+					item=(i.strip("\n")).split("|")[0]
+					price=(i.strip("\n")).split("|")[1]
+					url=(i.strip("\n")).split("|")[2]
 
-		bronze=getvalue(message.author.id, "bronze", "rsmoney")
-		silver=getvalue(message.author.id, "silver", "rsmoney")
-		if item=="2 Bronze Keys":
-			c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, message.author.id))
-		elif item=="2 Silver Keys":
-			c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, message.author.id))
-		conn.commit()
+			bronze=getvalue(message.author.id, "bronze", "rsmoney")
+			silver=getvalue(message.author.id, "silver", "rsmoney")
+			if item=="2 Bronze Keys":
+				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, message.author.id))
+			elif item=="2 Silver Keys":
+				c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, message.author.id))
+			conn.commit()
 
-		update_money(message.author.id, int(price), "07")
+			update_money(message.author.id, int(price), "07")
 
-		embed = discord.Embed(description="You recieved item: **"+str(item)+"**!", color=sidecolor)
-		embed.add_field(name="Price", value="*"+formatfromk(int(price), "07")+"*", inline=True)
-		embed.set_author(name=kind.title()+" Key Prize", icon_url=str(message.author.avatar_url))
-		embed.set_thumbnail(url=str(url))
-		await client.send_message(message.channel, embed=embed)
+			embed = discord.Embed(description="You recieved item: **"+str(item)+"**!", color=sidecolor)
+			embed.add_field(name="Price", value="*"+formatfromk(int(price), "07")+"*", inline=True)
+			embed.set_author(name=kind.title()+" Key Prize", icon_url=str(message.author.avatar_url))
+			embed.set_thumbnail(url=str(url))
+			await client.send_message(message.channel, embed=embed)
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$open (bronze, silver, or gold)`.")
 	# ###############################
 	elif message.content.startswith("$fp"):
 		try:
@@ -1072,6 +1150,44 @@ async def on_message(message):
 		else:
 			None
 	###########################################
+	elif message.content==("$start"):
+		if roulette!=121:
+			await client.send_message(message.channel, "There is already a roulette game going on!")
+		else:
+			roulette=120
+			embed = discord.Embed(description="A game of roulette has started! Use `$bet (Amount) (rs3 or 07) (0-36, High/Low, Black/Red/Green, or Odd/Even)` to place a bet on the wheel.", color=3800857)
+			embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
+			embed.add_field(name="Seconds Left", value=str(roulette), inline=True)
+			embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
+			roulettemsg = await client.send_message(message.channel, embed=embed)
+	###########################################
+	elif message.content.startswith("$bet"):
+		try:
+			if roulette!=121:
+				areas=['high','low','black','red','green','odd','even','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
+				game=str(message.content).split(" ")[2]
+				bet=formatok(str(message.content).split(" ")[1], game)
+				area=str(message.content).split(" ")[3]
+				if area not in areas:
+					await client.send_message(message.channel, "You can only bet on `0-36`, `High/Low`, `Black/Red/Green`, and `Odd/Even`")
+				else:
+					current=getvalue(message.author.id, game,"rsmoney")
+					ticketbets(message.author.id, bet, game)
+
+					if isenough(bet, game)[0]:
+						if current>=bet:
+							update_money(message.author.id, bet*-1, currency)
+							c.execute("INSERT INTO roulette VALUES (%s, %s, %s, %s)", (message.author.id,bet,currency,area))
+						else:
+							await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+					else:
+						await client.send_message(message.channel, (isenough(bet, game))[1])
+			else:
+				await client.send_message(message.channel, "There isn't a roulette game going on right now! Use `$start` to initiate one.")
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bet (Amount) (rs3 or 07) (0-36, High/Low, Black/Red/Green, or Odd/Even)`.")
+	###########################################
+
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
