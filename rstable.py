@@ -388,10 +388,10 @@ async def my_background_task():
 							update_money(int(i[0]), int(i[1])*35, str(i[2]))
 							winnerids+=("<@"+str(i[0])+">\n")
 					elif i[3]=='even':
-						if roll % 2 == 0:
+						if roll % 2 == 0 and roll!=0:
 							win=True
 					elif i[3]=='odd':
-						if roll % 2 != 0:
+						if roll % 2 != 0 and roll!=37:
 							win=True
 					elif i[3]=='green':
 						if roll==0 or roll==37:
@@ -436,7 +436,7 @@ async def my_background_task():
 				seconds=str(datetime.timedelta(seconds=roulette)).split(":")[2]
 				embed = discord.Embed(description="A game of roulette is going on! Use `$bet (Amount) (rs3 or 07) (0-36, High/Low, Black/Red/Green, or Odd/Even)` to place a bet on the wheel.", color=3800857)
 				embed.set_author(name="Roulette Game", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
-				embed.add_field(name="Seconds Left", value="__**"+minutes+"** Minutes and **"+seconds+"** seconds__", inline=True)
+				embed.add_field(name="Time Left", value="**"+minutes+"** Minutes and **"+seconds+"** Seconds", inline=True)
 				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
 				await client.edit_message(roulettemsg, embed=embed)
 				roulette-=10
@@ -614,11 +614,10 @@ async def on_message(message):
 				rs3="0 k"
 			if osrs=="0k":
 				osrs="0 k"
-			embed = discord.Embed(color=sidecolor)
+			embed = discord.Embed(description='Need to load up on weekly keys? Check out our [Patreon](https://www.patreon.com/EvilBob)', color=sidecolor)
 			embed.set_author(name=(str(member))[:-5]+"'s Wallet", icon_url=str(member.avatar_url))
 			embed.add_field(name="RS3 Balance", value=rs3, inline=True)
 			embed.add_field(name="07 Balance", value=osrs, inline=True)
-			embed.set_footer(text="Support us on Patreon: https://www.patreon.com/EvilBob")
 			await client.send_message(message.channel, embed=embed)
 			
 		elif getvalue(int(member.id), "privacy","rsmoney")==True:
@@ -1159,7 +1158,7 @@ async def on_message(message):
 			roulette=120
 			embed = discord.Embed(description="A game of roulette has started! Use `$bet (Amount) (rs3 or 07) (0-36, High/Low, Black/Red/Green, or Odd/Even)` to place a bet on the wheel.", color=3800857)
 			embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
-			embed.add_field(name="Seconds Left", value="**"+str(roulette)+"**", inline=True)
+			embed.add_field(name="Time Left", value="**2** Minutes", inline=True)
 			embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
 			roulettemsg = await client.send_message(message.channel, embed=embed)
 	###########################################
@@ -1180,6 +1179,7 @@ async def on_message(message):
 						if current>=bet:
 							update_money(message.author.id, bet*-1, game)
 							c.execute("INSERT INTO roulette VALUES (%s, %s, %s, %s)", (message.author.id,bet,game,area))
+							await client.send_message(message.channel, "You placed a bet of **"+formatfromk(bet)+" "+game+"** on **"+area+"**. Good Luck!")
 						else:
 							await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 					else:
