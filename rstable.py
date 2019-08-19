@@ -432,12 +432,14 @@ async def my_background_task():
 				conn.commit()
 
 			elif roulette!=121:
-				roulette-=15
+				minutes=str(datetime.timedelta(seconds=roulette)).split(":")[1]
+				seconds=str(datetime.timedelta(seconds=roulette)).split(":")[2]
 				embed = discord.Embed(description="A game of roulette is going on! Use `$bet (Amount) (rs3 or 07) (0-36, High/Low, Black/Red/Green, or Odd/Even)` to place a bet on the wheel.", color=3800857)
 				embed.set_author(name="Roulette Game", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
-				embed.add_field(name="Seconds Left", value="**"+str(roulette)+"**", inline=True)
+				embed.add_field(name="Seconds Left", value="__**"+minutes+"** Minutes and **"+seconds+"** seconds__", inline=True)
 				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
 				await client.edit_message(roulettemsg, embed=embed)
+				roulette-=10
 			else:
 				None
 		# channel = discord.Object(id='444569488948461569')
@@ -459,7 +461,7 @@ async def my_background_task():
 		# 	embed = discord.Embed(description="Say something in the next minute to be entered in a **100k** 07 Giveaway!", color=557823)
 		# 	embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
 		# 	await client.send_message(channel, embed=embed)
-		await asyncio.sleep(15)
+		await asyncio.sleep(10)
 
 
 
@@ -1162,30 +1164,30 @@ async def on_message(message):
 			roulettemsg = await client.send_message(message.channel, embed=embed)
 	###########################################
 	elif message.content.startswith("$bet"):
-		#try:
-		if roulette!=121:
-			areas=['high','low','black','red','green','odd','even','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
-			game=str(message.content).split(" ")[2]
-			bet=formatok(str(message.content).split(" ")[1], game)
-			area=str(message.content).split(" ")[3]
-			if area not in areas:
-				await client.send_message(message.channel, "You can only bet on `0-36`, `High/Low`, `Black/Red/Green`, and `Odd/Even`")
-			else:
-				current=getvalue(message.author.id, game,"rsmoney")
-				ticketbets(message.author.id, bet, game)
-
-				if isenough(bet, game)[0]:
-					if current>=bet:
-						update_money(message.author.id, bet*-1, currency)
-						c.execute("INSERT INTO roulette VALUES (%s, %s, %s, %s)", (message.author.id,bet,currency,area))
-					else:
-						await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+		try:
+			if roulette!=121:
+				areas=['high','low','black','red','green','odd','even','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
+				game=str(message.content).split(" ")[2]
+				bet=formatok(str(message.content).split(" ")[1], game)
+				area=str(message.content).split(" ")[3]
+				if area not in areas:
+					await client.send_message(message.channel, "You can only bet on `0-36`, `High/Low`, `Black/Red/Green`, and `Odd/Even`")
 				else:
-					await client.send_message(message.channel, (isenough(bet, game))[1])
-		else:
-			await client.send_message(message.channel, "There isn't a roulette game going on right now! Use `$start` to initiate one.")
-		#except:
-		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bet (Amount) (rs3 or 07) (0-36, High/Low, Black/Red/Green, or Odd/Even)`.")
+					current=getvalue(message.author.id, game,"rsmoney")
+					ticketbets(message.author.id, bet, game)
+
+					if isenough(bet, game)[0]:
+						if current>=bet:
+							update_money(message.author.id, bet*-1, game)
+							c.execute("INSERT INTO roulette VALUES (%s, %s, %s, %s)", (message.author.id,bet,game,area))
+						else:
+							await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+					else:
+						await client.send_message(message.channel, (isenough(bet, game))[1])
+			else:
+				await client.send_message(message.channel, "There isn't a roulette game going on right now! Use `$start` to initiate one.")
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bet (Amount) (rs3 or 07) (0-36, High/Low, Black/Red/Green, or Odd/Even)`.")
 	###########################################
 
 
