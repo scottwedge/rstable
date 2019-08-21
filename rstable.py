@@ -1155,7 +1155,7 @@ async def on_message(message):
 			None
 	###########################################
 	elif message.content==("$start"):
-		if str(message.channel)=='612790104158896128':
+		if str(message.channel.id)=='612790104158896128':
 			if roulette!=41:
 				await client.send_message(message.channel, "There is already a roulette game going on!")
 			else:
