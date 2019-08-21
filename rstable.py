@@ -384,8 +384,8 @@ async def my_background_task():
 
 					if i[3].isdigit():
 						if int(i[3])==roll:
-							update_money(int(i[0]), int(i[1])*35, str(i[2]))
-							winnerids+=("<@"+str(i[0])+">\n")
+							update_money(int(i[0]), int(i[1])*36, str(i[2]))
+							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*2), str(i[2]))+"__ (Bet "+i[3]+" **Payout x36**)\n")
 					elif i[3]=='even':
 						if roll % 2 == 0 and roll!=0:
 							win=True
@@ -410,7 +410,7 @@ async def my_background_task():
 
 					if win:
 						update_money(int(i[0]), int(i[1])*2, str(i[2]))
-						winnerids+=("<@"+str((i[0]))+"> won **"+formatfromk(int(i[1]*2), str(i[2]))+"**\n")
+						winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*2), str(i[2]))+"__ (Bet "+(i[3]).title()+" **Payout x2**)\n")
 
 				if roll==37:
 					roll='00'
@@ -422,10 +422,10 @@ async def my_background_task():
 				else:
 					embed = discord.Embed(description="The roulette wheel landed on **"+str(roll)+"**! Winners have been paid out!", color=3800857)
 				embed.set_author(name="Roulette Results", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
-				embed.add_field(name="Winners", value=winnerids, inline=True)
-				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/611235470478802955/unknown.png')
+				embed.set_image(url='https://cdn.discordapp.com/attachments/612790104158896128/613558748744515594/Roulete_Wheel_35.png')
 				channel = discord.Object(id='612790104158896128')
 				await client.send_message(channel, embed=embed)
+				await client.send_message(channel, winnerids)
 				roulette=41
 				c.execute("DROP TABLE roulette")
 				c.execute("""CREATE TABLE roulette (
