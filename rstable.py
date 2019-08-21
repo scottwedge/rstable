@@ -342,7 +342,7 @@ def scorefp(hand):
 colors=["A","B","C","D","E","F","0","1","2","3","4","5","6","7","8","9"]
 #nextgiveaway=1
 participants=[]
-roulette=121
+roulette=41
 roulettemsg=0
 
 
@@ -383,7 +383,7 @@ async def my_background_task():
 					win=False
 
 					if i[3].isdigit():
-						if i[3]==roll:
+						if int(i[3])==roll:
 							update_money(int(i[0]), int(i[1])*35, str(i[2]))
 							winnerids+=("<@"+str(i[0])+">\n")
 					elif i[3]=='even':
@@ -426,7 +426,7 @@ async def my_background_task():
 				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/611235470478802955/unknown.png')
 				channel = discord.Object(id='612790104158896128')
 				await client.send_message(channel, embed=embed)
-				roulette=121
+				roulette=41
 				c.execute("DROP TABLE roulette")
 				c.execute("""CREATE TABLE roulette (
 								id bigint,
@@ -436,12 +436,10 @@ async def my_background_task():
 								)""")
 				conn.commit()
 
-			elif roulette!=121:
-				minutes=str(datetime.timedelta(seconds=roulette)).split(":")[1]
-				seconds=str(datetime.timedelta(seconds=roulette)).split(":")[2]
+			elif roulette!=41:
 				embed = discord.Embed(description="A game of roulette is going on! Use `bet (0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
 				embed.set_author(name="Roulette Game", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
-				embed.add_field(name="Time Left", value="**"+minutes+"** Minute(s) and **"+seconds+"** Seconds", inline=True)
+				embed.add_field(name="Time Left", value="**"+str(roulette)+"** Seconds", inline=True)
 				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
 				await client.edit_message(roulettemsg, embed=embed)
 				roulette-=10
@@ -1157,19 +1155,19 @@ async def on_message(message):
 			None
 	###########################################
 	elif message.content==("$start"):
-		if roulette!=121:
+		if roulette!=41:
 			await client.send_message(message.channel, "There is already a roulette game going on!")
 		else:
-			roulette=120
+			roulette=40
 			embed = discord.Embed(description="A game of roulette has started! Use `bet (0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
 			embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
-			embed.add_field(name="Time Left", value="**2** Minutes", inline=True)
+			embed.add_field(name="Time Left", value="**40** Seconds", inline=True)
 			embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
 			roulettemsg = await client.send_message(message.channel, embed=embed)
 	###########################################
 	elif message.content.startswith("bet "):
 		try:
-			if roulette!=121:
+			if roulette!=41:
 				areas=['high','low','black','red','green','odd','even','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
 				game=str(message.content).split(" ")[3]
 				bet=formatok(str(message.content).split(" ")[2], game)
