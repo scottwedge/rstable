@@ -1184,7 +1184,7 @@ async def on_message(message):
 						if current>=bet:
 							update_money(message.author.id, bet*-1, game)
 							c.execute("INSERT INTO roulette VALUES (%s, %s, %s, %s)", (message.author.id,bet,game,area))
-							await client.send_message(message.channel, "You placed a bet of **"+formatfromk(bet, game)+" "+game+"** on **"+area+"**. Good Luck!")
+							await client.add_reaction(message,"✅")
 						else:
 							await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 					else:
