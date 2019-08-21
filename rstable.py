@@ -1166,9 +1166,9 @@ async def on_message(message):
 		#try:
 		if roulette!=121:
 			areas=['high','low','black','red','green','odd','even','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
-			game=str(message.content).split(" ")[2]
-			bet=formatok(str(message.content).split(" ")[1], game)
-			area=str(message.content).split(" ")[3]
+			game=str(message.content).split(" ")[3]
+			bet=formatok(str(message.content).split(" ")[2], game)
+			area=str(message.content).split(" ")[1]
 			if area not in areas:
 				await client.send_message(message.channel, "You can only bet on `0-36`, `High/Low`, `Black/Red/Green`, and `Odd/Even`")
 			else:
