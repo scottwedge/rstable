@@ -425,7 +425,10 @@ async def my_background_task():
 				embed.set_image(url='https://cdn.discordapp.com/attachments/612790104158896128/613558748744515594/Roulete_Wheel_35.png')
 				channel = discord.Object(id='612790104158896128')
 				await client.send_message(channel, embed=embed)
-				await client.send_message(channel, winnerids)
+				if winnerids=="":
+					await client.send_message(channel, "No winners.")
+				else:
+					await client.send_message(channel, winnerids)
 				roulette=41
 				c.execute("DROP TABLE roulette")
 				c.execute("""CREATE TABLE roulette (
