@@ -385,7 +385,7 @@ async def my_background_task():
 					if i[3].isdigit():
 						if int(i[3])==roll:
 							update_money(int(i[0]), int(i[1])*36, str(i[2]))
-							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*2), str(i[2]))+"__ (Bet "+i[3]+" **Payout x36**)\n")
+							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*36), str(i[2]))+"__ (Bet "+i[3]+" **Payout x36**)\n")
 					elif i[3]=='even':
 						if roll % 2 == 0 and roll!=0:
 							win=True
@@ -1155,15 +1155,18 @@ async def on_message(message):
 			None
 	###########################################
 	elif message.content==("$start"):
-		if roulette!=41:
-			await client.send_message(message.channel, "There is already a roulette game going on!")
+		if str(message.channel)=='612790104158896128':
+			if roulette!=41:
+				await client.send_message(message.channel, "There is already a roulette game going on!")
+			else:
+				roulette=40
+				embed = discord.Embed(description="A game of roulette has started! Use `bet (0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
+				embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
+				embed.add_field(name="Time Left", value="**40** Seconds", inline=True)
+				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
+				roulettemsg = await client.send_message(message.channel, embed=embed)
 		else:
-			roulette=40
-			embed = discord.Embed(description="A game of roulette has started! Use `bet (0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
-			embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
-			embed.add_field(name="Time Left", value="**40** Seconds", inline=True)
-			embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
-			roulettemsg = await client.send_message(message.channel, embed=embed)
+			await client.send_message(message.channel, "This command can only be used in <#612790104158896128>.")
 	###########################################
 	elif message.content.startswith("bet "):
 		try:
