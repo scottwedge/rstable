@@ -1157,7 +1157,7 @@ async def on_message(message):
 		else:
 			None
 	###########################################
-	elif message.content==("$start"):
+	elif message.content==("$please"):
 		if str(message.channel.id)=='612790104158896128':
 			if roulette!=41:
 				await client.send_message(message.channel, "There is already a roulette game going on!")
@@ -1194,7 +1194,7 @@ async def on_message(message):
 					else:
 						await client.send_message(message.channel, (isenough(bet, game))[1])
 			else:
-				await client.send_message(message.channel, "There isn't a roulette game going on right now! Use `$start` to initiate one.")
+				await client.send_message(message.channel, "Ask nicely and she will spin the wheel.")
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `bet (0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)`.")
 	###########################################
