@@ -344,10 +344,10 @@ colors=["A","B","C","D","E","F","0","1","2","3","4","5","6","7","8","9"]
 participants=[]
 roulette=41
 roulettemsg=0
-
+gif=""
 
 async def my_background_task():
-	global roulette,participants,winner,roulettemsg
+	global roulette,participants,winner,roulettemsg,gif
 	await client.wait_until_ready()
 	while not client.is_closed:
 		channel = discord.Object(id='585098599172538380')
@@ -407,6 +407,18 @@ async def my_background_task():
 					elif i[3]=='high':
 						if 37>roll>18:
 							win=True
+					elif i[3]=='1st':
+						if 13>roll>0:
+							update_money(int(i[0]), int(i[1])*3, str(i[2]))
+							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*36), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
+					elif i[3]=='2nd':
+						if 25>roll>12:
+							update_money(int(i[0]), int(i[1])*3, str(i[2]))
+							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*36), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
+					elif i[3]=='3rd':
+						if 37>roll>24:
+							update_money(int(i[0]), int(i[1])*3, str(i[2]))
+							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*36), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
 
 					if win:
 						update_money(int(i[0]), int(i[1])*2, str(i[2]))
@@ -422,7 +434,7 @@ async def my_background_task():
 				else:
 					embed = discord.Embed(description="The roulette wheel landed on **"+str(roll)+"**! Winners have been paid out!", color=3800857)
 				embed.set_author(name="Roulette Results", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
-				embed.set_image(url='https://cdn.discordapp.com/attachments/612790104158896128/613558748744515594/Roulete_Wheel_35.png')
+				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/614133788263317504/unknown.png')
 				channel = discord.Object(id='612790104158896128')
 				await client.send_message(channel, embed=embed)
 				if winnerids=="":
@@ -443,7 +455,7 @@ async def my_background_task():
 				embed = discord.Embed(description="A game of roulette is going on! Use `bet (0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
 				embed.set_author(name="Roulette Game", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
 				embed.add_field(name="Time Left", value="**"+str(roulette)+"** Seconds", inline=True)
-				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
+				embed.set_image(url=gif)
 				await client.edit_message(roulettemsg, embed=embed)
 				roulette-=10
 			else:
@@ -482,7 +494,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-	global roulette,roulettemsg
+	global roulette,roulettemsg,gif
 	message.content=(message.content).lower()
 
 	# if nextgiveaway==1 and message.channel.id=="444569488948461569" and message.server.id=="444569488491413506":
@@ -1163,10 +1175,11 @@ async def on_message(message):
 				await client.send_message(message.channel, "There is already a roulette game going on!")
 			else:
 				roulette=40
-				embed = discord.Embed(description="A game of roulette has started! Use `bet (0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
+				embed = discord.Embed(description="A game of roulette has started! Use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
 				embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
 				embed.add_field(name="Time Left", value="**40** Seconds", inline=True)
-				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif')
+				gif=random.random(['https://bit.ly/2U3jmpB','https://bit.ly/31ZfatE','https://bit.ly/2NuBqHN'])
+				embed.set_image(url=gif)
 				roulettemsg = await client.send_message(message.channel, embed=embed)
 		else:
 			await client.send_message(message.channel, "This command can only be used in <#612790104158896128>.")
@@ -1174,12 +1187,12 @@ async def on_message(message):
 	elif message.content.startswith("bet "):
 		try:
 			if roulette!=41:
-				areas=['high','low','black','red','green','odd','even','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
+				areas=['1st','2nd','3rd','high','low','black','red','green','odd','even','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
 				game=str(message.content).split(" ")[3]
 				bet=formatok(str(message.content).split(" ")[2], game)
 				area=str(message.content).split(" ")[1]
 				if area not in areas:
-					await client.send_message(message.channel, "You can only bet on `0-36`, `High/Low`, `Black/Red/Green`, and `Odd/Even`")
+					await client.send_message(message.channel, "You can only bet on `1st/2nd/3rd`, `0-36`, `High/Low`, `Black/Red/Green`, and `Odd/Even`")
 				else:
 					current=getvalue(message.author.id, game,"rsmoney")
 					ticketbets(message.author.id, bet, game)
@@ -1194,9 +1207,9 @@ async def on_message(message):
 					else:
 						await client.send_message(message.channel, (isenough(bet, game))[1])
 			else:
-				await client.send_message(message.channel, "Ask nicely and she will spin the wheel.")
+				await client.send_message(message.channel, "`Ask nicely and she will spin the wheel, say $please`")
 		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `bet (0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)`.")
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)`.")
 	###########################################
 
 
