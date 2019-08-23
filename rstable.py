@@ -1178,7 +1178,7 @@ async def on_message(message):
 				embed = discord.Embed(description="A game of roulette has started! Use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
 				embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
 				embed.add_field(name="Time Left", value="**40** Seconds", inline=True)
-				gif=random.random(['https://bit.ly/2U3jmpB','https://bit.ly/31ZfatE','https://bit.ly/2NuBqHN'])
+				gif=random.choice(['https://bit.ly/2U3jmpB','https://bit.ly/31ZfatE','https://bit.ly/2NuBqHN'])
 				embed.set_image(url=gif)
 				roulettemsg = await client.send_message(message.channel, embed=embed)
 		else:
