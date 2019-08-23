@@ -410,15 +410,15 @@ async def my_background_task():
 					elif i[3]=='1st':
 						if 13>roll>0:
 							update_money(int(i[0]), int(i[1])*3, str(i[2]))
-							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*36), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
+							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*3), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
 					elif i[3]=='2nd':
 						if 25>roll>12:
 							update_money(int(i[0]), int(i[1])*3, str(i[2]))
-							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*36), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
+							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*3), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
 					elif i[3]=='3rd':
 						if 37>roll>24:
 							update_money(int(i[0]), int(i[1])*3, str(i[2]))
-							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*36), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
+							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*3), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
 
 					if win:
 						update_money(int(i[0]), int(i[1])*2, str(i[2]))
