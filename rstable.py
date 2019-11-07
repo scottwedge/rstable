@@ -340,7 +340,7 @@ def scorefp(hand):
 #Predefined Variables
 
 colors=["A","B","C","D","E","F","0","1","2","3","4","5","6","7","8","9"]
-#nextgiveaway=1
+nextgiveaway=1
 participants=[]
 roulette=41
 roulettemsg=0
@@ -434,7 +434,7 @@ async def my_background_task():
 				else:
 					embed = discord.Embed(description="The roulette wheel landed on **"+str(roll)+"**! Winners have been paid out!", color=3800857)
 				embed.set_author(name="Roulette Results", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
-				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/614133788263317504/unknown.png')
+				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/614584339841155072/unknown.png')
 				channel = discord.Object(id='612790104158896128')
 				await client.send_message(channel, embed=embed)
 				if winnerids=="":
@@ -460,25 +460,27 @@ async def my_background_task():
 				roulette-=10
 			else:
 				None
-		# channel = discord.Object(id='444569488948461569')
-		# if nextgiveaway==1:
-		# 	if len(participants)<1:
-		# 		embed = discord.Embed(description="Couldn't determine a giveaway winner. Next giveaway in __15 minutes__.", color=557823)
-		# 		embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
-		# 		await client.send_message(channel, embed=embed)
-		# 	else:
-		# 		winner=random.choice(participants)
-		# 		embed = discord.Embed(description="<@"+winner+"> has won **100k** 07! Next giveaway in __15 minutes__.", color=557823)
-		# 		embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
-		# 		await client.send_message(channel, embed=embed)
-		# 		update_money(winner, 100, "07")
-		# 		participants=[]
-		# 	nextgiveaway=15
-		# else:
-		# 	nextgiveaway=1
-		# 	embed = discord.Embed(description="Say something in the next minute to be entered in a **100k** 07 Giveaway!", color=557823)
-		# 	embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
-		# 	await client.send_message(channel, embed=embed)
+		channel = discord.Object(id='444569488948461569')
+		if nextgiveaway==0:
+			None
+		elif nextgiveaway==1:
+			if len(participants)<1:
+				embed = discord.Embed(description="Couldn't determine a giveaway winner. Next giveaway in __15 minutes__.", color=557823)
+				embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
+				await client.send_message(channel, embed=embed)
+			else:
+				winner=random.choice(participants)
+				embed = discord.Embed(description="<@"+winner+"> has won **100k** 07! Next giveaway in __15 minutes__.", color=557823)
+				embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
+				await client.send_message(channel, embed=embed)
+				update_money(winner, 100, "07")
+				participants=[]
+			nextgiveaway=15
+		else:
+			nextgiveaway=1
+			embed = discord.Embed(description="Say something in the next minute to be entered in a **100k** 07 Giveaway!", color=557823)
+			embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
+			await client.send_message(channel, embed=embed)
 		await asyncio.sleep(10)
 
 
@@ -494,12 +496,12 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-	global roulette,roulettemsg,gif
+	global roulette,roulettemsg,gif,nextgiveaway,participants
 	message.content=(message.content).lower()
 
-	# if nextgiveaway==1 and message.channel.id=="444569488948461569" and message.server.id=="444569488491413506":
-	# 	if str(message.author.id) not in participants and str(message.author.id)!="456484773783928843":
-	# 		participants.append(str(message.author.id))
+	if nextgiveaway==1 and message.channel.id=="444569488948461569" and message.server.id=="444569488491413506":
+		if str(message.author.id) not in participants and str(message.author.id)!="456484773783928843":
+			participants.append(str(message.author.id))
 
 	if message.server.id!="512158131674152973":
 		None
@@ -1178,7 +1180,7 @@ async def on_message(message):
 				embed = discord.Embed(description="A game of roulette has started! Use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
 				embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
 				embed.add_field(name="Time Left", value="**40** Seconds", inline=True)
-				gif=random.choice(['https://bit.ly/2U3jmpB','https://bit.ly/31ZfatE','https://bit.ly/2NuBqHN'])
+				gif=random.choice(['https://bit.ly/2znjmak','https://bit.ly/2Zqh2dx','https://bit.ly/2NuBqHN'])
 				embed.set_image(url=gif)
 				roulettemsg = await client.send_message(message.channel, embed=embed)
 		else:
@@ -1211,7 +1213,35 @@ async def on_message(message):
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)`.")
 	###########################################
-
+	elif message.content==("$menu"):
+		embed = discord.Embed(description="""1. Blurberry Special\n
+											2. Chef's Delight\n
+											3. Cider\n
+											4. Dragon Bitter\n
+											5. Karamjan Rum\n
+											6. Legendary Cocktail\n
+											7. Nice Beer\n
+											8. Purple Lumbridge\n
+											9. Short Green Guy\n
+											10. Wine of Zamorak\n
+											11. Wizard's Mind Bomb\n
+											""", color=3800857)
+		embed.set_author(name="Drink Menu", icon_url=str(message.server.icon_url))
+		await client.send_message(message.channel, embed=embed)
+	##########################################
+	elif message.content==("$giveaways off"):
+		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+			nextgiveaway=0
+			await client.send_message(message.channel, "15 minute raffle giveaways turned off!")
+		else:
+			await client.send_message(message.channel, "Admin Command Only!")
+	elif message.content==("$giveaways on"):
+		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+			nextgiveaway=1
+			await client.send_message(message.channel, "15 minute raffle giveaways turned on!")
+		else:
+			await client.send_message(message.channel, "Admin Command Only!")
+	#########################################
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
