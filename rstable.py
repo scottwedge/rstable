@@ -347,10 +347,10 @@ roulettemsg=0
 gif=""
 
 async def my_background_task():
-	global roulette,participants,winner,roulettemsg,gif
+	global roulette,participants,winner,roulettemsg,gif,nextgiveaway
 	await client.wait_until_ready()
 	while not client.is_closed:
-		channel = discord.Object(id='585098599172538380')
+		channel = discord.Object(id='617076198740328459')
 		c.execute("SELECT seedreset FROM data")
 		lastdate=str(c.fetchone()[0])
 		today=str(time.gmtime()[2])
@@ -435,7 +435,7 @@ async def my_background_task():
 					embed = discord.Embed(description="The roulette wheel landed on **"+str(roll)+"**! Winners have been paid out!", color=3800857)
 				embed.set_author(name="Roulette Results", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
 				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/614584339841155072/unknown.png')
-				channel = discord.Object(id='612790104158896128')
+				channel = discord.Object(id='621787403778129934')
 				await client.send_message(channel, embed=embed)
 				if winnerids=="":
 					await client.send_message(channel, "No winners.")
@@ -460,7 +460,7 @@ async def my_background_task():
 				roulette-=10
 			else:
 				None
-		channel = discord.Object(id='444569488948461569')
+		channel = discord.Object(id='512165217438924801')
 		if nextgiveaway==0:
 			None
 		elif nextgiveaway==1:
