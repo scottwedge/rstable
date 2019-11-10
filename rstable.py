@@ -350,7 +350,7 @@ async def my_background_task():
 	global roulette,participants,winner,roulettemsg,gif,nextgiveaway
 	await client.wait_until_ready()
 	while not client.is_closed:
-		channel = discord.Object(id='617076198740328459')
+		channel = discord.Object(id='590950795390746634')
 		c.execute("SELECT seedreset FROM data")
 		lastdate=str(c.fetchone()[0])
 		today=str(time.gmtime()[2])
@@ -435,7 +435,7 @@ async def my_background_task():
 					embed = discord.Embed(description="The roulette wheel landed on **"+str(roll)+"**! Winners have been paid out!", color=3800857)
 				embed.set_author(name="Roulette Results", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
 				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/614584339841155072/unknown.png')
-				channel = discord.Object(id='621787403778129934')
+				channel = discord.Object(id='580153388402999308')
 				await client.send_message(channel, embed=embed)
 				if winnerids=="":
 					await client.send_message(channel, "No winners.")
@@ -460,7 +460,7 @@ async def my_background_task():
 				roulette-=10
 			else:
 				None
-		channel = discord.Object(id='512165217438924801')
+		channel = discord.Object(id='580153388402999308')
 		if nextgiveaway==0:
 			None
 		elif nextgiveaway==1:
@@ -499,11 +499,11 @@ async def on_message(message):
 	global roulette,roulettemsg,gif,nextgiveaway,participants
 	message.content=(message.content).lower()
 
-	if nextgiveaway==1 and message.channel.id=="444569488948461569" and message.server.id=="444569488491413506":
-		if str(message.author.id) not in participants and str(message.author.id)!="456484773783928843":
+	if nextgiveaway==1 and message.channel.id=="580153388402999308" and message.server.id=="518832231532331018":
+		if str(message.author.id) not in participants and str(message.author.id)!="580511336598077511":
 			participants.append(str(message.author.id))
 
-	if message.server.id!="512158131674152973":
+	if message.server.id!="518832231532331018":
 		None
 	#############################################
 	elif message.content.startswith("$input"):
