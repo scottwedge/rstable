@@ -12,24 +12,24 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 c=conn.cursor()
 
-c.execute("DROP TABLE rsmoney")
-c.execute("""CREATE TABLE rsmoney (
-				id bigint,
-				rs3 integer,
-				osrs integer,
-				rs3total bigint,
-				osrstotal bigint,
-				rs3week bigint,
-				osrsweek bigint,
-				clientseed text,
-				privacy boolean,
-				bronze integer,
-				silver integer,
-				gold integer,
-				tickets integer
-				)""")
-c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0))
-conn.commit()
+# c.execute("DROP TABLE rsmoney")
+# c.execute("""CREATE TABLE rsmoney (
+# 				id bigint,
+# 				rs3 integer,
+# 				osrs integer,
+# 				rs3total bigint,
+# 				osrstotal bigint,
+# 				rs3week bigint,
+# 				osrsweek bigint,
+# 				clientseed text,
+# 				privacy boolean,
+# 				bronze integer,
+# 				silver integer,
+# 				gold integer,
+# 				tickets integer
+# 				)""")
+# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0))
+# conn.commit()
 
 # c.execute("DROP TABLE data")
 # c.execute("""CREATE TABLE data (
@@ -462,9 +462,8 @@ async def my_background_task():
 			else:
 				None
 		channel = discord.Object(id='580153388402999308')
-		if nextgiveaway==181:
-			None
-		elif nextgiveaway==0:
+
+		if nextgiveaway==0:
 			if len(participants)<1:
 				embed = discord.Embed(description="Couldn't determine a giveaway winner. Next giveaway in __30 minutes__.", color=557823)
 				embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
@@ -479,11 +478,13 @@ async def my_background_task():
 				conn.commit()
 				participants=[]
 			nextgiveaway=180
-		else:
-			nextgiveaway-1
+		elif nextgiveaway==7:
 			embed = discord.Embed(description="Say something in the next minute to be entered in a raffle ticket giveaway!", color=557823)
 			embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
 			await client.send_message(channel, embed=embed)
+			nextgiveaway-1
+		else:
+			nextgiveaway-1
 		await asyncio.sleep(10)
 
 
@@ -502,7 +503,7 @@ async def on_message(message):
 	global roulette,roulettemsg,gif,nextgiveaway,participants
 	message.content=(message.content).lower()
 
-	if nextgiveaway==1 and message.channel.id=="580153388402999308" and message.server.id=="518832231532331018":
+	if nextgiveaway<=7 and message.channel.id=="580153388402999308" and message.server.id=="518832231532331018":
 		if str(message.author.id) not in participants and str(message.author.id)!="580511336598077511":
 			participants.append(str(message.author.id))
 
@@ -1235,20 +1236,7 @@ async def on_message(message):
 											""", color=3800857)
 		embed.set_author(name="Drink Menu", icon_url=str(message.server.icon_url))
 		await client.send_message(message.channel, embed=embed)
-	##########################################
-	# elif message.content==("$giveaways off"):
-	# 	if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-	# 		nextgiveaway=0
-	# 		await client.send_message(message.channel, "15 minute raffle giveaways turned off!")
-	# 	else:
-	# 		await client.send_message(message.channel, "Admin Command Only!")
-	# elif message.content==("$giveaways on"):
-	# 	if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-	# 		nextgiveaway=1
-	# 		await client.send_message(message.channel, "15 minute raffle giveaways turned on!")
-	# 	else:
-	# 		await client.send_message(message.channel, "Admin Command Only!")
-	#########################################
+	###############################################
 	elif message.content==("$drawraffle"):
 		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 			c.execute("SELECT id,tickets FROM rsmoney")
@@ -1267,6 +1255,18 @@ async def on_message(message):
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
 	########################################
+	elif message.content.startswith("$ticket"):
+		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+			amount=(message.content).split(" ")[2]
+			try:
+				int(str(message.content).split(" ")[1][2:3])
+				member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
+			except:
+				member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
+			tickets=getvalue(int(message.author.id),"tickets","rsmoney")
+			c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+amount, member.id))
+		else:
+			await client.send_message(message.channel, "Admin Command Only!")
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
