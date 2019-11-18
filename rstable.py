@@ -1265,6 +1265,8 @@ async def on_message(message):
 				member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
 			tickets=getvalue(int(message.author.id),"tickets","rsmoney")
 			c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+amount, member.id))
+			conn.commit()
+			await client.send_message(message.channel, "Tickets updated.")
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
 
