@@ -12,23 +12,24 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 c=conn.cursor()
 
-# c.execute("DROP TABLE rsmoney")
-# c.execute("""CREATE TABLE rsmoney (
-# 				id bigint,
-# 				rs3 integer,
-# 				osrs integer,
-# 				rs3total bigint,
-# 				osrstotal bigint,
-# 				rs3week bigint,
-# 				osrsweek bigint,
-# 				clientseed text,
-# 				privacy boolean,
-# 				bronze integer,
-# 				silver integer,
-# 				gold integer
-# 				)""")
-# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0))
-# conn.commit()
+c.execute("DROP TABLE rsmoney")
+c.execute("""CREATE TABLE rsmoney (
+				id bigint,
+				rs3 integer,
+				osrs integer,
+				rs3total bigint,
+				osrstotal bigint,
+				rs3week bigint,
+				osrsweek bigint,
+				clientseed text,
+				privacy boolean,
+				bronze integer,
+				silver integer,
+				gold integer,
+				tickets integer
+				)""")
+c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0))
+conn.commit()
 
 # c.execute("DROP TABLE data")
 # c.execute("""CREATE TABLE data (
@@ -70,7 +71,7 @@ client = discord.Client()
 
 
 def add_member(userid,rs3,osrs,usd):
-	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0))
 	conn.commit()
 
 def getvalue(userid,value,table):
@@ -340,7 +341,7 @@ def scorefp(hand):
 #Predefined Variables
 
 colors=["A","B","C","D","E","F","0","1","2","3","4","5","6","7","8","9"]
-nextgiveaway=1
+nextgiveaway=0
 participants=[]
 roulette=41
 roulettemsg=0
@@ -460,27 +461,29 @@ async def my_background_task():
 				roulette-=10
 			else:
 				None
-		# channel = discord.Object(id='580153388402999308')
-		# if nextgiveaway==0:
-		# 	None
-		# elif nextgiveaway==1:
-		# 	if len(participants)<1:
-		# 		embed = discord.Embed(description="Couldn't determine a giveaway winner. Next giveaway in __15 minutes__.", color=557823)
-		# 		embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
-		# 		await client.send_message(channel, embed=embed)
-		# 	else:
-		# 		winner=random.choice(participants)
-		# 		embed = discord.Embed(description="<@"+winner+"> has won **100k** 07! Next giveaway in __15 minutes__.", color=557823)
-		# 		embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
-		# 		await client.send_message(channel, embed=embed)
-		# 		update_money(winner, 100, "07")
-		# 		participants=[]
-		# 	nextgiveaway=15
-		# else:
-		# 	nextgiveaway=1
-		# 	embed = discord.Embed(description="Say something in the next minute to be entered in a **100k** 07 Giveaway!", color=557823)
-		# 	embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
-		# 	await client.send_message(channel, embed=embed)
+		channel = discord.Object(id='580153388402999308')
+		if nextgiveaway==181:
+			None
+		elif nextgiveaway==0:
+			if len(participants)<1:
+				embed = discord.Embed(description="Couldn't determine a giveaway winner. Next giveaway in __30 minutes__.", color=557823)
+				embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
+				await client.send_message(channel, embed=embed)
+			else:
+				winner=random.choice(participants)
+				embed = discord.Embed(description="<@"+winner+"> has won a raffle ticket! Next giveaway in __30 minutes__.", color=557823)
+				embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
+				await client.send_message(channel, embed=embed)
+				tickets=getvalue(int(message.author.id),"tickets","rsmoney")
+				c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+1, message.author.id))
+				conn.commit()
+				participants=[]
+			nextgiveaway=180
+		else:
+			nextgiveaway-1
+			embed = discord.Embed(description="Say something in the next minute to be entered in a raffle ticket giveaway!", color=557823)
+			embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
+			await client.send_message(channel, embed=embed)
 		await asyncio.sleep(10)
 
 
@@ -499,9 +502,9 @@ async def on_message(message):
 	global roulette,roulettemsg,gif,nextgiveaway,participants
 	message.content=(message.content).lower()
 
-	# if nextgiveaway==1 and message.channel.id=="580153388402999308" and message.server.id=="518832231532331018":
-	# 	if str(message.author.id) not in participants and str(message.author.id)!="580511336598077511":
-	# 		participants.append(str(message.author.id))
+	if nextgiveaway==1 and message.channel.id=="580153388402999308" and message.server.id=="518832231532331018":
+		if str(message.author.id) not in participants and str(message.author.id)!="580511336598077511":
+			participants.append(str(message.author.id))
 
 	if message.server.id!="518832231532331018":
 		None
@@ -580,6 +583,7 @@ async def on_message(message):
 	elif (message.content).lower()==("$wallet") or (message.content).lower()==("$w"):
 		osrs=getvalue(int(message.author.id),"07","rsmoney")
 		rs3=getvalue(int(message.author.id),"rs3","rsmoney")
+		tickets=getvalue(int(message.author.id),"tickets","rsmoney")
 
 		if osrs>=1000000 or rs3>=1000000:
 			sidecolor=2693614
@@ -597,6 +601,7 @@ async def on_message(message):
 		embed.set_author(name=(str(message.author))[:-5]+"'s Wallet", icon_url=str(message.author.avatar_url))
 		embed.add_field(name="RS3 Balance", value=rs3, inline=True)
 		embed.add_field(name="07 Balance", value=osrs, inline=True)
+		embed.add_field(name="Tickets", value=str(tickets), inline=True)
 		if getvalue(int(message.author.id), "privacy","rsmoney")==True:
 			await client.send_message(message.channel, embed=embed)
 		else:
@@ -621,6 +626,7 @@ async def on_message(message):
 		if getvalue(int(member.id), "privacy","rsmoney")==False or isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 			osrs=getvalue(int(member.id),"07","rsmoney")
 			rs3=getvalue(int(member.id),"rs3","rsmoney")
+			tickets=getvalue(int(member.id),"tickets","rsmoney")
 
 			if osrs>=1000000 or rs3>=1000000:
 				sidecolor=2693614
@@ -638,6 +644,7 @@ async def on_message(message):
 			embed.set_author(name=(str(member))[:-5]+"'s Wallet", icon_url=str(member.avatar_url))
 			embed.add_field(name="RS3 Balance", value=rs3, inline=True)
 			embed.add_field(name="07 Balance", value=osrs, inline=True)
+			embed.add_field(name="Tickets", value=str(tickets), inline=True)
 			await client.send_message(message.channel, embed=embed)
 			
 		elif getvalue(int(member.id), "privacy","rsmoney")==True:
@@ -1242,6 +1249,24 @@ async def on_message(message):
 	# 	else:
 	# 		await client.send_message(message.channel, "Admin Command Only!")
 	#########################################
+	elif message.content==("$drawraffle"):
+		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+			c.execute("SELECT id,tickets FROM rsmoney")
+			tickets=c.fetchall()
+			entered=[]
+			for i in tickets:
+				for x in range(i[1]):
+					entered+=str(i[0])
+			winner=random.choice(entered)
+			c.execute("UPDATE rsmoney SET tickets=0")
+			conn.commit()
+
+			embed = discord.Embed(description="<@"+winner+"> has won the raffle!", color=16729241)
+			embed.set_author(name="Raffle Winner", icon_url=str(message.server.icon_url))
+			await client.send_message(message.channel, embed=embed)
+		else:
+			await client.send_message(message.channel, "Admin Command Only!")
+	########################################
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
