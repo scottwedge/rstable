@@ -769,19 +769,22 @@ async def on_message(message):
 					except:
 						member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
 					
-					taker=getvalue(int(member.id),currency,"rsmoney")
-			
-					if currency=="rs3":
-						c.execute("UPDATE rsmoney SET rs3={} WHERE id={}".format(current-transfered, message.author.id))
-						c.execute("UPDATE rsmoney SET rs3={} WHERE id={}".format(taker+transfered, member.id))
-					elif currency=="07":
-						c.execute("UPDATE rsmoney SET osrs={} WHERE id={}".format(current-transfered, message.author.id))
-						c.execute("UPDATE rsmoney SET osrs={} WHERE id={}".format(taker+transfered, member.id))
-					conn.commit()
+					if str(member.id)==str(message.author.id):
+						await client.send_message(message.channel, "You can't transfer money to yourself 😂")
+					else:
+						taker=getvalue(int(member.id),currency,"rsmoney")
+				
+						if currency=="rs3":
+							c.execute("UPDATE rsmoney SET rs3={} WHERE id={}".format(current-transfered, message.author.id))
+							c.execute("UPDATE rsmoney SET rs3={} WHERE id={}".format(taker+transfered, member.id))
+						elif currency=="07":
+							c.execute("UPDATE rsmoney SET osrs={} WHERE id={}".format(current-transfered, message.author.id))
+							c.execute("UPDATE rsmoney SET osrs={} WHERE id={}".format(taker+transfered, member.id))
+						conn.commit()
 
-					embed = discord.Embed(description="<@"+str(message.author.id)+"> has transfered "+str(formatfromk(transfered, currency))+" "+currency+" to <@"+str(member.id)+">'s wallet.", color=5174318)
-					embed.set_author(name="Transfer Request", icon_url=str(message.author.avatar_url))
-					await client.send_message(message.channel, embed=embed)
+						embed = discord.Embed(description="<@"+str(message.author.id)+"> has transfered "+str(formatfromk(transfered, currency))+" "+currency+" to <@"+str(member.id)+">'s wallet.", color=5174318)
+						embed.set_author(name="Transfer Request", icon_url=str(message.author.avatar_url))
+						await client.send_message(message.channel, embed=embed)
 				else:
 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have enough money to transfer that amount!")
 			else:
