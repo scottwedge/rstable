@@ -477,14 +477,14 @@ async def my_background_task():
 				c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+1, message.author.id))
 				conn.commit()
 				participants=[]
-			nextgiveaway=300
+			nextgiveaway=30
 		elif nextgiveaway==7:
 			embed = discord.Embed(description="Say something in the next minute to be entered in a raffle ticket giveaway!", color=557823)
 			embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
 			await client.send_message(channel, embed=embed)
-			nextgiveaway-1
+			nextgiveaway-=1
 		else:
-			nextgiveaway-1
+			nextgiveaway-=1
 		print(nextgiveaway)
 		await asyncio.sleep(10)
 
