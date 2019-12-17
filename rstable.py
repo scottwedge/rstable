@@ -477,7 +477,7 @@ async def my_background_task():
 				c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+1, message.author.id))
 				conn.commit()
 				participants=[]
-			nextgiveaway=180
+			nextgiveaway=300
 		elif nextgiveaway==7:
 			embed = discord.Embed(description="Say something in the next minute to be entered in a raffle ticket giveaway!", color=557823)
 			embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
@@ -1180,7 +1180,7 @@ async def on_message(message):
 			None
 	###########################################
 	elif message.content==("$please"):
-		if str(message.channel.id)=='612790104158896128':
+		if str(message.channel.id)=='566165744954638346':
 			if roulette!=41:
 				await client.send_message(message.channel, "There is already a roulette game going on!")
 			else:
@@ -1192,7 +1192,7 @@ async def on_message(message):
 				embed.set_image(url=gif)
 				roulettemsg = await client.send_message(message.channel, embed=embed)
 		else:
-			await client.send_message(message.channel, "This command can only be used in <#612790104158896128>.")
+			await client.send_message(message.channel, "This command can only be used in <#566165744954638346>.")
 	###########################################
 	elif message.content.startswith("bet "):
 		try:
@@ -1257,7 +1257,7 @@ async def on_message(message):
 	########################################
 	elif message.content.startswith("$ticket"):
 		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-			amount=(message.content).split(" ")[2]
+			amount=int((message.content).split(" ")[2])
 			try:
 				int(str(message.content).split(" ")[1][2:3])
 				member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
@@ -1269,6 +1269,7 @@ async def on_message(message):
 			await client.send_message(message.channel, "Tickets updated.")
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
+
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
