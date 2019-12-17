@@ -436,7 +436,7 @@ async def my_background_task():
 					embed = discord.Embed(description="The roulette wheel landed on **"+str(roll)+"**! Winners have been paid out!", color=3800857)
 				embed.set_author(name="Roulette Results", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
 				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/614584339841155072/unknown.png')
-				channel = discord.Object(id='580153388402999308')
+				channel = discord.Object(id='566165744954638346')
 				await client.send_message(channel, embed=embed)
 				if winnerids=="":
 					await client.send_message(channel, "No winners.")
@@ -1245,7 +1245,6 @@ async def on_message(message):
 			for i in tickets:
 				for x in range(i[1]):
 					entered.append(str(i[0]))
-			print(entered)
 			winner=random.choice(entered)
 			c.execute("UPDATE rsmoney SET tickets=0")
 			conn.commit()
