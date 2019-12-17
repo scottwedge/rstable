@@ -461,30 +461,30 @@ async def my_background_task():
 				roulette-=10
 			else:
 				None
-		channel = discord.Object(id='566165744954638346')
+		# channel = discord.Object(id='566165744954638346')
 
-		if nextgiveaway==0:
-			if len(participants)<1:
-				embed = discord.Embed(description="Couldn't determine a giveaway winner. Next giveaway in __30 minutes__.", color=557823)
-				embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
-				await client.send_message(channel, embed=embed)
-			else:
-				winner=random.choice(participants)
-				embed = discord.Embed(description="<@"+winner+"> has won a raffle ticket! Next giveaway in __30 minutes__.", color=557823)
-				embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
-				await client.send_message(channel, embed=embed)
-				tickets=getvalue(int(message.author.id),"tickets","rsmoney")
-				c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+1, winner))
-				conn.commit()
-				participants=[]
-			nextgiveaway=30
-		elif nextgiveaway==7:
-			embed = discord.Embed(description="Say something in the next minute to be entered in a raffle ticket giveaway!", color=557823)
-			embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
-			await client.send_message(channel, embed=embed)
-			nextgiveaway-=1
-		else:
-			nextgiveaway-=1
+		# if nextgiveaway==0:
+		# 	if len(participants)<1:
+		# 		embed = discord.Embed(description="Couldn't determine a giveaway winner. Next giveaway in __30 minutes__.", color=557823)
+		# 		embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
+		# 		await client.send_message(channel, embed=embed)
+		# 	else:
+		# 		winner=random.choice(participants)
+		# 		embed = discord.Embed(description="<@"+winner+"> has won a raffle ticket! Next giveaway in __30 minutes__.", color=557823)
+		# 		embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
+		# 		await client.send_message(channel, embed=embed)
+		# 		tickets=getvalue(int(message.author.id),"tickets","rsmoney")
+		# 		c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+1, winner))
+		# 		conn.commit()
+		# 		participants=[]
+		# 	nextgiveaway=30
+		# elif nextgiveaway==7:
+		# 	embed = discord.Embed(description="Say something in the next minute to be entered in a raffle ticket giveaway!", color=557823)
+		# 	embed.set_author(name="Giveaway", icon_url="https://cdn.discordapp.com/icons/444569488491413506/fb7ac7ed9204c85dd640d86e7358f1b8.jpg")
+		# 	await client.send_message(channel, embed=embed)
+		# 	nextgiveaway-=1
+		# else:
+		# 	nextgiveaway-=1
 		await asyncio.sleep(10)
 
 
@@ -503,9 +503,9 @@ async def on_message(message):
 	global roulette,roulettemsg,gif,nextgiveaway,participants
 	message.content=(message.content).lower()
 
-	if nextgiveaway<=7 and message.channel.id=="580153388402999308" and message.server.id=="518832231532331018":
-		if str(message.author.id) not in participants and str(message.author.id)!="580511336598077511":
-			participants.append(str(message.author.id))
+	# if nextgiveaway<=7 and message.channel.id=="580153388402999308" and message.server.id=="518832231532331018":
+	# 	if str(message.author.id) not in participants and str(message.author.id)!="580511336598077511":
+	# 		participants.append(str(message.author.id))
 
 	if message.server.id!="518832231532331018":
 		None
@@ -1244,7 +1244,7 @@ async def on_message(message):
 			entered=[]
 			for i in tickets:
 				for x in range(i[1]):
-					entered+=str(i[0])
+					entered.append(str(i[0]))
 			print(entered)
 			winner=random.choice(entered)
 			c.execute("UPDATE rsmoney SET tickets=0")
