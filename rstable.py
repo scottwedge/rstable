@@ -452,7 +452,7 @@ async def my_background_task():
 								)""")
 				conn.commit()
 
-			elif roulette!=41:
+			elif roulette!=41 and roulette!=0:
 				embed = discord.Embed(description="A game of roulette is going on! Use `bet (0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
 				embed.set_author(name="Roulette Game", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
 				embed.add_field(name="Time Left", value="**"+str(roulette)+"** Seconds", inline=True)
@@ -485,6 +485,7 @@ async def my_background_task():
 			nextgiveaway-1
 		else:
 			nextgiveaway-1
+		print(nextgiveaway)
 		await asyncio.sleep(10)
 
 
