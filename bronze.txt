@@ -19,3 +19,6 @@ Granite Body|67|https://cdn.discordapp.com/attachments/580787390520492062/580787
 Bandos Mitre|26|https://cdn.discordapp.com/attachments/580787390520492062/580787547349712926/unknown.png
 3000 Feathers|6|https://cdn.discordapp.com/attachments/580787390520492062/580787736886247475/unknown.png
 The Evil Golden Keg|1|https://cdn.discordapp.com/attachments/580787390520492062/580787722659168304/unknown.png
+Rune Dagger|10|https://cdn.discordapp.com/attachments/580436923756314624/656647665265934357/Rune_dagger_detail.png
+Pink Boater|20|https://cdn.discordapp.com/attachments/580436923756314624/656643929483247627/Pink_boater_detail.png
+Blue Boater|15|https://cdn.discordapp.com/attachments/580436923756314624/656644021057486848/latest.png

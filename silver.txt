@@ -24,3 +24,5 @@ Zamorak Cloak|63|https://cdn.discordapp.com/attachments/580791377424678919/58079
 Bob's Blue Shirt|23|https://cdn.discordapp.com/attachments/580791377424678919/580791928522539013/unknown.png
 10000 Feathers|20|https://cdn.discordapp.com/attachments/580791377424678919/580791946273095690/unknown.png
 Rune Scimitar|15|https://cdn.discordapp.com/attachments/580791377424678919/580791960164499456/unknown.png
+Pink Boater|20|https://cdn.discordapp.com/attachments/580436923756314624/656643929483247627/Pink_boater_detail.png
+Blue Boater|15|https://cdn.discordapp.com/attachments/580436923756314624/656644021057486848/latest.png
