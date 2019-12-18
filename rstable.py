@@ -391,7 +391,7 @@ addins=[(174, '391667822536818689', '0', '48205000', '2', '0', '3', '0', 'NO'),
 (539, '160186344776138752', '0', '250000', '0', '0', '0', '0', 'NO')]
 
 for i in addins:
-	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (int(i[1]),0,int(i[3]),0,0,0,0,"ClientSeed",False,int(i[5]),int(i[6]),int(i[7]),int(i[4])))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (int(i[1]),0,int(float(i[3])),0,0,0,0,"ClientSeed",False,int(i[5]),int(i[6]),int(i[7]),int(i[4])))
 conn.commit()
 
 def add_member(userid,rs3,osrs):
