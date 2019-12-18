@@ -509,7 +509,7 @@ async def on_message(message):
 	# 	if str(message.author.id) not in participants and str(message.author.id)!="580511336598077511":
 	# 		participants.append(str(message.author.id))
 
-	if message.server.id!="512158131674152973" or message.server.id!="518832231532331018":
+	if message.server.id!="512158131674152973" and message.server.id!="518832231532331018":
 		None
 	#############################################
 	elif message.content.startswith("$input"):
