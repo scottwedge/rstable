@@ -82,7 +82,7 @@ def getvalue(userid,value,table):
 		tester=int(c.fetchone()[0])
 	except:
 		print("New Member")
-		add_member(int(userid),0,0,0)
+		add_member(int(userid),0,0)
 		return 0
 
 	c.execute("SELECT {} FROM {} WHERE id={}".format(value, table, userid))
