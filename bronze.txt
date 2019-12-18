@@ -22,3 +22,4 @@ The Evil Golden Keg|1|https://cdn.discordapp.com/attachments/580787390520492062/
 Rune Dagger|10|https://cdn.discordapp.com/attachments/580436923756314624/656647665265934357/Rune_dagger_detail.png
 Pink Boater|20|https://cdn.discordapp.com/attachments/580436923756314624/656643929483247627/Pink_boater_detail.png
 Blue Boater|15|https://cdn.discordapp.com/attachments/580436923756314624/656644021057486848/latest.png
+1,000 Rune Arrows|70|https://cdn.discordapp.com/attachments/580408602339180584/656949555836878889/Rune_arrow_detail.png

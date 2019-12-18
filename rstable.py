@@ -1017,37 +1017,40 @@ async def on_message(message):
 		await client.send_message(message.channel, embed=embed)
 	###############################
 	elif message.content.startswith("$buykey"):
-		amount=int((message.content).split(" ")[1])
-		kind=(message.content).split(" ")[2]
-		bronze=getvalue(message.author.id, "bronze", "rsmoney")
-		silver=getvalue(message.author.id, "silver", "rsmoney")
-		gold=getvalue(message.author.id, "gold", "rsmoney")
-		buyer=getvalue(message.author.id, "07", "rsmoney")
-		embed = discord.Embed(description="You successfully purchased **"+str(amount)+"** key(s)!", color=5174318)
-		embed.set_author(name="Purchase Complete", icon_url=str(message.author.avatar_url))
+		try:
+			amount=int((message.content).split(" ")[1])
+			kind=(message.content).split(" ")[2]
+			bronze=getvalue(message.author.id, "bronze", "rsmoney")
+			silver=getvalue(message.author.id, "silver", "rsmoney")
+			gold=getvalue(message.author.id, "gold", "rsmoney")
+			buyer=getvalue(message.author.id, "07", "rsmoney")
+			embed = discord.Embed(description="You successfully purchased **"+str(amount)+"** key(s)!", color=5174318)
+			embed.set_author(name="Purchase Complete", icon_url=str(message.author.avatar_url))
 
-		if kind=="bronze":
-			if buyer<250*amount:
-				await client.send_message(message.channel, "You don't have enough to buy that many bronze keys.")
-			else:
-				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+amount, message.author.id))
-				update_money(message.author.id, -250*amount, "07")
-				await client.send_message(message.channel, embed=embed)
-		elif kind=="silver":
-			if buyer<750*amount:
-				await client.send_message(message.channel, "You don't have enough to buy that many silver keys.")
-			else:
-				c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+amount, message.author.id))
-				update_money(message.author.id, -750*amount, "07")
-				await client.send_message(message.channel, embed=embed)
-		elif kind=="gold":
-			if buyer<2000*amount:
-				await client.send_message(message.channel, "You don't have enough to buy that many gold keys.")
-			else:
-				c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold+amount, message.author.id))
-				update_money(message.author.id, -2000*amount, "07")
-				await client.send_message(message.channel, embed=embed)
-		conn.commit()
+			if kind=="bronze":
+				if buyer<250*amount:
+					await client.send_message(message.channel, "You don't have enough to buy that many bronze keys.")
+				else:
+					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+amount, message.author.id))
+					update_money(message.author.id, -250*amount, "07")
+					await client.send_message(message.channel, embed=embed)
+			elif kind=="silver":
+				if buyer<750*amount:
+					await client.send_message(message.channel, "You don't have enough to buy that many silver keys.")
+				else:
+					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+amount, message.author.id))
+					update_money(message.author.id, -750*amount, "07")
+					await client.send_message(message.channel, embed=embed)
+			elif kind=="gold":
+				if buyer<2000*amount:
+					await client.send_message(message.channel, "You don't have enough to buy that many gold keys.")
+				else:
+					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold+amount, message.author.id))
+					update_money(message.author.id, -2000*amount, "07")
+					await client.send_message(message.channel, embed=embed)
+			conn.commit()
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bukey (amount) (bronze, silver, or gold)`.")
 	###############################
 	elif message.content.startswith("$open"):
 		try:
@@ -1059,24 +1062,24 @@ async def on_message(message):
 			if kind=="bronze":
 				if bronze>=1:
 					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze-1, message.author.id))
-					roll=random.randint(0,1063)
-					ranges=[range(0,7), range(7,15), range(15,24), range(24,40), range(40,59), range(59,80), range(80,103), range(103,128), range(128,157), range(157,192), range(192,248), range(248,340), range(340,493), range(493,594), range(594,685), range(685,763), range(763,829), range(829,891), range(891,946), range(946,994), range(994,1000), range(1000,1016), range(1016,1040), range(1040,1064)]
+					roll=random.randint(0,1173)
+					ranges=[range(0,7), range(7,15), range(15,24), range(24,40), range(40,59), range(59,80), range(80,103), range(103,128), range(128,157), range(157,192), range(192,248), range(248,340), range(340,493), range(493,594), range(594,685), range(685,763), range(763,829), range(829,891), range(891,946), range(946,994), range(994,1000), range(1000,1016), range(1016,1040), range(1040,1064), range(1064,1174)]
 					sidecolor=11880979
 				else:
 					await client.send_message(message.channel, "You don't have any bronze keys to open!")
 			elif kind=="silver":
 				if silver>=1:
 					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver-1, message.author.id))
-					roll=random.randint(0,1047)
-					ranges=[range(0,1), range(1,2), range(2,12), range(12,27), range(27,45), range(45,65), range(65,100), range(100,140), range(140,180), range(180,221), range(221,264), range(264,308), range(308,354), range(354,407), range(407,463), range(463,519), range(519,574), range(574,628), range(628,679), range(679,717), range(717,765), range(765,813), range(864,920), range(920,955), range(955,1000), range(1000,1024), range(1024,1048)]	
+					roll=random.randint(0,1437)
+					ranges=[range(0,1), range(1,2), range(2,12), range(12,27), range(27,45), range(45,65), range(65,100), range(100,140), range(140,180), range(180,221), range(221,264), range(264,308), range(308,354), range(354,407), range(407,463), range(463,519), range(519,574), range(574,628), range(628,679), range(679,717), range(717,765), range(765,813), range(864,920), range(920,955), range(955,1000), range(1000,1024), range(1024,1048), range(1048,1218), range(1218,1268), range(1268,1308), range(1308,1408), range(1408,1438)]	
 					sidecolor=13226456
 				else:
 					await client.send_message(message.channel, "You don't have any silver keys to open!")
 			elif kind=="gold":
 				if gold>=1:
 					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold-1, message.author.id))
-					roll=random.randint(0,1064)
-					ranges=[range(0,1), range(1,3), range(3,6), range(6,10), range(10,18), range(18,28), range(28,50), range(50,75), range(75,101), range(101,129), range(129,169), range(169,229), range(229,279), range(279,354), range(354,419), range(419,479), range(479,531), range(531,585), range(585,641), range(641,706), range(706,761), range(761,861), range(861,930), range(930,966), range(966,1000), range(1000,1065)]
+					roll=random.randint(0,1364)
+					ranges=[range(0,1), range(1,3), range(3,6), range(6,10), range(10,18), range(18,28), range(28,50), range(50,75), range(75,101), range(101,129), range(129,169), range(169,229), range(229,279), range(279,354), range(354,419), range(419,479), range(479,531), range(531,585), range(585,641), range(641,706), range(706,761), range(761,861), range(861,930), range(930,966), range(966,1000), range(1000,1065), range(1065,1235), range(1235,1275), range(1275,1345), range(1345,1365)]
 					sidecolor=16759822
 				else:
 					await client.send_message(message.channel, "You don't have any gold keys to open!")

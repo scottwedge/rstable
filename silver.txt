@@ -26,3 +26,8 @@ Bob's Blue Shirt|23|https://cdn.discordapp.com/attachments/580791377424678919/58
 Rune Scimitar|15|https://cdn.discordapp.com/attachments/580791377424678919/580791960164499456/unknown.png
 Pink Boater|20|https://cdn.discordapp.com/attachments/580436923756314624/656643929483247627/Pink_boater_detail.png
 Blue Boater|15|https://cdn.discordapp.com/attachments/580436923756314624/656644021057486848/latest.png
+Evil Chicken Head|650|https://cdn.discordapp.com/attachments/580408602339180584/656945058691547165/Evil_chicken_head_detail.png
+One Cake|1|https://cdn.discordapp.com/attachments/580408602339180584/656946029819854869/latest.png
+Cyclopse Head|10|https://cdn.discordapp.com/attachments/580408602339180584/656947337956032542/Cyclops_head_detail.png
+1,000 Amethyst Arrows|170|https://cdn.discordapp.com/attachments/580408602339180584/656947942711623699/Amethyst_arrow_detail.png
+1,000 Rune Arrows|70|https://cdn.discordapp.com/attachments/580408602339180584/656949555836878889/Rune_arrow_detail.png

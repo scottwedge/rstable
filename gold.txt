@@ -24,3 +24,7 @@ Heavy Ballista|627|https://cdn.discordapp.com/attachments/580840009834168320/581
 Ancient D'hide Set|393|https://cdn.discordapp.com/attachments/580840009834168320/581249988772888617/latest.png
 Monk's Robe Top (t)|326|https://cdn.discordapp.com/attachments/580840009834168320/581250076425453578/1200px-Monk27s_robe_top_28t29_detail.png
 Santa Hat|25|https://cdn.discordapp.com/attachments/580436923756314624/656647726628601867/Santa_hat_detail.png
+Evil Chicken Head|650|https://cdn.discordapp.com/attachments/580408602339180584/656945058691547165/Evil_chicken_head_detail.png
+Cyclopse Head|10|https://cdn.discordapp.com/attachments/580408602339180584/656947337956032542/Cyclops_head_detail.png
+1,000 Amethyst Arrows|170|https://cdn.discordapp.com/attachments/580408602339180584/656947942711623699/Amethyst_arrow_detail.png
+1,000 Rune Arrows|70|https://cdn.discordapp.com/attachments/580408602339180584/656949555836878889/Rune_arrow_detail.png
