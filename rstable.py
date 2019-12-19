@@ -1291,7 +1291,28 @@ async def on_message(message):
 			override=int((message.content).split(" ")[1])
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
+	#######################################
+	elif message.content==('$weekly'):
+		bronze=get(message.server.roles, name='Bronze Donor')
+		silver=get(message.server.roles, name='Silver Donor')
+		c.execute('SELECT weeklydate FROM rsmoney WHERE id={}'.format(message.author.id))
+		lastdate=datetime.date(c.fetchone()[0])
+		dayspast=(datetime.date.today()-lastdate).days
 
+		if bronze in message.author.roles or silver in message.author.roles:
+			if dayspast>=7:
+				if bronze in message.author.roles:
+					bkeys=getvalue(int(message.author.id),'bronze','rsmoney')
+					c.execute('UPDATE rsmoney SET bronze={} WHERE id={}'.format(bkeys+5, message.author.id))
+				elif silver in message.author.roles:
+					skeys=getvalue(int(message.author.id),'silver','rsmoney')
+					c.execute('UPDATE rsmoney SET silver={} WHERE id={}'.format(skeys+5, message.author.id))
+				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(datetime.date.today(), message.author.id))
+				conn.commit()
+			else:
+				await client.send_message(message.channel, 'You have '+str(7-dayspast)+' days left until you can collect your weekly keys.')
+		else:
+			await client.send_message(message.channel, 'You are not a silver or bronze donor!')
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
