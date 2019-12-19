@@ -1296,7 +1296,7 @@ async def on_message(message):
 		bronze=get(message.server.roles, name='Bronze Donor')
 		silver=get(message.server.roles, name='Silver Donor')
 		c.execute('SELECT weeklydate FROM rsmoney WHERE id={}'.format(message.author.id))
-		lastdate=datetime.date(c.fetchone()[0])
+		lastdate=c.fetchone()[0]
 		dayspast=(datetime.date.today()-lastdate).days
 
 		if bronze in message.author.roles or silver in message.author.roles:
