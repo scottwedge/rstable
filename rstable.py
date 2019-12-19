@@ -345,9 +345,10 @@ participants=[]
 roulette=41
 roulettemsg=0
 gif=""
+override=100
 
 async def my_background_task():
-	global roulette,participants,winner,roulettemsg,gif,nextgiveaway
+	global roulette,participants,winner,roulettemsg,gif,nextgiveaway,override
 	await client.wait_until_ready()
 	while not client.is_closed:
 		channel = discord.Object(id='617076198740328459')
@@ -374,7 +375,10 @@ async def my_background_task():
 			await client.send_message(channel, embed=embed)
 		else:
 			if roulette<1:
-				roll=random.randint(0,37)
+				if override!=100:
+					roll=override
+				else:
+					roll=random.randint(0,37)
 
 				winnerids=""
 				c.execute("SELECT * from roulette")
@@ -445,6 +449,7 @@ async def my_background_task():
 				else:
 					await client.send_message(channel, winnerids)
 				roulette=41
+				override=100
 				c.execute("DROP TABLE roulette")
 				c.execute("""CREATE TABLE roulette (
 								id bigint,
@@ -502,7 +507,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-	global roulette,roulettemsg,gif,nextgiveaway,participants
+	global roulette,roulettemsg,gif,nextgiveaway,participants,override
 	message.content=(message.content).lower()
 
 	# if nextgiveaway<=7 and message.channel.id=="580153388402999308" and message.server.id=="518832231532331018":
@@ -1280,7 +1285,12 @@ async def on_message(message):
 			await client.send_message(message.channel, "Tickets updated.")
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
-
+	########################################
+	elif message.content.startswith("$override"):
+		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+			override=int((message.content).split(" ")[1])
+		else:
+			await client.send_message(message.channel, "Admin Command Only!")
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
