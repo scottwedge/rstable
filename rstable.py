@@ -68,6 +68,13 @@ c.execute("""CREATE TABLE roulette (
 				)""")
 conn.commit()
 
+#c.execute("DROP TABLE jackpot")
+c.execute("""CREATE TABLE jackpot (
+				id bigint,
+				bet integer
+				)""")
+conn.commit()
+
 client = discord.Client()
 
 def add_member(userid,rs3,osrs):
@@ -1319,6 +1326,39 @@ async def on_message(message):
 			await client.send_message(message.channel, embed=embed)
 		else:
 			await client.send_message(message.channel, 'You are not a silver or bronze donor!')
+	#######################################
+	elif message.content==('$jackpot'):
+		embed = discord.Embed(description='A Jackpot has started, use `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
+		embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
+		embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
+		await client.send_message(message.channel, embed=embed)
+	#######################################
+	elif message.content.startswith('$add'):
+		bet=formatok(str(message.content).split(" ")[1], '07')
+		current=getvalue(message.author.id, game,"rsmoney")
+
+		if isenough(bet, '07')[0]:
+			if current>=bet:
+				update_money(message.author.id, bet*-1, '07')
+				c.execute("INSERT INTO jackpot VALUES (%s, %s)", (message.author.id,bet))
+				conn.commit()
+				await client.add_reaction(message,"✅")
+
+				c.execute('SELECT * FROM jackpot')
+				bets=c.fetchall()
+				total=(sum(x) for x in zip(*bets))[1]
+				embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total)+'**\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
+
+				for i in bets:
+					chance=str(round(i[1]/total,3))+'%'
+					embed.add_field(name='<@'+str(i[0])+'>', value='Bet - *'+formatfromk(i[1])+'* | Chance of Winning - *'+chance+'*', inline=False)
+				embed.set_author(name="Jackpot Bets", icon_url=str(message.server.icon_url))
+				embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
+				await client.send_message(message.channel, embed=embed)
+			else:
+				await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+		else:
+			await client.send_message(message.channel, (isenough(bet, '07'))[1])
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
