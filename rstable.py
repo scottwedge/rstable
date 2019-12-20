@@ -1346,7 +1346,7 @@ async def on_message(message):
 
 				c.execute('SELECT * FROM jackpot')
 				bets=c.fetchall()
-				total=(sum(x) for x in zip(*bets))[1]
+				total=sum(x[1] for x in bets)
 				embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total)+'**\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
 
 				for i in bets:
