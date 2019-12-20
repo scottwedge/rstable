@@ -26,9 +26,10 @@ c=conn.cursor()
 # 				bronze integer,
 # 				silver integer,
 # 				gold integer,
-# 				tickets integer
+# 				tickets integer,
+#				weeklydate integer
 # 				)""")
-# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0))
+# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0,20191201))
 # conn.commit()
 
 # c.execute("DROP TABLE data")
@@ -70,7 +71,7 @@ conn.commit()
 client = discord.Client()
 
 def add_member(userid,rs3,osrs):
-	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0,20191201))
 	conn.commit()
 
 def getvalue(userid,value,table):
