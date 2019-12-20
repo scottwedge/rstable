@@ -1295,8 +1295,8 @@ async def on_message(message):
 	elif message.content==('$weekly'):
 		bronze=get(message.server.roles, name='Bronze Donor')
 		silver=get(message.server.roles, name='Silver Donor')
-		c.execute('SELECT weeklydate FROM rsmoney WHERE id={}'.format(message.author.id))
-		lastdate=c.fetchone()[0]
+		lastdate=str(getvalue(int(message.author.id,'weeklydate','rsmoney')))
+		lastdate=datetime.date(int(lastdate[:4]),int(lastdate[4:-2]),int(lastdate[6:]))
 		dayspast=(datetime.date.today()-lastdate).days
 
 		if bronze in message.author.roles or silver in message.author.roles:
@@ -1307,7 +1307,7 @@ async def on_message(message):
 				elif silver in message.author.roles:
 					skeys=getvalue(int(message.author.id),'silver','rsmoney')
 					c.execute('UPDATE rsmoney SET silver={} WHERE id={}'.format(skeys+5, message.author.id))
-				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(str(datetime.date.today()), message.author.id))
+				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(int(time.strftime('%Y%m%d')), message.author.id))
 				conn.commit()
 			else:
 				await client.send_message(message.channel, 'You have '+str(7-dayspast)+' days left until you can collect your weekly keys.')
