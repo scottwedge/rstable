@@ -1313,7 +1313,7 @@ async def on_message(message):
 			else:
 				words='You have **'+str(7-dayspast)+'** days left until you can collect your weekly keys.'
 			embed = discord.Embed(description=words, color=65348)
-			embed.set_author(name="Weekly Keys", icon_url=str(message.author.icon_url))
+			embed.set_author(name="Weekly Keys", icon_url=str(message.author.avatar_url))
 			await client.send_message(message.channel, embed=embed)
 		else:
 			await client.send_message(message.channel, 'You are not a silver or bronze donor!')
