@@ -402,7 +402,8 @@ async def my_background_task():
 							win=True
 					elif i[3]=='green':
 						if roll==0 or roll==37:
-							win=True
+							update_money(int(i[0]), int(i[1])*15, str(i[2]))
+							winnerids+=("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*15), str(i[2]))+"__ (Bet "+i[3].title()+" **Payout x15**)\n")
 					elif i[3]=='black':
 						if roll in [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]:
 							win=True
