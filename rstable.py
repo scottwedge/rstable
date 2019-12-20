@@ -68,7 +68,7 @@ c.execute("""CREATE TABLE roulette (
 				)""")
 conn.commit()
 
-#c.execute("DROP TABLE jackpot")
+c.execute("DROP TABLE jackpot")
 c.execute("""CREATE TABLE jackpot (
 				id bigint,
 				bet integer
@@ -1335,7 +1335,7 @@ async def on_message(message):
 	#######################################
 	elif message.content.startswith('$add'):
 		bet=formatok(str(message.content).split(" ")[1], '07')
-		current=getvalue(message.author.id, game,"rsmoney")
+		current=getvalue(message.author.id, '07','rsmoney')
 
 		if isenough(bet, '07')[0]:
 			if current>=bet:
