@@ -1307,7 +1307,7 @@ async def on_message(message):
 				elif silver in message.author.roles:
 					skeys=getvalue(int(message.author.id),'silver','rsmoney')
 					c.execute('UPDATE rsmoney SET silver={} WHERE id={}'.format(skeys+5, message.author.id))
-				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(datetime.date.today(), message.author.id))
+				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(str(datetime.date.today()), message.author.id))
 				conn.commit()
 			else:
 				await client.send_message(message.channel, 'You have '+str(7-dayspast)+' days left until you can collect your weekly keys.')
