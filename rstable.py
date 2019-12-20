@@ -1295,7 +1295,7 @@ async def on_message(message):
 	elif message.content==('$weekly'):
 		bronze=get(message.server.roles, name='Bronze Donor')
 		silver=get(message.server.roles, name='Silver Donor')
-		lastdate=str(getvalue(int(message.author.id,'weeklydate','rsmoney')))
+		lastdate=str(getvalue(int(message.author.id),'weeklydate','rsmoney'))
 		lastdate=datetime.date(int(lastdate[:4]),int(lastdate[4:-2]),int(lastdate[6:]))
 		dayspast=(datetime.date.today()-lastdate).days
 
