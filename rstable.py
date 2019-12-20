@@ -1309,8 +1309,12 @@ async def on_message(message):
 					c.execute('UPDATE rsmoney SET silver={} WHERE id={}'.format(skeys+5, message.author.id))
 				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(int(time.strftime('%Y%m%d')), message.author.id))
 				conn.commit()
+				words='Your weekly keys have been given!'
 			else:
-				await client.send_message(message.channel, 'You have '+str(7-dayspast)+' days left until you can collect your weekly keys.')
+				words='You have **'+str(7-dayspast)+'** days left until you can collect your weekly keys.'
+			embed = discord.Embed(description=words, color=65348)
+			embed.set_author(name="Weekly Keys", icon_url=str(message.author.icon_url))
+			await client.send_message(message.channel, embed=embed)
 		else:
 			await client.send_message(message.channel, 'You are not a silver or bronze donor!')
 
