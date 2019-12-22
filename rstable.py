@@ -1372,8 +1372,8 @@ async def on_message(message):
 			chances=[]
 
 			for i in bets:
-				chances.append(i[2])
-			winner=choice(range(bets), 1, chances)
+				chances.append(i[2]/100)
+			winner=choice(range(bets), 1, p=chances)
 			winner=bets[winner]
 
 			update_money(winner[0], total-total*0.05, '07')
