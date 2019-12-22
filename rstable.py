@@ -1373,8 +1373,7 @@ async def on_message(message):
 
 			for i in bets:
 				chances.append(i[2]/100)
-			winner=choice(range(len(bets)), 1, p=chances)
-			winner=bets[winner]
+			winner=choice(bets, 1, p=chances)
 
 			update_money(winner[0], total-total*0.05, '07')
 			c.execute("DROP TABLE jackpot")
