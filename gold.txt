@@ -5,7 +5,7 @@ Zamorak Spear|14699|https://cdn.discordapp.com/attachments/580840009834168320/58
 Bandos Godsword|10004|https://cdn.discordapp.com/attachments/580840009834168320/581246888293040155/latest.png
 Archers Ring|6000|https://cdn.discordapp.com/attachments/580840009834168320/581247104467599375/latest.png
 Zamorak Godsword|5200|https://cdn.discordapp.com/attachments/580840009834168320/581247197396598807/latest.png
-OSRS Bond|3900|https://cdn.discordapp.com/attachments/580840009834168320/581247410773164042/Old_school_bond_detail.png
+OSRS Bond|5500|https://cdn.discordapp.com/attachments/580840009834168320/581247410773164042/Old_school_bond_detail.png
 Monk's Robe (g)|3000|https://cdn.discordapp.com/attachments/580840009834168320/581247606697623552/202.png
 Uncut Onyx|2800|https://cdn.discordapp.com/attachments/580840009834168320/581247908368744571/latest.png
 2500 Platinum Tokens|2500|https://cdn.discordapp.com/attachments/580840009834168320/581248067752165385/latest.png
