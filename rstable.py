@@ -6,7 +6,6 @@ import datetime
 import os
 import psycopg2
 import hashslingingslasher as hasher
-from numpy.random import choice
 from discord.utils import get
 
 DATABASE_URL = os.environ['DATABASE_URL']
@@ -1373,7 +1372,7 @@ async def on_message(message):
 
 			for i in bets:
 				chances.append(i[2]/100)
-			winner=choice(bets, 1, p=chances)
+			winner=choices(population=bets, weights=choices, k=1)
 
 			update_money(winner[0], total-total*0.05, '07')
 			c.execute("DROP TABLE jackpot")
