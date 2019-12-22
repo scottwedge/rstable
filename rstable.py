@@ -71,7 +71,8 @@ conn.commit()
 c.execute("DROP TABLE jackpot")
 c.execute("""CREATE TABLE jackpot (
 				id bigint,
-				bet integer
+				bet integer,
+				chance real
 				)""")
 conn.commit()
 
@@ -1340,7 +1341,7 @@ async def on_message(message):
 		if isenough(bet, '07')[0]:
 			if current>=bet:
 				update_money(message.author.id, bet*-1, '07')
-				c.execute("INSERT INTO jackpot VALUES (%s, %s)", (message.author.id,bet))
+				c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (message.author.id,0))
 				conn.commit()
 				await client.add_reaction(message,"✅")
 
@@ -1350,8 +1351,10 @@ async def on_message(message):
 				embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
 
 				for i in bets:
-					chance=str(round(i[1]/total,3)*100)+'%'
-					embed.add_field(name='<@'+str(i[0])+'>', value='Bet - *'+formatfromk(i[1], '07')+'* | Chance of Winning - *'+chance+'*', inline=False)
+					chance=round(i[1]/total, 5)*100
+					c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(chance, i[0]))
+					conn.commit()
+					embed.add_field(name='Bet - *'+formatfromk(i[1], '07')+'* | Chance of Winning - *'+str(chance)+'%*', value='<@'+str(i[0])+'>', inline=False)
 				embed.set_author(name="Jackpot Bets", icon_url=str(message.server.icon_url))
 				embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
 				await client.send_message(message.channel, embed=embed)
@@ -1359,6 +1362,38 @@ async def on_message(message):
 				await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 		else:
 			await client.send_message(message.channel, (isenough(bet, '07'))[1])
+	######################################
+	elif message.content==('$endjackpot'):
+		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+			c.execute('SELECT * FROM jackpot')
+			bets=c.fetchall()
+			total=sum(x[1] for x in bets)
+			chances=[]
+
+			for i in bets:
+				chances.append(i[2]*1000)
+			rnd=random.random()*sum(chances)
+			for i,w in enumerate(chances):
+				rnd -= w
+				if rnd < 0:
+					winner=i
+					break
+
+			update_money(winner[0], total-total*0.05, '07')
+			c.execute("DROP TABLE jackpot")
+			c.execute("""CREATE TABLE jackpot (
+							id bigint,
+							bet integer,
+							chance real
+							)""")
+			conn.commit()
+			embed = discord.Embed(description='<@'+str(winner[0])+'> has won the jackpot containing **'+formatfromk(total,'07')+'** with a chance of **'+str(winner[2])+'%**!', color=5056466)
+			embed.set_footer(text="Use '$jackpot' to start a new jackpot game")
+			embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
+			await client.send_message(message.channel, embed=embed)
+		else:
+			await client.send_message(message.channel, "Only admins can end a jackpot. Please tag one if necessary.")
+	#################################
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
