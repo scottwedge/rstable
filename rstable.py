@@ -1341,7 +1341,7 @@ async def on_message(message):
 		if isenough(bet, '07')[0]:
 			if current>=bet:
 				update_money(message.author.id, bet*-1, '07')
-				c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (message.author.id,0))
+				c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (message.author.id, bet, 0))
 				conn.commit()
 				await client.add_reaction(message,"✅")
 
