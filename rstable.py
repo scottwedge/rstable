@@ -1196,7 +1196,7 @@ async def on_message(message):
 				userid=i[0]
 				total=i[number]
 				total=formatfromk(int(total),game)
-				words+=(str(counter+1)+". <@"+str(userid)+"> - **"+total+"** - **"+prizes[counter]+"**\n\n")
+				words+=(str(counter+1)+". <@"+str(userid)+"> - **"+total+"**\n\n")# - **"+prizes[counter]+"**\n\n")
 
 			embed = discord.Embed(color=557823, description=words)
 			embed.set_author(name="Top "+game.upper()+" Thisweek Wager", icon_url=str(message.server.icon_url))
@@ -1373,7 +1373,7 @@ async def on_message(message):
 
 			for i in bets:
 				chances.append(i[2]/100)
-			winner=choice(range(bets), 1, p=chances)
+			winner=choice(range(len(bets)), 1, p=chances)
 			winner=bets[winner]
 
 			update_money(winner[0], total-total*0.05, '07')
