@@ -1376,7 +1376,7 @@ async def on_message(message):
 			for i,w in enumerate(chances):
 				rnd -= w
 				if rnd < 0:
-					winner=i
+					winner=bets[i]
 					break
 
 			update_money(winner[0], total-total*0.05, '07')
