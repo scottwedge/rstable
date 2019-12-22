@@ -1351,7 +1351,7 @@ async def on_message(message):
 				embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
 
 				for i in bets:
-					print(round(i[1]/total))
+					print(round(i[1]/total, 5))
 					chance=round(i[1]/total, 5)*100
 					c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(chance, i[0]))
 					conn.commit()
@@ -1372,7 +1372,7 @@ async def on_message(message):
 			chances=[]
 
 			for i in bets:
-				chances.append(i[2]*1000)
+				chances.append(i[2])
 			rnd=random.random()*sum(chances)
 			for i,w in enumerate(chances):
 				rnd -= w
