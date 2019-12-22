@@ -6,6 +6,7 @@ import datetime
 import os
 import psycopg2
 import hashslingingslasher as hasher
+from numpy.random import choice
 from discord.utils import get
 
 DATABASE_URL = os.environ['DATABASE_URL']
@@ -1351,7 +1352,7 @@ async def on_message(message):
 				embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
 
 				for i in bets:
-					chance=round(i[1]/total*100, 5)
+					chance=round(i[1]/total*100, 3)
 					c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(chance, i[0]))
 					conn.commit()
 					embed.add_field(name=(message.server.get_member(str(i[0]))).nick, value='Bet - *'+formatfromk(i[1], '07')+'* | Chance of Winning - *'+str(chance)+'%*', inline=False)
@@ -1371,9 +1372,8 @@ async def on_message(message):
 			chances=[]
 
 			for i in bets:
-				for x in range(1,(i[2]*1000)+1):
-					chances.append(i)
-			winner=random.choice(chances)
+				chances.append(i[2])
+			winner=choice(bets, 1, chances)
 
 			update_money(winner[0], total-total*0.05, '07')
 			c.execute("DROP TABLE jackpot")
