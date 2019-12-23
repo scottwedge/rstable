@@ -1081,11 +1081,11 @@ async def on_message(message):
 	###############################
 	elif message.content.startswith("$open"):
 		try:
-			#roll=(round(random.uniform(0,100), 1))*10
 			kind=(message.content).split(" ")[1]
 			bronze=getvalue(message.author.id, "bronze", "rsmoney")
 			silver=getvalue(message.author.id, "silver", "rsmoney")
 			gold=getvalue(message.author.id, "gold", "rsmoney")
+			notenough='None'
 			if kind=="bronze":
 				if bronze>=1:
 					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze-1, message.author.id))
@@ -1093,7 +1093,7 @@ async def on_message(message):
 					ranges=[range(0,7), range(7,15), range(15,24), range(24,40), range(40,59), range(59,80), range(80,103), range(103,128), range(128,157), range(157,192), range(192,248), range(248,340), range(340,493), range(493,594), range(594,685), range(685,763), range(763,829), range(829,891), range(891,946), range(946,994), range(994,1000), range(1000,1016), range(1016,1040), range(1040,1064), range(1064,1174)]
 					sidecolor=11880979
 				else:
-					await client.send_message(message.channel, "You don't have any bronze keys to open!")
+					notenough='bronze'
 			elif kind=="silver":
 				if silver>=1:
 					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver-1, message.author.id))
@@ -1101,7 +1101,7 @@ async def on_message(message):
 					ranges=[range(0,1), range(1,2), range(2,12), range(12,27), range(27,45), range(45,65), range(65,100), range(100,140), range(140,180), range(180,221), range(221,264), range(264,308), range(308,354), range(354,407), range(407,463), range(463,519), range(519,574), range(574,628), range(628,679), range(679,717), range(717,765), range(765,813), range(864,920), range(920,955), range(955,1000), range(1000,1024), range(1024,1048), range(1048,1218), range(1218,1268), range(1268,1308), range(1308,1408), range(1408,1438)]	
 					sidecolor=13226456
 				else:
-					await client.send_message(message.channel, "You don't have any silver keys to open!")
+					notenough='silver'
 			elif kind=="gold":
 				if gold>=1:
 					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold-1, message.author.id))
@@ -1109,40 +1109,43 @@ async def on_message(message):
 					ranges=[range(0,1), range(1,3), range(3,6), range(6,10), range(10,18), range(18,28), range(28,50), range(50,75), range(75,101), range(101,129), range(129,169), range(169,229), range(229,279), range(279,354), range(354,419), range(419,479), range(479,531), range(531,585), range(585,641), range(641,706), range(706,761), range(761,861), range(861,930), range(930,966), range(966,1000), range(1000,1065), range(1065,1235), range(1235,1275), range(1275,1345), range(1345,1365)]
 					sidecolor=16759822
 				else:
-					await client.send_message(message.channel, "You don't have any gold keys to open!")
-			conn.commit()
+					notenough='gold'
+			if notenough=='None':
+				conn.commit()
 
-			for counter, i in enumerate(ranges):
-				if roll in i:
-					index=counter
-				else:
-					continue
+				for counter, i in enumerate(ranges):
+					if roll in i:
+						index=counter
+					else:
+						continue
 
-			f=open(kind+".txt")
-			for counter, i in enumerate(f):
-				if counter==index:
-					item=(i.strip("\n")).split("|")[0]
-					price=(i.strip("\n")).split("|")[1]
-					url=(i.strip("\n")).split("|")[2]
+				f=open(kind+".txt")
+				for counter, i in enumerate(f):
+					if counter==index:
+						item=(i.strip("\n")).split("|")[0]
+						price=(i.strip("\n")).split("|")[1]
+						url=(i.strip("\n")).split("|")[2]
 
-			bronze=getvalue(message.author.id, "bronze", "rsmoney")
-			silver=getvalue(message.author.id, "silver", "rsmoney")
-			if item=="2 Bronze Keys":
-				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, message.author.id))
-			elif item=="2 Silver Keys":
-				c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, message.author.id))
-			conn.commit()
+				bronze=getvalue(message.author.id, "bronze", "rsmoney")
+				silver=getvalue(message.author.id, "silver", "rsmoney")
+				if item=="2 Bronze Keys":
+					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, message.author.id))
+				elif item=="2 Silver Keys":
+					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, message.author.id))
+				conn.commit()
 
-			update_money(message.author.id, int(price), "07")
+				update_money(message.author.id, int(price), "07")
 
-			embed = discord.Embed(description="You recieved item: **"+str(item)+"**!", color=sidecolor)
-			embed.add_field(name="Price", value="*"+formatfromk(int(price), "07")+"*", inline=True)
-			embed.set_author(name=kind.title()+" Key Prize", icon_url=str(message.author.avatar_url))
-			embed.set_thumbnail(url=str(url))
-			await client.send_message(message.channel, embed=embed)
+				embed = discord.Embed(description="You recieved item: **"+str(item)+"**!", color=sidecolor)
+				embed.add_field(name="Price", value="*"+formatfromk(int(price), "07")+"*", inline=True)
+				embed.set_author(name=kind.title()+" Key Prize", icon_url=str(message.author.avatar_url))
+				embed.set_thumbnail(url=str(url))
+				await client.send_message(message.channel, embed=embed)
+			else:
+				await client.send_message(message.channel, "You don't have any *"+notenough+"* keys to open!")
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$open (bronze, silver, or gold)`.")
-	# ###############################
+	################################
 	elif message.content.startswith("$fp"):
 		try:
 			game=str(message.content).split(" ")[2]
@@ -1317,11 +1320,12 @@ async def on_message(message):
 	elif message.content==('$weekly'):
 		bronze=get(message.server.roles, name='Bronze Donor')
 		silver=get(message.server.roles, name='Silver Donor')
+		gold=get(message.server.roles, name='Gold Donor')
 		lastdate=str(getvalue(int(message.author.id),'weeklydate','rsmoney'))
 		lastdate=datetime.date(int(lastdate[:4]),int(lastdate[4:-2]),int(lastdate[6:]))
 		dayspast=(datetime.date.today()-lastdate).days
 
-		if bronze in message.author.roles or silver in message.author.roles:
+		if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
 			if dayspast>=7:
 				if bronze in message.author.roles:
 					bkeys=getvalue(int(message.author.id),'bronze','rsmoney')
@@ -1329,6 +1333,9 @@ async def on_message(message):
 				elif silver in message.author.roles:
 					skeys=getvalue(int(message.author.id),'silver','rsmoney')
 					c.execute('UPDATE rsmoney SET silver={} WHERE id={}'.format(skeys+5, message.author.id))
+				elif gold in message.author.roles:
+					gkeys=getvalue(int(message.author.id),'gold','rsmoney')
+					c.execute('UPDATE rsmoney SET gold={} WHERE id={}'.format(gkeys+5, message.author.id))
 				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(int(time.strftime('%Y%m%d')), message.author.id))
 				conn.commit()
 				words='Your weekly keys have been given!'
@@ -1338,7 +1345,7 @@ async def on_message(message):
 			embed.set_author(name="Weekly Keys", icon_url=str(message.author.avatar_url))
 			await client.send_message(message.channel, embed=embed)
 		else:
-			await client.send_message(message.channel, 'You are not a silver or bronze donor!')
+			await client.send_message(message.channel, 'You are not a bronze, silver, or gold donor!')
 	#######################################
 	elif message.content.startswith('$add'):
 		bet=formatok(str(message.content).split(" ")[1], '07')
