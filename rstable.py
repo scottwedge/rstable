@@ -620,6 +620,10 @@ async def on_message(message):
 		embed.add_field(name="RS3 Balance", value=rs3, inline=True)
 		embed.add_field(name="07 Balance", value=osrs, inline=True)
 		embed.add_field(name="Tickets", value=str(tickets), inline=True)
+		c.execute('SELECT * FROM jackpot')
+		bets=c.fetchall()
+		total=sum(x[1] for x in bets)
+		embed.set_footer(text="Checkout our new Jackpot game, the current pot is up to "+formatfromk(total, '07')+"!")
 		if getvalue(int(message.author.id), "privacy","rsmoney")==True:
 			await client.send_message(message.channel, embed=embed)
 		else:
@@ -881,6 +885,10 @@ async def on_message(message):
 		embed.set_author(name=(str(message.author))[:-5]+"'s Total Bets", icon_url=str(message.author.avatar_url))
 		embed.add_field(name="RS3 Total Bets", value=rs3, inline=True)
 		embed.add_field(name="07 Total Bets", value=osrs, inline=True)
+		c.execute('SELECT * FROM jackpot')
+		bets=c.fetchall()
+		total=sum(x[1] for x in bets)
+		embed.set_footer(text="Checkout our new Jackpot game, the current pot is up to "+formatfromk(total, '07')+"!")
 		await client.send_message(message.channel, embed=embed)
 	###############################
 	elif message.content=="$thisweek":
@@ -1029,6 +1037,10 @@ async def on_message(message):
 		embed.add_field(name="Bronze", value="**"+str(bronze)+"**", inline=True)
 		embed.add_field(name="Silver", value="**"+str(silver)+"**", inline=True)
 		embed.add_field(name="Gold", value="**"+str(gold)+"**", inline=True)
+		c.execute('SELECT * FROM jackpot')
+		bets=c.fetchall()
+		total=sum(x[1] for x in bets)
+		embed.set_footer(text="Checkout our new Jackpot game, the current pot is up to "+formatfromk(total, '07')+"!")
 		await client.send_message(message.channel, embed=embed)
 	###############################
 	elif message.content.startswith("$buykey"):
@@ -1327,18 +1339,6 @@ async def on_message(message):
 			await client.send_message(message.channel, embed=embed)
 		else:
 			await client.send_message(message.channel, 'You are not a silver or bronze donor!')
-	#######################################
-	# elif message.content==('$jackpot'):
-	# 	c.execute("SELECT COUNT(*) FROM jackpot")
-	# 	rows=c.fetchall()
-	# 	print(rows)
-	# 	if int(rows)==0:
-	# 		await client.send_message(message.channel, 'A jackpot is already going on. Use `$add (amount in 07)` to contribute to the jackpot.')
-	# 	else:
-	# 		embed = discord.Embed(description='A jackpot has started, use `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
-	# 		embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
-	# 		embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
-	# 		await client.send_message(message.channel, embed=embed)
 	#######################################
 	elif message.content.startswith('$add'):
 		bet=formatok(str(message.content).split(" ")[1], '07')
