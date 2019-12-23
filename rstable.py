@@ -1328,11 +1328,17 @@ async def on_message(message):
 		else:
 			await client.send_message(message.channel, 'You are not a silver or bronze donor!')
 	#######################################
-	elif message.content==('$jackpot'):
-		embed = discord.Embed(description='A Jackpot has started, use `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
-		embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
-		embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
-		await client.send_message(message.channel, embed=embed)
+	# elif message.content==('$jackpot'):
+	# 	c.execute("SELECT COUNT(*) FROM jackpot")
+	# 	rows=c.fetchall()
+	# 	print(rows)
+	# 	if int(rows)==0:
+	# 		await client.send_message(message.channel, 'A jackpot is already going on. Use `$add (amount in 07)` to contribute to the jackpot.')
+	# 	else:
+	# 		embed = discord.Embed(description='A jackpot has started, use `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
+	# 		embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
+	# 		embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
+	# 		await client.send_message(message.channel, embed=embed)
 	#######################################
 	elif message.content.startswith('$add'):
 		bet=formatok(str(message.content).split(" ")[1], '07')
@@ -1373,9 +1379,7 @@ async def on_message(message):
 
 			for i in bets:
 				chances.append(i[2]/100)
-			print(chances)
 			winner=random.choices(population=bets, weights=chances, k=1)[0]
-			print(winner)
 
 			update_money(winner[0], total-total*0.05, '07')
 			c.execute("DROP TABLE jackpot")
@@ -1385,7 +1389,7 @@ async def on_message(message):
 							chance real
 							)""")
 			conn.commit()
-			embed = discord.Embed(description='<@'+str(winner[0])+'> has won the jackpot containing **'+formatfromk(total,'07')+'** with a chance of **'+str(winner[2])+'%**!', color=5056466)
+			embed = discord.Embed(description='<@'+str(winner[0])+'> has won **'+formatfromk(total-total*0.05,'07')+'** from the jackpot with a chance of **'+str(winner[2])+'%**!', color=5056466)
 			embed.set_footer(text="Use '$jackpot' to start a new jackpot game")
 			embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
 			await client.send_message(message.channel, embed=embed)
