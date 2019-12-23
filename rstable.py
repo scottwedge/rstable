@@ -1352,7 +1352,8 @@ async def on_message(message):
 
 				for i in bets:
 					chance=round(i[1]/total*100, 3)
-					c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(chance, i[0]))
+					print(chance)
+					c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), i[0]))
 					conn.commit()
 					embed.add_field(name=(message.server.get_member(str(i[0]))).nick, value='Bet - *'+formatfromk(i[1], '07')+'* | Chance of Winning - *'+str(chance)+'%*', inline=False)
 				embed.set_author(name="Jackpot Bets", icon_url=str(message.server.icon_url))
