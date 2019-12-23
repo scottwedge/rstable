@@ -1395,7 +1395,13 @@ async def on_message(message):
 		else:
 			await client.send_message(message.channel, "Only admins can end a jackpot. Please tag one if necessary.")
 	#################################
+	elif message.content=='$giftest':
+		embed = discord.Embed(description='test', color=5056466)
+		embed.set_author(name="test", icon_url=str(message.server.icon_url))
+		embed.set_image(url='https://media.giphy.com/media/41xF6qBDznhIY/giphy.gif')
+		await client.send_message(message.channel, embed=embed)
 
+		
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
 client.run(str(Bot_Token))
