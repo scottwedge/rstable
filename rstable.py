@@ -429,13 +429,14 @@ async def on_message(message):
 	if message.server.id!="512158131674152973" and message.server.id!="518832231532331018":
 		None
 	elif str(message.channel.id)=="556097134370226192":
-		embed = discord.Embed(description=str(message.content), color=15925108)
-		embed.set_author(name="Suggestion", icon_url=str(message.server.icon_url))
-		embed.set_footer(text="Suggested On:"+str(datetime.datetime.now())[:-7])
-		embed.set_footer(text="👍 = Like | 👎 = Dislike")
-		sent=await client.send_message(message.channel, embed=embed)
-		await client.add_reaction(sent,"👍")
-		await client.add_reaction(sent,"👎")
+		if message.author.id!="580511336598077511":
+			embed = discord.Embed(description=str(message.content), color=15925108)
+			embed.set_author(name="Suggestion", icon_url=str(message.server.icon_url))
+			embed.set_footer(text="Suggested On:"+str(datetime.datetime.now())[:-7])
+			embed.set_footer(text="👍 = Like | 👎 = Dislike")
+			sent=await client.send_message(message.channel, embed=embed)
+			await client.add_reaction(sent,"👍")
+			await client.add_reaction(sent,"👎")
 	#############################################
 	elif message.content.startswith("$input"):
 		print(message.content)
