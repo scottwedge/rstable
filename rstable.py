@@ -430,7 +430,8 @@ async def on_message(message):
 		None
 	elif str(message.channel.id)=="556097134370226192":
 		if message.author.id!="580511336598077511":
-			embed = discord.Embed(description=str(message.content), color=15925108)
+			await client.delete_messages(message)
+			embed = discord.Embed(description=str(message.content).title(), color=15925108)
 			embed.set_author(name="Suggestion", icon_url=str(message.server.icon_url))
 			embed.set_footer(text="Suggested On:"+str(datetime.datetime.now())[:-7])
 			embed.set_footer(text="👍 = Like | 👎 = Dislike")
