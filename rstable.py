@@ -1087,7 +1087,7 @@ async def on_message(message):
 
 			if keyvalue>=1:
 				c.execute("UPDATE rsmoney SET {}={} WHERE id={}".format(kind, keyvalue-1, message.author.id))
-				openkey(kind)
+				index = openkey(kind)
 				f=open(kind+".txt")
 				for counter, i in enumerate(f):
 					if counter==index:
