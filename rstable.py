@@ -1087,7 +1087,7 @@ async def on_message(message):
 
 			if keyvalue>=1:
 				c.execute("UPDATE rsmoney SET {}={} WHERE id={}".format(kind, keyvalue-1, message.author.id))
-				index = openkey(kind)
+				index = openkey(kind)[0]
 				f=open(kind+".txt")
 				for counter, i in enumerate(f):
 					if counter==index:
@@ -1310,7 +1310,7 @@ async def on_message(message):
 				conn.commit()
 				words='Your weekly keys have been given!'
 			else:
-				words='You have **'+str(7-dayspast)+'** days left until you can collect your weekly keys.'
+				words='You have **'+str(7-dayspast)+'** day(s) left until you can collect your weekly keys.'
 			embed = discord.Embed(description=words, color=65348)
 			embed.set_author(name="Weekly Keys", icon_url=str(message.author.avatar_url))
 			await client.send_message(message.channel, embed=embed)
