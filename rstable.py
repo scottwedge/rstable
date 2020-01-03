@@ -246,6 +246,20 @@ def profit(win, currency, bet):
 			c.execute("UPDATE data SET osrsprofit={}".format(osrsprofit+bet))
 	conn.commit()
 
+def openkey(kind):
+	if kind=='bronze':
+		ranges=[7, 8, 9, 16, 19, 21, 23, 25, 29, 35, 56, 92, 153, 101, 91, 78, 66, 62, 55, 48, 6, 16, 24, 24, 110]
+	elif kind=='silver':
+		ranges=[1, 1, 10, 15, 18, 20, 35, 40, 40, 41, 43, 44, 46, 53, 56, 56, 55, 54, 51, 38, 48, 48, 56, 35, 45, 24, 24, 170, 50, 40, 100, 30]
+	elif kind=='gold':
+		ranges=[1, 2, 3, 4, 8, 10, 22, 25, 26, 28, 40, 60, 50, 75, 65, 60, 52, 54, 56, 65, 55, 100, 69, 36, 34, 65, 170, 40, 70, 20]
+
+	chances=[]
+	for i in ranges:
+		chances.append(i/sum(ranges))
+		
+	return random.choices(population=range(0, len(ranges)), weights=chances, k=1)
+
 ######################################################################################
 
 #Predefined Variables
@@ -510,7 +524,7 @@ async def on_message(message):
 
 
 	###################################################
-	elif (message.content).lower()==("$wallet") or (message.content).lower()==("$w"):
+	elif message.content==("$wallet") or message.content==("$w"):
 		osrs=getvalue(int(message.author.id),"07","rsmoney")
 		rs3=getvalue(int(message.author.id),"rs3","rsmoney")
 		tickets=getvalue(int(message.author.id),"tickets","rsmoney")
@@ -543,7 +557,7 @@ async def on_message(message):
 
 
 
-	elif  ((message.content).lower()).startswith("$wallet <@") or ((message.content).lower()).startswith("$w <@"):
+	elif message.content.startswith("$wallet <@") or message.content.startswith("$w <@"):
 		if message.content.startswith("$wallet <@"):
 			try:
 				int(str(message.content[10:11]))
@@ -609,7 +623,7 @@ async def on_message(message):
 		except:
 			await client.send_message(message.channel, "An **error** occured. Make sure you use `$clear (rs3 or 07) (@user)`")
 	###########################################
-	elif (message.content).startswith("$deposit") or message.content.startswith("$withdraw"):
+	elif message.content.startswith("$deposit") or message.content.startswith("$withdraw"):
 		try:
 			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 				maximum=False
@@ -673,7 +687,7 @@ async def on_message(message):
 		await client.send_message(message.channel, embed=embed)
 		# await client.send_message(message.channel, "The commands have been sent to your private messages.")
 	###################################
-	elif ((message.content).lower()).startswith("$transfer"):
+	elif message.content.startswith("$transfer"):
 		try:
 			transfered=formatok((str(message.content).split(" ")[2]), str(message.content).split(" ")[3])
 			enough=True
@@ -786,7 +800,7 @@ async def on_message(message):
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$(50, 53, 75, or 95) (BET) (rs3 or 07)`.")
 	#############################
-	elif ((message.content).lower())==("$wager") or ((message.content).lower())==("$total bet") or ((message.content).lower())==("$tb"):
+	elif message.content==("$wager") or message.content==("$total bet") or message.content==("$tb"):
 		rs3total=getvalue(message.author.id, "rs3total","rsmoney")
 		osrstotal=getvalue(message.author.id, "osrstotal","rsmoney")
 
@@ -840,15 +854,6 @@ async def on_message(message):
 		embed = discord.Embed(description="<@"+str(message.author.id)+">'s wallet privacy is now disabled.", color=5174318)
 		embed.set_author(name="Privacy Mode", icon_url=str(message.author.avatar_url))
 		await client.send_message(message.channel, embed=embed)
-	#################################
-	# elif message.content.startswith("!randint"):
-	# 	maximum=int((message.content).split(" ")[1])
-	# 	if maximum>10000 or maximum<1:
-	# 		await client.send_message(message.channel, "That is not a valid maximum number. Please try again.")
-	# 	else:
-	# 		await client.send_message(message.channel, "**"+str(random.randint(1,maximum))+"**")
-	# elif message.content==("!roll"):
-	# 	await client.send_message(message.channel, "**"+str(random.randint(1, 100))+"**")
 	#################################
 	elif message.content.startswith("$bj"):
 		try:
@@ -993,44 +998,26 @@ async def on_message(message):
 	###############################
 	elif message.content.startswith("$open"):
 		try:
-			kind=(message.content).split(" ")[1]
-			bronze=getvalue(message.author.id, "bronze", "rsmoney")
-			silver=getvalue(message.author.id, "silver", "rsmoney")
-			gold=getvalue(message.author.id, "gold", "rsmoney")
-			notenough='None'
-			if kind=="bronze":
-				if bronze>=1:
-					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze-1, message.author.id))
-					roll=random.randint(0,1173)
-					ranges=[range(0,7), range(7,15), range(15,24), range(24,40), range(40,59), range(59,80), range(80,103), range(103,128), range(128,157), range(157,192), range(192,248), range(248,340), range(340,493), range(493,594), range(594,685), range(685,763), range(763,829), range(829,891), range(891,946), range(946,994), range(994,1000), range(1000,1016), range(1016,1040), range(1040,1064), range(1064,1174)]
+			kind = (message.content).split(" ")[1]
+			keyvalue = getvalue(message.author.id, kind, 'rsmoney')
+			notenough = True
+			index = openkey(kind)
+
+			if keyvalue>=1:
+				if kind=='bronze':
+					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(keyvalue-1, message.author.id))
 					sidecolor=11880979
-				else:
-					notenough='bronze'
-			elif kind=="silver":
-				if silver>=1:
-					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver-1, message.author.id))
-					roll=random.randint(0,1437)
-					ranges=[range(0,1), range(1,2), range(2,12), range(12,27), range(27,45), range(45,65), range(65,100), range(100,140), range(140,180), range(180,221), range(221,264), range(264,308), range(308,354), range(354,407), range(407,463), range(463,519), range(519,574), range(574,628), range(628,679), range(679,717), range(717,765), range(765,813), range(864,920), range(920,955), range(955,1000), range(1000,1024), range(1024,1048), range(1048,1218), range(1218,1268), range(1268,1308), range(1308,1408), range(1408,1438)]	
+				elif kind=='silver':
+					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(keyvalue-1, message.author.id))
 					sidecolor=13226456
-				else:
-					notenough='silver'
-			elif kind=="gold":
-				if gold>=1:
-					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold-1, message.author.id))
-					roll=random.randint(0,1364)
-					ranges=[range(0,1), range(1,3), range(3,6), range(6,10), range(10,18), range(18,28), range(28,50), range(50,75), range(75,101), range(101,129), range(129,169), range(169,229), range(229,279), range(279,354), range(354,419), range(419,479), range(479,531), range(531,585), range(585,641), range(641,706), range(706,761), range(761,861), range(861,930), range(930,966), range(966,1000), range(1000,1065), range(1065,1235), range(1235,1275), range(1275,1345), range(1345,1365)]
+				elif kind=='gold':
+					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(keyvalue-1, message.author.id))
 					sidecolor=16759822
-				else:
-					notenough='gold'
-			if notenough=='None':
 				conn.commit()
-
-				for counter, i in enumerate(ranges):
-					if roll in i:
-						index=counter
-					else:
-						continue
-
+			else:
+				notenough=False
+		
+			if notenough:
 				f=open(kind+".txt")
 				for counter, i in enumerate(f):
 					if counter==index:
@@ -1054,9 +1041,55 @@ async def on_message(message):
 				embed.set_thumbnail(url=str(url))
 				await client.send_message(message.channel, embed=embed)
 			else:
-				await client.send_message(message.channel, "You don't have any *"+notenough+"* keys to open!")
+				await client.send_message(message.channel, "You don't have any *"+kind+"* keys to open!")
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$open (bronze, silver, or gold)`.")
+	################################
+	elif message.content.startswith("$updatekey"):
+		try:
+			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+				try:
+					int(str(message.content).split(" ")[1][2:3])
+					member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
+				except:
+					member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
+						
+				current=getvalue(member.id, kind, 'rsmoney')
+				amount=int(message.content).split(" ")[3]
+				kind=str(message.content).split(" ")[2]
+
+				if kind=='bronze':
+					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(current+amount, member.id))
+				elif kind=='silver':
+					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(current+amount, member.id))
+				elif kind=='gold':
+					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(current+amount, member.id))
+				conn.commit()
+
+				embed = discord.Embed(description="<@"+str(message.author.id)+"> has transfered "+str(amount)+" "+kind+" key(s) to <@"+str(member.id)+">.", color=5174318)
+				embed.set_author(name="Key Transfer", icon_url=str(message.author.avatar_url))
+				await client.send_message(message.channel, embed=embed)
+			else:
+				await client.send_message(message.channel, "Admin Command Only!")
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$transfer (@user) (Kind) (Number of Keys)`.")
+	################################
+	elif message.content.startswith('$giftkey'):
+		bronze=get(message.server.roles, name='Bronze Donor')
+		silver=get(message.server.roles, name='Silver Donor')
+		gold=get(message.server.roles, name='Gold Donor')
+		if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
+			try:
+				int(str(message.content).split(" ")[1][2:3])
+				member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
+			except:
+				member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
+	
+			kind=str(message.content).split(" ")[2]
+			keyvalue=getvalue(message.author.id, kind, 'rsmoney')
+			c.execute("UPDATE rsmoney SET {}={} WHERE id={}".format(kind, keyvalue-1, message.author.id))
+		else:
+			await client.send_message(message.channel, 'This is a subscriber-only command.')
 	################################
 	elif message.content.startswith("$fp"):
 		try:
@@ -1126,8 +1159,6 @@ async def on_message(message):
 
 			embed = discord.Embed(color=557823, description=words)
 			embed.set_author(name="Top "+game.upper()+" Thisweek Wager", icon_url=str(message.server.icon_url))
-			# days=abs(time.gmtime()[6]-4)
-			# embed.set_footer(text="Days Until Reset: "+str(days))
 			await client.send_message(message.channel, embed=embed)
 		else:
 			None
