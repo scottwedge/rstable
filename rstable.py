@@ -1001,7 +1001,7 @@ async def on_message(message):
 		kind = (message.content).split(" ")[1]
 		keyvalue = getvalue(message.author.id, kind, 'rsmoney')
 		notenough = True
-		index = openkey(kind)
+		index = openkey(kind)[0]
 
 		if keyvalue>=1:
 			if kind=='bronze':
@@ -1054,9 +1054,9 @@ async def on_message(message):
 			except:
 				member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
 					
-			current=getvalue(member.id, kind, 'rsmoney')
 			amount=int(message.content).split(" ")[3]
 			kind=str(message.content).split(" ")[2]
+			current=getvalue(member.id, kind, 'rsmoney')
 
 			if kind=='bronze':
 				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(current+amount, member.id))
