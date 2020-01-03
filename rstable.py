@@ -997,82 +997,82 @@ async def on_message(message):
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bukey (amount) (bronze, silver, or gold)`.")
 	###############################
 	elif message.content.startswith("$open"):
-		#try:
-		kind = (message.content).split(" ")[1]
-		keyvalue = getvalue(message.author.id, kind, 'rsmoney')
-		notenough = True
-		index = openkey(kind)[0]
+		try:
+			kind = (message.content).split(" ")[1]
+			keyvalue = getvalue(message.author.id, kind, 'rsmoney')
+			notenough = True
+			index = openkey(kind)[0]
 
-		if keyvalue>=1:
-			if kind=='bronze':
-				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(keyvalue-1, message.author.id))
-				sidecolor=11880979
-			elif kind=='silver':
-				c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(keyvalue-1, message.author.id))
-				sidecolor=13226456
-			elif kind=='gold':
-				c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(keyvalue-1, message.author.id))
-				sidecolor=16759822
-			conn.commit()
-		else:
-			notenough=False
-	
-		if notenough:
-			f=open(kind+".txt")
-			for counter, i in enumerate(f):
-				if counter==index:
-					item=(i.strip("\n")).split("|")[0]
-					price=(i.strip("\n")).split("|")[1]
-					url=(i.strip("\n")).split("|")[2]
+			if keyvalue>=1:
+				if kind=='bronze':
+					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(keyvalue-1, message.author.id))
+					sidecolor=11880979
+				elif kind=='silver':
+					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(keyvalue-1, message.author.id))
+					sidecolor=13226456
+				elif kind=='gold':
+					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(keyvalue-1, message.author.id))
+					sidecolor=16759822
+				conn.commit()
+			else:
+				notenough=False
+		
+			if notenough:
+				f=open(kind+".txt")
+				for counter, i in enumerate(f):
+					if counter==index:
+						item=(i.strip("\n")).split("|")[0]
+						price=(i.strip("\n")).split("|")[1]
+						url=(i.strip("\n")).split("|")[2]
 
-			bronze=getvalue(message.author.id, "bronze", "rsmoney")
-			silver=getvalue(message.author.id, "silver", "rsmoney")
-			if item=="2 Bronze Keys":
-				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, message.author.id))
-			elif item=="2 Silver Keys":
-				c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, message.author.id))
-			conn.commit()
+				bronze=getvalue(message.author.id, "bronze", "rsmoney")
+				silver=getvalue(message.author.id, "silver", "rsmoney")
+				if item=="2 Bronze Keys":
+					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, message.author.id))
+				elif item=="2 Silver Keys":
+					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, message.author.id))
+				conn.commit()
 
-			update_money(message.author.id, int(price), "07")
+				update_money(message.author.id, int(price), "07")
 
-			embed = discord.Embed(description="You recieved item: **"+str(item)+"**!", color=sidecolor)
-			embed.add_field(name="Price", value="*"+formatfromk(int(price), "07")+"*", inline=True)
-			embed.set_author(name=kind.title()+" Key Prize", icon_url=str(message.author.avatar_url))
-			embed.set_thumbnail(url=str(url))
-			await client.send_message(message.channel, embed=embed)
-		else:
-			await client.send_message(message.channel, "You don't have any *"+kind+"* keys to open!")
-		#except:
-		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$open (bronze, silver, or gold)`.")
+				embed = discord.Embed(description="You recieved item: **"+str(item)+"**!", color=sidecolor)
+				embed.add_field(name="Price", value="*"+formatfromk(int(price), "07")+"*", inline=True)
+				embed.set_author(name=kind.title()+" Key Prize", icon_url=str(message.author.avatar_url))
+				embed.set_thumbnail(url=str(url))
+				await client.send_message(message.channel, embed=embed)
+			else:
+				await client.send_message(message.channel, "You don't have any *"+kind+"* keys to open!")
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$open (bronze, silver, or gold)`.")
 	################################
 	elif message.content.startswith("$updatekey"):
-		#try:
-		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-			try:
-				int(str(message.content).split(" ")[1][2:3])
-				member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
-			except:
-				member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
-					
-			amount=int(message.content).split(" ")[3]
-			kind=str(message.content).split(" ")[2]
-			current=getvalue(member.id, kind, 'rsmoney')
+		try:
+			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+				try:
+					int(str(message.content).split(" ")[1][2:3])
+					member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
+				except:
+					member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
+						
+				amount=int((message.content).split(" ")[3])
+				kind=(message.content).split(" ")[2]
+				current=getvalue(member.id, kind, 'rsmoney')
 
-			if kind=='bronze':
-				c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(current+amount, member.id))
-			elif kind=='silver':
-				c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(current+amount, member.id))
-			elif kind=='gold':
-				c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(current+amount, member.id))
-			conn.commit()
+				if kind=='bronze':
+					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(current+amount, member.id))
+				elif kind=='silver':
+					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(current+amount, member.id))
+				elif kind=='gold':
+					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(current+amount, member.id))
+				conn.commit()
 
-			embed = discord.Embed(description="<@"+str(message.author.id)+"> has transfered "+str(amount)+" "+kind+" key(s) to <@"+str(member.id)+">.", color=5174318)
-			embed.set_author(name="Key Transfer", icon_url=str(message.author.avatar_url))
-			await client.send_message(message.channel, embed=embed)
-		else:
-			await client.send_message(message.channel, "Admin Command Only!")
-		#except:
-		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$updatekey (@user) (Kind) (Number of Keys)`.")
+				embed = discord.Embed(description="<@"+str(message.author.id)+"> has transfered "+str(amount)+" "+kind+" key(s) to <@"+str(member.id)+">.", color=5174318)
+				embed.set_author(name="Key Transfer", icon_url=str(message.author.avatar_url))
+				await client.send_message(message.channel, embed=embed)
+			else:
+				await client.send_message(message.channel, "Admin Command Only!")
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$updatekey (@user) (Kind) (Number of Keys)`.")
 	################################
 	elif message.content.startswith('$giftkey'):
 		bronze=get(message.server.roles, name='Bronze Donor')
