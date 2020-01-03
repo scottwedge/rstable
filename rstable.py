@@ -1000,7 +1000,6 @@ async def on_message(message):
 		try:
 			kind = (message.content).split(" ")[1]
 			keyvalue = getvalue(message.author.id, kind, 'rsmoney')
-			notenough = True
 			index = openkey(kind)[0]
 
 			if keyvalue>=1:
@@ -1014,10 +1013,7 @@ async def on_message(message):
 					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(keyvalue-1, message.author.id))
 					sidecolor=16759822
 				conn.commit()
-			else:
-				notenough=False
-		
-			if notenough:
+
 				f=open(kind+".txt")
 				for counter, i in enumerate(f):
 					if counter==index:
@@ -1075,6 +1071,7 @@ async def on_message(message):
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$updatekey (@user) (Kind) (Number of Keys)`.")
 	################################
 	elif message.content.startswith('$giftkey'):
+		#try:
 		bronze=get(message.server.roles, name='Bronze Donor')
 		silver=get(message.server.roles, name='Silver Donor')
 		gold=get(message.server.roles, name='Gold Donor')
@@ -1087,9 +1084,38 @@ async def on_message(message):
 	
 			kind=str(message.content).split(" ")[2]
 			keyvalue=getvalue(message.author.id, kind, 'rsmoney')
-			c.execute("UPDATE rsmoney SET {}={} WHERE id={}".format(kind, keyvalue-1, message.author.id))
+
+			if keyvalue>=1:
+				c.execute("UPDATE rsmoney SET {}={} WHERE id={}".format(kind, keyvalue-1, message.author.id))
+				openkey(kind)
+				f=open(kind+".txt")
+				for counter, i in enumerate(f):
+					if counter==index:
+						item=(i.strip("\n")).split("|")[0]
+						price=(i.strip("\n")).split("|")[1]
+						url=(i.strip("\n")).split("|")[2]
+
+				bronze=getvalue(member.id, "bronze", "rsmoney")
+				silver=getvalue(member.id, "silver", "rsmoney")
+				if item=="2 Bronze Keys":
+					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, member.id))
+				elif item=="2 Silver Keys":
+					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, member.id))
+				conn.commit()
+
+				update_money(member.id, int(price), "07")
+
+				embed = discord.Embed(description="You gifted a "+kind+" prize to <@"+str(member.id)+"> and they won item: **"+str(item)+"**!", color=16756991)
+				embed.add_field(name="Price", value="*"+formatfromk(int(price), "07")+"*", inline=True)
+				embed.set_author(name=kind.title()+" Key Prize - Gift", icon_url=str(member.avatar_url))
+				embed.set_thumbnail(url=str(url))
+				await client.send_message(message.channel, embed=embed)
+			else:
+				await client.send_message(message.channel, "You don't have any *"+kind+"* keys to open!")
 		else:
 			await client.send_message(message.channel, 'This is a subscriber-only command.')
+		#except:
+		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$giftkey (@user) (Kind)`.")
 	################################
 	elif message.content.startswith("$fp"):
 		try:
