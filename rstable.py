@@ -446,7 +446,7 @@ async def on_message(message):
 		if message.author.id!="580511336598077511":
 			await client.delete_message(message)
 			embed = discord.Embed(description=str(message.content).title(), color=15925108)
-			embed.set_author(name="Suggestion", icon_url=str(message.server.icon_url))
+			embed.set_author(name="Suggestion From "+str(message.author), icon_url=str(message.server.icon_url))
 			embed.set_footer(text="Suggested On:"+str(datetime.datetime.now())[:-7])
 			embed.set_footer(text="👍 = Like | 👎 = Dislike")
 			sent=await client.send_message(message.channel, embed=embed)
@@ -1071,51 +1071,57 @@ async def on_message(message):
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$updatekey (@user) (Kind) (Number of Keys)`.")
 	################################
 	elif message.content.startswith('$giftkey'):
-		#try:
-		bronze=get(message.server.roles, name='Bronze Donor')
-		silver=get(message.server.roles, name='Silver Donor')
-		gold=get(message.server.roles, name='Gold Donor')
-		if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
-			try:
-				int(str(message.content).split(" ")[1][2:3])
-				member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
-			except:
-				member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
-	
-			kind=str(message.content).split(" ")[2]
-			keyvalue=getvalue(message.author.id, kind, 'rsmoney')
+		try:
+			bronze=get(message.server.roles, name='Bronze Donor')
+			silver=get(message.server.roles, name='Silver Donor')
+			gold=get(message.server.roles, name='Gold Donor')
+			if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
+				try:
+					int(str(message.content).split(" ")[1][2:3])
+					member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
+				except:
+					member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
+		
+				kind=str(message.content).split(" ")[2]
+				keyvalue=getvalue(message.author.id, kind, 'rsmoney')
 
-			if keyvalue>=1:
-				c.execute("UPDATE rsmoney SET {}={} WHERE id={}".format(kind, keyvalue-1, message.author.id))
-				index = openkey(kind)[0]
-				f=open(kind+".txt")
-				for counter, i in enumerate(f):
-					if counter==index:
-						item=(i.strip("\n")).split("|")[0]
-						price=(i.strip("\n")).split("|")[1]
-						url=(i.strip("\n")).split("|")[2]
+				if keyvalue>=1:
+					if kind=='bronze':
+						c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(keyvalue-1, message.author.id))
+					elif kind=='silver':
+						c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(keyvalue-1, message.author.id))
+					elif kind=='gold':
+						c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(keyvalue-1, message.author.id))
 
-				bronze=getvalue(member.id, "bronze", "rsmoney")
-				silver=getvalue(member.id, "silver", "rsmoney")
-				if item=="2 Bronze Keys":
-					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, member.id))
-				elif item=="2 Silver Keys":
-					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, member.id))
-				conn.commit()
+					index = openkey(kind)[0]
+					f=open(kind+".txt")
+					for counter, i in enumerate(f):
+						if counter==index:
+							item=(i.strip("\n")).split("|")[0]
+							price=(i.strip("\n")).split("|")[1]
+							url=(i.strip("\n")).split("|")[2]
 
-				update_money(member.id, int(price), "07")
+					bronze=getvalue(member.id, "bronze", "rsmoney")
+					silver=getvalue(member.id, "silver", "rsmoney")
+					if item=="2 Bronze Keys":
+						c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, member.id))
+					elif item=="2 Silver Keys":
+						c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, member.id))
+					conn.commit()
 
-				embed = discord.Embed(description="You gifted a "+kind+" prize to <@"+str(member.id)+"> and they won item: **"+str(item)+"**!", color=16756991)
-				embed.add_field(name="Price", value="*"+formatfromk(int(price), "07")+"*", inline=True)
-				embed.set_author(name=kind.title()+" Key Prize - Gift", icon_url=str(member.avatar_url))
-				embed.set_thumbnail(url=str(url))
-				await client.send_message(message.channel, embed=embed)
+					update_money(member.id, int(price), "07")
+
+					embed = discord.Embed(description="You gifted a "+kind+" prize to <@"+str(member.id)+"> and they won item: **"+str(item)+"**!", color=16756991)
+					embed.add_field(name="Price", value="*"+formatfromk(int(price), "07")+"*", inline=True)
+					embed.set_author(name=kind.title()+" Key Prize - Gift", icon_url=str(member.avatar_url))
+					embed.set_thumbnail(url=str(url))
+					await client.send_message(message.channel, embed=embed)
+				else:
+					await client.send_message(message.channel, "You don't have any *"+kind+"* keys to open!")
 			else:
-				await client.send_message(message.channel, "You don't have any *"+kind+"* keys to open!")
-		else:
-			await client.send_message(message.channel, 'This is a subscriber-only command.')
-		#except:
-		#	await client.send_message(message.channel, "An **error** has occured. Make sure you use `$giftkey (@user) (Kind)`.")
+				await client.send_message(message.channel, 'This is a subscriber-only command.')
+		except:
+			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$giftkey (@user) (Kind)`.")
 	################################
 	elif message.content.startswith("$fp"):
 		try:
