@@ -12,7 +12,7 @@ from utilities import isstaff, formatok, formatfromk, pickflower, scorefp
 DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 c=conn.cursor()
-conn.setAutoCommit(True);
+#conn.setAutoCommit(True);
 
 # c.execute("DROP TABLE rsmoney")
 # c.execute("""CREATE TABLE rsmoney (
