@@ -12,7 +12,7 @@ from utilities import isstaff, formatok, formatfromk, pickflower, scorefp
 DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 c=conn.cursor()
-#conn.setAutoCommit(True);
+conn.set_session(autocommit=True)
 
 # c.execute("DROP TABLE rsmoney")
 # c.execute("""CREATE TABLE rsmoney (
@@ -739,11 +739,14 @@ async def on_message(message):
 	###################################
 	elif message.content.startswith("$53") or message.content.startswith("$50") or message.content.startswith("$75") or message.content.startswith("$95"):
 		try:
-			game=str(message.content).split(" ")[2]
-			bet=formatok(str(message.content).split(" ")[1], game)
-			current=getvalue(message.author.id, game,"rsmoney")
+			if len((message.content).split(" "))==2:
+				currency='07'
+			else:
+				currency=str(message.content).split(" ")[2]
+			bet=formatok(str(message.content).split(" ")[1], currency)
+			current=getvalue(message.author.id, currency,"rsmoney")
 
-			if isenough(bet, game)[0]:
+			if isenough(bet, currency)[0]:
 				if message.content.startswith("$53x2") or message.content.startswith("$53"):
 					title="53x2"
 					odds=54
@@ -766,20 +769,20 @@ async def on_message(message):
 
 					if roll in range(1,odds):
 						winnings=bet
-						words="Rolled **"+str(roll)+"** out of **100**. You lost **"+str(formatfromk(bet, game))+"** "+str(game)+"."
+						words="Rolled **"+str(roll)+"** out of **100**. You lost **"+str(formatfromk(bet, currency))+"** "+str(currency)+"."
 						sidecolor=16718121
 						gains=bet*-1
 						win=False
 					else:
 						winnings=int(bet*multiplier)
-						winnings=formatfromk(winnings, game)
-						words="Rolled **"+str(roll)+"** out of **100**. You won **"+str(winnings)+"** "+str(game)+"."	
-						winnings=formatok(winnings, game)
+						winnings=formatfromk(winnings, currency)
+						words="Rolled **"+str(roll)+"** out of **100**. You won **"+str(winnings)+"** "+str(currency)+"."	
+						winnings=formatok(winnings, currency)
 						sidecolor=3997475
 						gains=(bet*multiplier)-(bet)
 						win=True
 
-					update_money(int(message.author.id), gains, game)
+					update_money(int(message.author.id), gains, currency)
 
 					c.execute("SELECT nonce FROM data")
 					nonce=int(c.fetchone()[0])
@@ -791,13 +794,13 @@ async def on_message(message):
 					embed.set_footer(text="Nonce: "+str(nonce-1)+" | Client Seed: \""+str(clientseed)+"\"")
 					await client.send_message(message.channel, embed=embed)
 
-					ticketbets(message.author.id, bet, game)
-					profit(win, game, winnings)
+					ticketbets(message.author.id, bet, currency)
+					profit(win, currency, winnings)
 
 				else:
 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 			else:
-				await client.send_message(message.channel, (isenough(bet, game))[1])
+				await client.send_message(message.channel, (isenough(bet, currency))[1])
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$(50, 53, 75, or 95) (BET) (rs3 or 07)`.")
 	#############################
@@ -886,7 +889,7 @@ async def on_message(message):
 				else:
 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 			else:
-				await client.send_message(message.channel, (isenough(bet, game))[1])
+				await client.send_message(message.channel, isenough(bet, game)[1])
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bj (Amount) (rs3 or 07)`.")
 	################################
@@ -912,29 +915,26 @@ async def on_message(message):
 		playerscore=getvalue(message.author.id,"playerscore","bj")
 		messageid=getvalue(message.author.id,"messageid","bj")
 		channelid=getvalue(message.author.id,"channelid","bj")
-		sent=await client.get_message(message.server.get_channel(channelid), messageid)
-		while True:
+		sent = await client.get_message(message.server.get_channel(channelid), messageid)
+
+		while botscore<17:
 			cards=getvalue(message.author.id,"botcards","bj")
 			botscore=scorebj(message.author.id,cards,False)
-
-			if botscore<17:
-				drawcard(message.author.id,False)
-			else:
-				break
+			drawcard(message.author.id,False)
 
 		bet=getvalue(message.author.id,"bet","bj")
 		currency=getvalue(message.author.id,"currency","bj")
 		win=False
 
 		if botscore>21:
-			await client.edit_message(sent, embed=printbj(message.author, True, "Dealer Busts. You Win!", 3407616))
+			await client.edit_message(sent, embed=printbj(message.author, True, "Dealer Busts. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
 			update_money(message.author.id, bet*2, currency)
 			win=True
 		elif botscore==playerscore:
 			await client.edit_message(sent, embed=printbj(message.author, True, "Tie! Money Back.", 16776960))
 			update_money(message.author.id, bet, currency)
 		elif playerscore>botscore:
-			await client.edit_message(sent, embed=printbj(message.author, True, "Your score is higher than the dealer's. You Win!", 3407616))
+			await client.edit_message(sent, embed=printbj(message.author, True, "Your score is higher than the dealer's. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
 			update_money(message.author.id, bet*2, currency)
 			win=True
 		elif botscore>playerscore:
@@ -1152,7 +1152,7 @@ async def on_message(message):
 						embed = discord.Embed(description="Tie! 10% commission taken.", color=16776960)
 						update_money(message.author.id, bet*-0.1, game)
 					elif scorefp(playerflowers)[0]>scorefp(botflowers)[0]:
-						embed = discord.Embed(description="Congratulations! You won "+formatfromk(bet*2, game)+"!", color=3997475)
+						embed = discord.Embed(description="Congratulations! You won **"+formatfromk(bet*2, game)+"**!", color=3997475)
 						update_money(message.author.id, bet, game)
 					elif scorefp(playerflowers)[0]<scorefp(botflowers)[0]:
 						embed = discord.Embed(description="House wins. You lost "+formatfromk(bet, game)+".", color=16718121)
@@ -1291,6 +1291,7 @@ async def on_message(message):
 	elif message.content.startswith("$override"):
 		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 			override=int((message.content).split(" ")[1])
+			await cliend.send_message(message.channel, "Overridden")
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
 	#######################################
