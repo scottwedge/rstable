@@ -1313,7 +1313,14 @@ async def on_message(message):
 		if isenough(bet, '07')[0]:
 			if current>=bet:
 				update_money(message.author.id, bet*-1, '07')
-				c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (message.author.id, bet, 0))
+				c.execute('SELECT * FROM jackpot')
+				bets=c.fetchall()
+				for counter, i in enumerate(bets):
+					if message.author.id in i:
+						c.execte('UPDATE jackpot SET bet={} WHERE id={}'.format(bet+i[1], message.author.id))
+					else:
+						c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (message.author.id, bet, 0))
+						break
 				await client.add_reaction(message,"✅")
 
 				c.execute('SELECT * FROM jackpot')
@@ -1364,6 +1371,7 @@ async def on_message(message):
 		embed2 = discord.Embed()
 		embed2.set_image(url='https://cdn.discordapp.com/attachments/656732430442430465/665625410393866260/th.png')
 		await client.send_message(message.channel, embed=embed2, content='Hi', file='th.png')
+
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
