@@ -624,8 +624,11 @@ async def on_message(message):
 						maximum=True
 
 				if maximum==False:
-					game=(message.content).split(" ")[3]
-					amount=formatok(str(message.content).split(" ")[2], game)
+					if len((message.content).split(" "))==3:
+						currency='07'
+					else:
+						currency=(message.content).split(" ")[3]
+					amount=formatok(str(message.content).split(" ")[2], currency)
 
 					try:
 						int(str(message.content).split(" ")[1][2:3])
@@ -634,9 +637,9 @@ async def on_message(message):
 						member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
 
 					if message.content.startswith("$deposit"):
-						update_money(int(member.id), amount, game)
+						update_money(int(member.id), amount, currency)
 					elif message.content.startswith("$withdraw"):
-						update_money(int(member.id), amount*-1, game)
+						update_money(int(member.id), amount*-1, currency)
 	
 					embed = discord.Embed(description="<@"+str(member.id)+">'s wallet has been updated.", color=5174318)
 					embed.set_author(name="Update Request", icon_url=str(message.author.avatar_url))
@@ -680,23 +683,15 @@ async def on_message(message):
 	###################################
 	elif message.content.startswith("$transfer"):
 		try:
-			transfered=formatok((str(message.content).split(" ")[2]), str(message.content).split(" ")[3])
-			enough=True
+			if len((message.content).split(" "))==3:
+				currency='07'
+			else:
+				currency=(message.content).split(" ")[3]
 
-			if str(message.content).split(" ")[3]=="rs3":
-				if transfered<1:
-					await client.send_message(message.channel, "You must transfer at least **1k** 07.")
-					enough=False
-
-			elif str(message.content).split(" ")[3]=="07":
-				if transfered<1:
-					await client.send_message(message.channel, "You must transfer at least **1k** RS3.")
-					enough=False
-
-			currency=str(message.content).split(" ")[3]
+			transfered=formatok((message.content).split(" ")[2], currency)
 			current=getvalue(int(message.author.id),currency,"rsmoney")
 
-			if enough==True:
+			if transfered>1:
 				if current>=transfered:
 					try:
 						int(str(message.content).split(" ")[1][2:3])
@@ -722,7 +717,7 @@ async def on_message(message):
 				else:
 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have enough money to transfer that amount!")
 			else:
-				None
+				await client.send_message(message.channel, "You must transfer at least **1k** "+currency+".")
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$transfer (@user) (Amount you want to give) (rs3 or 07)`.")
 	###################################
@@ -848,7 +843,10 @@ async def on_message(message):
 	elif message.content.startswith("$bj"):
 		try:
 			deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
-			currency=(message.content).split(" ")[2]
+			if len((message.content).split(" "))==2:
+				currency='07'
+			else:
+				currency=(message.content).split(" ")[2]
 			bet=formatok((message.content).split(" ")[1], currency)
 			current=getvalue(int(message.author.id), currency,"rsmoney")
 			if isenough(bet, currency)[0]:
@@ -861,14 +859,14 @@ async def on_message(message):
 						update_money(message.author.id, bet*-1, currency)
 						ticketbets(message.author.id, bet, currency)
 						c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id,deck,"","",0,0,bet,currency,"",str(message.channel.id)))
-						drawcard(message.author.id,True)
-						drawcard(message.author.id,True)
-						drawcard(message.author.id,False)
-						drawcard(message.author.id,False)
-						botcards=getvalue(message.author.id,"botcards","bj")
-						playercards=getvalue(message.author.id,"playercards","bj")
-						scorebj(message.author.id,botcards,False)
-						scorebj(message.author.id,playercards,True)
+						drawcard(message.author.id, True)
+						drawcard(message.author.id, True)
+						drawcard(message.author.id, False)
+						drawcard(message.author.id, False)
+						botcards=getvalue(message.author.id, "botcards", "bj")
+						playercards=getvalue(message.author.id, "playercards", "bj")
+						scorebj(message.author.id,botcards, False)
+						scorebj(message.author.id,playercards, True)
 						sent=await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw or `stand` to pass.", 28))
 						c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
 				else:
@@ -1106,7 +1104,10 @@ async def on_message(message):
 	################################
 	elif message.content.startswith("$fp"):
 		try:
-			game=str(message.content).split(" ")[2]
+			if len((message.content).split(" "))==2:
+				game='07'
+			else:
+				game=(message.content).split(" ")[2]
 			bet=formatok(str(message.content).split(" ")[1], game)
 			current=getvalue(message.author.id, game,"rsmoney")
 			ticketbets(message.author.id, bet, game)
@@ -1195,7 +1196,10 @@ async def on_message(message):
 		try:
 			if roulette!=41:
 				areas=['1st','2nd','3rd','high','low','black','red','green','odd','even','00','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
-				game=str(message.content).split(" ")[3]
+				if len((message.content).split(" "))==3:
+					game='07'
+				else:
+					game=(message.content).split(" ")[3]
 				bet=formatok(str(message.content).split(" ")[2], game)
 				area=str(message.content).split(" ")[1]
 				if area not in areas:
