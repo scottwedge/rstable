@@ -902,9 +902,9 @@ async def on_message(message):
 		cards=getvalue(message.author.id,"botcards","bj")
 		botscore=scorebj(message.author.id,cards,False)
 		while botscore<17:
+			drawcard(message.author.id,False)
 			cards=getvalue(message.author.id,"botcards","bj")
 			botscore=scorebj(message.author.id,cards,False)
-			drawcard(message.author.id,False)
 
 		bet=getvalue(message.author.id,"bet","bj")
 		currency=getvalue(message.author.id,"currency","bj")
