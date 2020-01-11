@@ -1313,18 +1313,18 @@ async def on_message(message):
 		if isenough(bet, '07')[0]:
 			if current>=bet:
 				update_money(message.author.id, bet*-1, '07')
-				c.execute('SELECT * FROM jackpot')
-				bets=c.fetchall()
+				# c.execute('SELECT * FROM jackpot')
+				# bets=c.fetchall()
 
-				alreadyin=False
-				for counter, i in enumerate(bets):
-					if message.author.id in i:
-						c.execte('UPDATE jackpot SET bet={} WHERE id={}'.format(bet+i[1], message.author.id))
-						alreadyin=True
+				# alreadyin=False
+				# for counter, i in enumerate(bets):
+				# 	if message.author.id in i:
+				# 		c.execte('UPDATE jackpot SET bet={} WHERE id={}'.format(bet+i[1], message.author.id))
+				# 		alreadyin=True
 
-				if alreadyin==False:
-					c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (message.author.id, bet, 0))
-					
+				# if alreadyin==False:
+				# 	c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (message.author.id, bet, 0))
+				c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (message.author.id, bet, 0))
 				await client.add_reaction(message,"✅")
 
 				c.execute('SELECT * FROM jackpot')
