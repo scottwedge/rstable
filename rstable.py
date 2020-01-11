@@ -1359,12 +1359,11 @@ async def on_message(message):
 			await client.send_message(message.channel, "Only admins can end a jackpot. Please tag one if necessary.")
 	#################################
 	elif message.content=='testing':
-		await client.send_message(message.channel, content='Hi', avatar_url=message.author.avatar_url)
 		embed = discord.Embed()
 		embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/656732430442430465/665625102888730644/th.png')
 		embed2 = discord.Embed()
 		embed2.set_image(url='https://cdn.discordapp.com/attachments/656732430442430465/665625410393866260/th.png')
-		await client.send_message(message.channel, embed=embed)
+		await client.send_message(message.channel, content='Hi', embed=embed)
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
