@@ -917,6 +917,8 @@ async def on_message(message):
 		channelid=getvalue(message.author.id,"channelid","bj")
 		sent = await client.get_message(message.server.get_channel(channelid), messageid)
 
+		cards=getvalue(message.author.id,"botcards","bj")
+		botscore=scorebj(message.author.id,cards,False)
 		while botscore<17:
 			cards=getvalue(message.author.id,"botcards","bj")
 			botscore=scorebj(message.author.id,cards,False)
