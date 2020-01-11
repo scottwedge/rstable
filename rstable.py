@@ -1363,7 +1363,7 @@ async def on_message(message):
 		embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/656732430442430465/665625102888730644/th.png')
 		embed2 = discord.Embed()
 		embed2.set_image(url='https://cdn.discordapp.com/attachments/656732430442430465/665625410393866260/th.png')
-		await client.send_message(message.channel, content='Hi', embeds=[embed,embed2])
+		await client.send_message(message.channel, embed=embed2, content='Hi', file='th.png')
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
