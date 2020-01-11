@@ -878,14 +878,14 @@ async def on_message(message):
 	################################
 	elif message.content==("hit"):
 		drawcard(message.author.id,True)
-		cards=getvalue(message.author.id,"playercards","bj")
-		playerscore=scorebj(message.author.id,cards,True)
-		botscore=getvalue(message.author.id,"botscore","bj")
-		messageid=getvalue(message.author.id,"messageid","bj")
-		channelid=getvalue(message.author.id,"channelid","bj")
-		currency=getvalue(message.author.id,"currency","bj")
-		bet=getvalue(message.author.id,"bet","bj")
-		sent=await client.get_message(message.server.get_channel(channelid), messageid)
+		cards = getvalue(message.author.id,"playercards","bj")
+		playerscore = scorebj(message.author.id,cards,True)
+		botscore = getvalue(message.author.id,"botscore","bj")
+		messageid = getvalue(message.author.id,"messageid","bj")
+		channelid = getvalue(message.author.id,"channelid","bj")
+		currency = getvalue(message.author.id,"currency","bj")
+		bet = getvalue(message.author.id,"bet","bj")
+		sent = await client.get_message(message.server.get_channel(channelid), messageid)
 		if playerscore>21:
 			await client.edit_message(sent, embed=printbj(message.author, True, "Sorry. You busted and lost.", 16711718))
 			profit(False, currency, bet)
@@ -1358,7 +1358,13 @@ async def on_message(message):
 		else:
 			await client.send_message(message.channel, "Only admins can end a jackpot. Please tag one if necessary.")
 	#################################
-
+	elif message.content=='testing':
+		await client.send_message(message.channel, content='Hi', avatar_url=message.author.avatar_url)
+		embed = discord.Embed()
+		embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/656732430442430465/665625102888730644/th.png')
+		embed2 = discord.Embed()
+		embed2.set_image(url='https://cdn.discordapp.com/attachments/656732430442430465/665625410393866260/th.png')
+		await client.send_message(message.channel, embed=embed)
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
