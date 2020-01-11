@@ -82,7 +82,6 @@ client = discord.Client()
 
 def add_member(userid,rs3,osrs):
 	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0,20191201))
-	conn.commit()
 
 def getvalue(userid,value,table):
 	strings=["clientseed","seedreset","serverseed","yesterdayseed","deck","botcards","playercards","currency","messageid","channelid","bets","streak"]
@@ -113,7 +112,6 @@ def update_money(userid,amount,currency):
 		c.execute("UPDATE rsmoney SET osrs={} WHERE id={}".format(osrs+amount, userid))
 	elif currency=="rs3":
 		c.execute("UPDATE rsmoney SET rs3={} WHERE id={}".format(rs3+amount, userid))
-	conn.commit()
 
 def isenough(amount, currency):
 	global words
@@ -141,7 +139,6 @@ def ticketbets(userid, bet, currency):
 		c.execute("UPDATE rsmoney SET osrstotal={} WHERE id={}".format(totalbet+bet, userid))
 		totalbet=getvalue(userid, "osrsweek","rsmoney")
 		c.execute("UPDATE rsmoney SET osrsweek={} WHERE id={}".format(totalbet+bet, userid))
-	conn.commit()
 
 def getrandint(userid):
 	c.execute("SELECT serverseed FROM data")
@@ -151,7 +148,6 @@ def getrandint(userid):
 	clientseed=getvalue(userid, "clientseed","rsmoney")
 	randint=hasher.getrandint(serverseed, clientseed, nonce)
 	c.execute("UPDATE data SET nonce={}".format(int(nonce+1)))
-	conn.commit()
 	return randint
 
 def scorebj(userid,cards,player):
@@ -228,7 +224,6 @@ def drawcard(userid,player):
 		c.execute("UPDATE bj SET botcards='{}' WHERE id={}".format(str(botcards)+str(card)+"|", userid))
 
 	c.execute("UPDATE bj SET deck='{}' WHERE id={}".format(deck, userid))
-	conn.commit()
 
 def profit(win, currency, bet):
 	if currency=="rs3":
@@ -245,7 +240,6 @@ def profit(win, currency, bet):
 			c.execute("UPDATE data SET osrsprofit={}".format(osrsprofit-bet))
 		elif win==False:
 			c.execute("UPDATE data SET osrsprofit={}".format(osrsprofit+bet))
-	conn.commit()
 
 def openkey(kind):
 	if kind=='bronze':
@@ -290,7 +284,6 @@ async def my_background_task():
 			c.execute("UPDATE data SET yesterdayseed='{}'".format(serverseed))
 			c.execute("UPDATE data SET seedreset={}".format(today))
 			c.execute("UPDATE data SET nonce=0")
-			conn.commit()
 
 			embed = discord.Embed(color=16724721)
 			embed.set_author(name="Server Seed Updates")
@@ -384,7 +377,7 @@ async def my_background_task():
 								currency text,
 								area text
 								)""")
-				conn.commit()
+
 
 			elif roulette!=41 and roulette!=0:
 				embed = discord.Embed(description="A game of roulette is going on! Use `bet (0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
@@ -409,7 +402,6 @@ async def my_background_task():
 		# 		await client.send_message(channel, embed=embed)
 		# 		tickets=getvalue(int(message.author.id),"tickets","rsmoney")
 		# 		c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+1, winner))
-		# 		conn.commit()
 		# 		participants=[]
 		# 	nextgiveaway=30
 		# elif nextgiveaway==7:
@@ -511,7 +503,6 @@ async def on_message(message):
 				await client.send_message(message.channel, "That client seed is too long. Please try a shorter one. (20 Character Limit)")
 			else:
 				c.execute("UPDATE rsmoney SET clientseed='{}' WHERE id={}".format(str(clientseed), int(message.author.id)))
-				conn.commit()
 				await client.send_message(message.channel, "Your client seed has been set to "+(message.content)[9:]+".")
 		else:
 			await client.send_message(message.channel, "This command can only be used in <#656709120870580235> to prevent spam.")
@@ -614,7 +605,6 @@ async def on_message(message):
 				elif str(message.content).split(" ")[1]=="rs3":
 					currency="rs3"
 					c.execute("UPDATE rsmoney SET rs3={} WHERE id={}".format(0, member.id))
-				conn.commit()
 
 				embed = discord.Embed(description="<@"+str(member.id)+">'s "+currency+" currency has been cleared. RIP", color=5174318)
 				embed.set_author(name="Wallet Clearing", icon_url=str(member.avatar_url))
@@ -725,7 +715,6 @@ async def on_message(message):
 						elif currency=="07":
 							c.execute("UPDATE rsmoney SET osrs={} WHERE id={}".format(current-transfered, message.author.id))
 							c.execute("UPDATE rsmoney SET osrs={} WHERE id={}".format(taker+transfered, member.id))
-						conn.commit()
 
 						embed = discord.Embed(description="<@"+str(message.author.id)+"> has transfered "+str(formatfromk(transfered, currency))+" "+currency+" to <@"+str(member.id)+">'s wallet.", color=5174318)
 						embed.set_author(name="Transfer Request", icon_url=str(message.author.avatar_url))
@@ -838,7 +827,6 @@ async def on_message(message):
 		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 			c.execute("UPDATE rsmoney SET rs3week={}".format(0))
 			c.execute("UPDATE rsmoney SET osrsweek={}".format(0))
-			conn.commit()
 			embed = discord.Embed(description="All weekly bets have been reset.", color=5174318)
 			embed.set_author(name="Weekly Bets Reset", icon_url=str(message.server.icon_url))
 			await client.send_message(message.channel, embed=embed)
@@ -847,14 +835,12 @@ async def on_message(message):
 	###############################
 	elif message.content=="$privacy on":
 		c.execute("UPDATE rsmoney SET privacy=True WHERE id={}".format(message.author.id))
-		conn.commit()
 		embed = discord.Embed(description="<@"+str(message.author.id)+">'s wallet privacy is now enabled.", color=5174318)
 		embed.set_author(name="Privacy Mode", icon_url=str(message.author.avatar_url))
 		await client.send_message(message.channel, embed=embed)
 	#################################
 	elif message.content=="$privacy off":
 		c.execute("UPDATE rsmoney SET privacy=False WHERE id={}".format(message.author.id))
-		conn.commit()
 		embed = discord.Embed(description="<@"+str(message.author.id)+">'s wallet privacy is now disabled.", color=5174318)
 		embed.set_author(name="Privacy Mode", icon_url=str(message.author.avatar_url))
 		await client.send_message(message.channel, embed=embed)
@@ -885,7 +871,6 @@ async def on_message(message):
 						scorebj(message.author.id,playercards,True)
 						sent=await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw or `stand` to pass.", 28))
 						c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
-					conn.commit()
 				else:
 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 			else:
@@ -907,7 +892,6 @@ async def on_message(message):
 			await client.edit_message(sent, embed=printbj(message.author, True, "Sorry. You busted and lost.", 16711718))
 			profit(False, currency, bet)
 			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
-			conn.commit()
 		else:
 			await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw or `stand` to pass.", 28))
 	###################################
@@ -945,7 +929,6 @@ async def on_message(message):
 		profit(win, currency, bet)
 
 		c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
-		conn.commit()
 	################################
 	elif message.content==("$keys") or message.content==("$k"):
 		bronze=getvalue(message.author.id, "bronze", "rsmoney")
@@ -995,7 +978,6 @@ async def on_message(message):
 					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(gold+amount, message.author.id))
 					update_money(message.author.id, -2000*amount, "07")
 					await client.send_message(message.channel, embed=embed)
-			conn.commit()
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bukey (amount) (bronze, silver, or gold)`.")
 	###############################
@@ -1015,7 +997,6 @@ async def on_message(message):
 				elif kind=='gold':
 					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(keyvalue-1, message.author.id))
 					sidecolor=16759822
-				conn.commit()
 
 				f=open(kind+".txt")
 				for counter, i in enumerate(f):
@@ -1030,7 +1011,6 @@ async def on_message(message):
 					c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, message.author.id))
 				elif item=="2 Silver Keys":
 					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, message.author.id))
-				conn.commit()
 
 				update_money(message.author.id, int(price), "07")
 
@@ -1063,7 +1043,6 @@ async def on_message(message):
 					c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(current+amount, member.id))
 				elif kind=='gold':
 					c.execute("UPDATE rsmoney SET gold={} WHERE id={}".format(current+amount, member.id))
-				conn.commit()
 
 				embed = discord.Embed(description="<@"+str(message.author.id)+"> has transfered "+str(amount)+" "+kind+" key(s) to <@"+str(member.id)+">.", color=5174318)
 				embed.set_author(name="Key Transfer", icon_url=str(message.author.avatar_url))
@@ -1110,7 +1089,6 @@ async def on_message(message):
 						c.execute("UPDATE rsmoney SET bronze={} WHERE id={}".format(bronze+2, member.id))
 					elif item=="2 Silver Keys":
 						c.execute("UPDATE rsmoney SET silver={} WHERE id={}".format(silver+2, member.id))
-					conn.commit()
 
 					update_money(member.id, int(price), "07")
 
@@ -1267,7 +1245,6 @@ async def on_message(message):
 					entered.append(str(i[0]))
 			winner=random.choice(entered)
 			c.execute("UPDATE rsmoney SET tickets=0")
-			conn.commit()
 
 			embed = discord.Embed(description="<@"+winner+"> has won the raffle!", color=16729241)
 			embed.set_author(name="Raffle Winner", icon_url=str(message.server.icon_url))
@@ -1285,7 +1262,6 @@ async def on_message(message):
 				member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
 			tickets=getvalue(int(member.id),"tickets","rsmoney")
 			c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+amount, member.id))
-			conn.commit()
 			await client.send_message(message.channel, "Tickets updated.")
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
@@ -1317,7 +1293,6 @@ async def on_message(message):
 					gkeys=getvalue(int(message.author.id),'gold','rsmoney')
 					c.execute('UPDATE rsmoney SET gold={} WHERE id={}'.format(gkeys+5, message.author.id))
 				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(int(time.strftime('%Y%m%d')), message.author.id))
-				conn.commit()
 				words='Your weekly keys have been given!'
 			else:
 				words='You have **'+str(7-dayspast)+'** day(s) left until you can collect your weekly keys.'
@@ -1335,7 +1310,6 @@ async def on_message(message):
 			if current>=bet:
 				update_money(message.author.id, bet*-1, '07')
 				c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (message.author.id, bet, 0))
-				conn.commit()
 				await client.add_reaction(message,"✅")
 
 				c.execute('SELECT * FROM jackpot')
@@ -1346,7 +1320,6 @@ async def on_message(message):
 				for i in bets:
 					chance=round(i[1]/total*100, 3)
 					c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), i[0]))
-					conn.commit()
 					embed.add_field(name=(message.server.get_member(str(i[0]))).name, value='Bet - *'+formatfromk(i[1], '07')+'* | Chance of Winning - *'+str(chance)+'%*', inline=False)
 				embed.set_author(name="Jackpot Bets", icon_url=str(message.server.icon_url))
 				embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
@@ -1374,7 +1347,6 @@ async def on_message(message):
 							bet integer,
 							chance real
 							)""")
-			conn.commit()
 			embed = discord.Embed(description='<@'+str(winner[0])+'> has won **'+formatfromk(int(total-total*0.05),'07')+'** from the jackpot with a chance of **'+str(winner[2])+'%**!', color=5056466)
 			embed.set_footer(text="Use '$jackpot' to start a new jackpot game")
 			embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
