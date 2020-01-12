@@ -1318,8 +1318,8 @@ async def on_message(message):
 
 				alreadyin=False
 				for counter, i in enumerate(bets):
-					if message.author.id in i:
-						c.execte('UPDATE jackpot SET bet={} WHERE id={}'.format(bet+i[1], message.author.id))
+					if int(message.author.id) in i:
+						c.execute('UPDATE jackpot SET bet={} WHERE id={}'.format(bet+i[1], message.author.id))
 						alreadyin=True
 
 				if alreadyin==False:
