@@ -1317,7 +1317,7 @@ async def on_message(message):
 				bets=c.fetchall()
 
 				alreadyin=False
-				for counter, i in enumerate(bets):
+				for i in bets:
 					if int(message.author.id) in i:
 						c.execute('UPDATE jackpot SET bet={} WHERE id={}'.format(bet+i[1], message.author.id))
 						alreadyin=True
@@ -1363,7 +1363,7 @@ async def on_message(message):
 							chance real
 							)""")
 			embed = discord.Embed(description='<@'+str(winner[0])+'> has won **'+formatfromk(int(total-total*0.05),'07')+'** from the jackpot with a chance of **'+str(winner[2])+'%**!', color=5056466)
-			embed.set_footer(text="Use '$jackpot' to start a new jackpot game")
+			embed.set_footer(text="Use '$add (amount)' to start a new jackpot game")
 			embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
 			await client.send_message(message.channel, embed=embed)
 		else:
