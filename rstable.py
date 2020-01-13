@@ -1329,14 +1329,14 @@ async def on_message(message):
 
 				c.execute('SELECT * FROM jackpot')
 				bets=c.fetchall()
-				print(bets)
 				total=sum(x[1] for x in bets)
 				embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
 
 				for i in bets:
-					print(i)
+					print(i[0])
+					test=message.server.get_member(i[0])
 					chance=round(i[1]/total*100, 3)
-					c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), i[0]))
+					c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), int(i[0])))
 					embed.add_field(name=(message.server.get_member(str(i[0]))).name, value='Bet - *'+formatfromk(i[1], '07')+'* | Chance of Winning - *'+str(chance)+'%*', inline=False)
 				embed.set_author(name="Jackpot Bets", icon_url=str(message.server.icon_url))
 				embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
