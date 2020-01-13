@@ -1317,22 +1317,24 @@ async def on_message(message):
 				bets=c.fetchall()
 
 				alreadyin=False
-				for i in bets:
-					if int(message.author.id) in i:
-						c.execute('UPDATE jackpot SET bet={} WHERE id={}'.format(bet+i[1], message.author.id))
+				for y in bets:
+					if int(message.author.id) in y:
+						c.execute('UPDATE jackpot SET bet={} WHERE id={}'.format(bet+y[1], message.author.id))
 						alreadyin=True
 
 				if alreadyin==False:
-					c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (message.author.id, bet, 0))
+					c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (int(message.author.id), bet, 0))
 
 				await client.add_reaction(message,"✅")
 
 				c.execute('SELECT * FROM jackpot')
 				bets=c.fetchall()
+				print(bets)
 				total=sum(x[1] for x in bets)
 				embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
 
 				for i in bets:
+					print(i)
 					chance=round(i[1]/total*100, 3)
 					c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), i[0]))
 					embed.add_field(name=(message.server.get_member(str(i[0]))).name, value='Bet - *'+formatfromk(i[1], '07')+'* | Chance of Winning - *'+str(chance)+'%*', inline=False)
