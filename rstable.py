@@ -57,7 +57,8 @@ c.execute("""CREATE TABLE bj (
 				bet integer,
 				currency text,
 				messageid text,
-				channelid text
+				channelid text,
+				dd boolean
 				)""")
 conn.commit()
 
@@ -97,7 +98,7 @@ def getvalue(userid,value,table):
 
 	c.execute("SELECT {} FROM {} WHERE id={}".format(value, table, userid))
 
-	if value=="privacy" or value=="claimed":
+	if value=="privacy" or value=="claimed" or value=="dd":
 		return bool(c.fetchone()[0])
 	elif value in strings:
 		return str(c.fetchone()[0])
@@ -854,11 +855,11 @@ async def on_message(message):
 					try:
 						c.execute("SELECT playerscore FROM bj WHERE id={}".format(message.author.id))
 						tester=int(c.fetchone()[0])
-						await client.send_message(message.channel, "You are already in a game of blackjack! Type `hit` or `stand` to continue the game!")
+						await client.send_message(message.channel, "You are already in a game of blackjack! Type `hit`, `stand`, or `dd` to continue the game!")
 					except:
 						update_money(message.author.id, bet*-1, currency)
 						ticketbets(message.author.id, bet, currency)
-						c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id,deck,"","",0,0,bet,currency,"",str(message.channel.id)))
+						c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id,deck,"","",0,0,bet,currency,"",str(message.channel.id),False))
 						drawcard(message.author.id, True)
 						drawcard(message.author.id, True)
 						drawcard(message.author.id, False)
@@ -867,7 +868,7 @@ async def on_message(message):
 						playercards=getvalue(message.author.id, "playercards", "bj")
 						scorebj(message.author.id,botcards, False)
 						scorebj(message.author.id,playercards, True)
-						sent=await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw or `stand` to pass.", 28))
+						sent=await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
 						c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
 				else:
 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
@@ -891,7 +892,7 @@ async def on_message(message):
 			profit(False, currency, bet)
 			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 		else:
-			await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw or `stand` to pass.", 28))
+			await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
 	###################################
 	elif message.content==("stand"):
 		playerscore=getvalue(message.author.id,"playerscore","bj")
@@ -927,6 +928,22 @@ async def on_message(message):
 		profit(win, currency, bet)
 
 		c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
+	################################
+	elif message.content=='dd':
+		currency = getvalue(message.author.id,"currency","bj")
+		bet = getvalue(message.author.id,"bet","bj")
+		messageid = getvalue(message.author.id,"messageid","bj")
+		channelid = getvalue(message.author.id,"channelid","bj")
+		dd = getvalue(message.author.id, "dd", "bj")
+		sent = await client.get_message(message.server.get_channel(channelid), messageid)
+
+		if dd:
+			await client.send_message(message.channel, 'You already doubled down!')
+		else:
+			update_money(message.author.id, bet*-1, currency)
+			c.execute("UPDATE bj SET bet={} WHERE id={}".format(bet*2, message.author.id))
+			c.execute("UPDATE bj SET dd={} WHERE id={}".format(True, message.author.id))
+			await client.edit_message(sent, embed=printbj(message.author, False, 'You double down and double your bet to **'+formatfromk(bet*2, currency)+' '+currency+'**!\nUse `hit` to draw or `stand` to pass.', 16777215))
 	################################
 	elif message.content==("$keys") or message.content==("$k"):
 		bronze=getvalue(message.author.id, "bronze", "rsmoney")
@@ -1332,9 +1349,7 @@ async def on_message(message):
 				total=sum(x[1] for x in bets)
 				embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
 
-				print(bets)
 				for i in bets:
-					print(i[0])
 					chance=round(i[1]/total*100, 3)
 					c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), i[0]))
 					embed.add_field(name=message.server.get_member(str(i[0])).name, value='Bet - *'+formatfromk(i[1], '07')+'* | Chance of Winning - *'+str(chance)+'%*', inline=False)
