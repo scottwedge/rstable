@@ -935,15 +935,19 @@ async def on_message(message):
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		dd = getvalue(message.author.id, "dd", "bj")
+		current = getvalue(int(message.author.id), currency, "rsmoney")
 		sent = await client.get_message(message.server.get_channel(channelid), messageid)
 
-		if dd:
-			await client.send_message(message.channel, 'You already doubled down!')
+		if current>=bet:
+			if dd:
+				await client.send_message(message.channel, 'You already doubled down!')
+			else:
+				update_money(message.author.id, bet*-1, currency)
+				c.execute("UPDATE bj SET bet={} WHERE id={}".format(bet*2, message.author.id))
+				c.execute("UPDATE bj SET dd={} WHERE id={}".format(True, message.author.id))
+				await client.edit_message(sent, embed=printbj(message.author, False, 'You double down and double your bet to **'+formatfromk(bet*2, currency)+' '+currency+'**!\nUse `hit` to draw or `stand` to pass.', 16777215))
 		else:
-			update_money(message.author.id, bet*-1, currency)
-			c.execute("UPDATE bj SET bet={} WHERE id={}".format(bet*2, message.author.id))
-			c.execute("UPDATE bj SET dd={} WHERE id={}".format(True, message.author.id))
-			await client.edit_message(sent, embed=printbj(message.author, False, 'You double down and double your bet to **'+formatfromk(bet*2, currency)+' '+currency+'**!\nUse `hit` to draw or `stand` to pass.', 16777215))
+			await client.send_message(message.channel, "You don't have enough money to double down!")
 	################################
 	elif message.content==("$keys") or message.content==("$k"):
 		bronze=getvalue(message.author.id, "bronze", "rsmoney")
