@@ -57,8 +57,7 @@ c.execute("""CREATE TABLE bj (
 				bet integer,
 				currency text,
 				messageid text,
-				channelid text,
-				dd boolean
+				channelid text
 				)""")
 conn.commit()
 
@@ -98,7 +97,7 @@ def getvalue(userid,value,table):
 
 	c.execute("SELECT {} FROM {} WHERE id={}".format(value, table, userid))
 
-	if value=="privacy" or value=="claimed" or value=="dd":
+	if value=="privacy" or value=="claimed":
 		return bool(c.fetchone()[0])
 	elif value in strings:
 		return str(c.fetchone()[0])
@@ -894,11 +893,26 @@ async def on_message(message):
 		else:
 			await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
 	###################################
-	elif message.content==("stand"):
-		playerscore=getvalue(message.author.id,"playerscore","bj")
-		messageid=getvalue(message.author.id,"messageid","bj")
-		channelid=getvalue(message.author.id,"channelid","bj")
+	elif message.content==("stand") or message.content=='dd':
+		playerscore = getvalue(message.author.id,"playerscore","bj")
+		messageid = getvalue(message.author.id,"messageid","bj")
+		channelid = getvalue(message.author.id,"channelid","bj")
+		current = getvalue(int(message.author.id), currency, "rsmoney")
+		bet = getvalue(message.author.id,"bet","bj")
+		currency = getvalue(message.author.id,"currency","bj")
 		sent = await client.get_message(message.server.get_channel(channelid), messageid)
+
+		if message.content=='dd':
+			if current>=bet:
+				update_money(message.author.id, bet*-1, currency)
+				bet = bet*2
+				drawcard(message.author.id, True)
+				if playerscore>21:
+					await client.edit_message(sent, embed=printbj(message.author, True, "Sorry. You busted and lost.", 16711718))
+					profit(False, currency, bet)
+					c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
+			else:
+				await client.send_message(message.channel, "You don't have enough money to double down!")
 
 		cards=getvalue(message.author.id,"botcards","bj")
 		botscore=scorebj(message.author.id,cards,False)
@@ -907,8 +921,6 @@ async def on_message(message):
 			cards=getvalue(message.author.id,"botcards","bj")
 			botscore=scorebj(message.author.id,cards,False)
 
-		bet=getvalue(message.author.id,"bet","bj")
-		currency=getvalue(message.author.id,"currency","bj")
 		win=False
 
 		if botscore>21:
@@ -926,28 +938,7 @@ async def on_message(message):
 			await client.edit_message(sent, embed=printbj(message.author, True, "The dealer's score is higher than yours. You lose.", 16711718))
 
 		profit(win, currency, bet)
-
 		c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
-	################################
-	elif message.content=='dd':
-		currency = getvalue(message.author.id,"currency","bj")
-		bet = getvalue(message.author.id,"bet","bj")
-		messageid = getvalue(message.author.id,"messageid","bj")
-		channelid = getvalue(message.author.id,"channelid","bj")
-		dd = getvalue(message.author.id, "dd", "bj")
-		current = getvalue(int(message.author.id), currency, "rsmoney")
-		sent = await client.get_message(message.server.get_channel(channelid), messageid)
-
-		if current>=bet:
-			if dd:
-				await client.send_message(message.channel, 'You already doubled down!')
-			else:
-				update_money(message.author.id, bet*-1, currency)
-				c.execute("UPDATE bj SET bet={} WHERE id={}".format(bet*2, message.author.id))
-				c.execute("UPDATE bj SET dd={} WHERE id={}".format(True, message.author.id))
-				await client.edit_message(sent, embed=printbj(message.author, False, 'You double down and double your bet to **'+formatfromk(bet*2, currency)+' '+currency+'**!\nUse `hit` to draw or `stand` to pass.', 16777215))
-		else:
-			await client.send_message(message.channel, "You don't have enough money to double down!")
 	################################
 	elif message.content==("$keys") or message.content==("$k"):
 		bronze=getvalue(message.author.id, "bronze", "rsmoney")
