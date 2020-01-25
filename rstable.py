@@ -1304,7 +1304,7 @@ async def on_message(message):
 		gold=get(message.server.roles, name='Gold Donor')
 		lastdate=str(getvalue(int(message.author.id),'weeklydate','rsmoney'))
 		hours=int(lastdate[8:])-int(time.strftime('%H'))
-		if hours<0:
+		if hours<=0:
 			hours=hours+24
 		lastdate=datetime.date(int(lastdate[:4]),int(lastdate[4:-4]),int(lastdate[6:-2]))
 		dayspast=(datetime.date.today()-lastdate).days
@@ -1323,7 +1323,7 @@ async def on_message(message):
 				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(int(time.strftime('%Y%m%d%H')), message.author.id))
 				words='Your weekly keys have been given!'
 			else:
-				words='You have **'+str(7-dayspast)+' day(s) and '+str(hours)+' hour(s)** left until you can collect your weekly keys.'
+				words='You have **'+str(6-dayspast)+' day(s)** and **'+str(hours)+' hour(s)** left until you can collect your weekly keys.'
 			embed = discord.Embed(description=words, color=65348)
 			embed.set_author(name="Weekly Keys", icon_url=str(message.author.avatar_url))
 			await client.send_message(message.channel, embed=embed)
