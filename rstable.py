@@ -1303,8 +1303,8 @@ async def on_message(message):
 		silver=get(message.server.roles, name='Silver Donor')
 		gold=get(message.server.roles, name='Gold Donor')
 		lastdate=str(getvalue(int(message.author.id),'weeklydate','rsmoney'))
-		lastdate=datetime.date(int(lastdate[:4]),int(lastdate[4:-4]),int(lastdate[6:-2]))
 		hours=int(lastdate[8:])
+		lastdate=datetime.date(int(lastdate[:4]),int(lastdate[4:-4]),int(lastdate[6:-2]))
 		dayspast=(datetime.date.today()-lastdate).days
 
 		if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
