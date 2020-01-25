@@ -896,6 +896,7 @@ async def on_message(message):
 	elif message.content==("stand") or message.content=='dd':
 		currency = getvalue(message.author.id,"currency","bj")
 		playerscore = getvalue(message.author.id,"playerscore","bj")
+		cards = getvalue(message.author.id,"playercards","bj")
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		current = getvalue(int(message.author.id), currency, "rsmoney")
@@ -907,6 +908,7 @@ async def on_message(message):
 				update_money(message.author.id, bet*-1, currency)
 				bet = bet*2
 				drawcard(message.author.id, True)
+				playerscore = scorebj(message.author.id,cards,True)
 				if playerscore>21:
 					await client.edit_message(sent, embed=printbj(message.author, True, "Sorry. You busted and lost.", 16711718))
 					profit(False, currency, bet)
