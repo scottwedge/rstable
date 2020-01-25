@@ -858,7 +858,7 @@ async def on_message(message):
 					except:
 						update_money(message.author.id, bet*-1, currency)
 						ticketbets(message.author.id, bet, currency)
-						c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id,deck,"","",0,0,bet,currency,"",str(message.channel.id),False))
+						c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id,deck,"","",0,0,bet,currency,"",str(message.channel.id)))
 						drawcard(message.author.id, True)
 						drawcard(message.author.id, True)
 						drawcard(message.author.id, False)
