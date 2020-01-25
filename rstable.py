@@ -82,7 +82,7 @@ conn.commit()
 client = discord.Client()
 
 def add_member(userid,rs3,osrs):
-	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0,20191201))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0,2019120100))
 
 def getvalue(userid,value,table):
 	strings=["clientseed","seedreset","serverseed","yesterdayseed","deck","botcards","playercards","currency","messageid","channelid","bets","streak"]
@@ -1303,7 +1303,8 @@ async def on_message(message):
 		silver=get(message.server.roles, name='Silver Donor')
 		gold=get(message.server.roles, name='Gold Donor')
 		lastdate=str(getvalue(int(message.author.id),'weeklydate','rsmoney'))
-		lastdate=datetime.date(int(lastdate[:4]),int(lastdate[4:-2]),int(lastdate[6:]))
+		lastdate=datetime.date(int(lastdate[:4]),int(lastdate[4:-4]),int(lastdate[6:-2]))
+		hours=int(lastdate[8:])
 		dayspast=(datetime.date.today()-lastdate).days
 
 		if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
@@ -1317,10 +1318,10 @@ async def on_message(message):
 				elif gold in message.author.roles:
 					gkeys=getvalue(int(message.author.id),'gold','rsmoney')
 					c.execute('UPDATE rsmoney SET gold={} WHERE id={}'.format(gkeys+5, message.author.id))
-				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(int(time.strftime('%Y%m%d')), message.author.id))
+				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(int(time.strftime('%Y%m%d%H')), message.author.id))
 				words='Your weekly keys have been given!'
 			else:
-				words='You have **'+str(7-dayspast)+'** day(s) left until you can collect your weekly keys.'
+				words='You have **'+str(7-dayspast)+' day(s) and '+str(24-hours)+' hour(s)** left until you can collect your weekly keys.'
 			embed = discord.Embed(description=words, color=65348)
 			embed.set_author(name="Weekly Keys", icon_url=str(message.author.avatar_url))
 			await client.send_message(message.channel, embed=embed)
@@ -1403,3 +1404,16 @@ Bot_Token = os.environ['TOKEN']
 client.run(str(Bot_Token))
 #https://discordapp.com/oauth2/authorize?client_id=580511336598077511&scope=bot&permissions=8
 #heroku pg:psql postgresql-adjacent-85932 --app rstable
+
+
+"""
+Profile system
+	XP For:
+	- Chatting
+	- Gambling
+	- Inviting Friends
+
+Dice Duels
+
+Whip Duels - Cryptoscape
+"""
