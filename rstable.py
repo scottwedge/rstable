@@ -894,12 +894,12 @@ async def on_message(message):
 			await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
 	###################################
 	elif message.content==("stand") or message.content=='dd':
+		currency = getvalue(message.author.id,"currency","bj")
 		playerscore = getvalue(message.author.id,"playerscore","bj")
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		current = getvalue(int(message.author.id), currency, "rsmoney")
 		bet = getvalue(message.author.id,"bet","bj")
-		currency = getvalue(message.author.id,"currency","bj")
 		sent = await client.get_message(message.server.get_channel(channelid), messageid)
 
 		if message.content=='dd':
