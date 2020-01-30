@@ -905,6 +905,7 @@ async def on_message(message):
 		if message.content=='dd':
 			if current>=bet:
 				update_money(message.author.id, bet*-1, currency)
+				ticketbets(message.author.id, bet, currency)
 				bet = bet*2
 				drawcard(message.author.id, True)
 				cards = getvalue(message.author.id,"playercards","bj")
@@ -1321,7 +1322,11 @@ async def on_message(message):
 			embed.set_author(name="Weekly Keys", icon_url=str(message.author.avatar_url))
 			await client.send_message(message.channel, embed=embed)
 		else:
-			await client.send_message(message.channel, 'You are not a bronze, silver, or gold donor!')
+			embed = discord.Embed(description="Not so fast there, Amigo!\n\n**Start your subscription today at https://patreon.com/evilbob**", color=7995152)
+			embed.set_author(name="Subscribe for Weekly Keys", icon_url=str(message.server.icon_url))
+			embed.set_image(url="https://cdn.discordapp.com/attachments/580436923756314624/671919480271667200/Screen_Shot_2020-01-28_at_10.10.57_PM.png")
+			embed.set_footer(text="Bronze, Silver, and Gold Subscriptions Available")
+			await client.send_message(message.channel, embed=embed)
 	#######################################
 	elif message.content.startswith('$add'):
 		bet=formatok(str(message.content).split(" ")[1], '07')
