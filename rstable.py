@@ -1322,7 +1322,7 @@ async def on_message(message):
 			embed.set_author(name="Weekly Keys", icon_url=str(message.author.avatar_url))
 			await client.send_message(message.channel, embed=embed)
 		else:
-			embed = discord.Embed(description="Not so fast there, Amigo!\n\n**Start your subscription today at https://patreon.com/evilbob**", color=7995152)
+			embed = discord.Embed(description="Not so fast there, Amigo!\n\n**Start your subscription today at\nhttps://patreon.com/evilbob**", color=7995152)
 			embed.set_author(name="Subscribe for Weekly Keys", icon_url=str(message.server.icon_url))
 			embed.set_image(url="https://cdn.discordapp.com/attachments/580436923756314624/671919480271667200/Screen_Shot_2020-01-28_at_10.10.57_PM.png")
 			embed.set_footer(text="Bronze, Silver, and Gold Subscriptions Available")
@@ -1390,13 +1390,6 @@ async def on_message(message):
 			await client.send_message(message.channel, embed=embed)
 		else:
 			await client.send_message(message.channel, "Only admins can end a jackpot. Please tag one if necessary.")
-	#################################
-	elif message.content=='testing':
-		embed = discord.Embed()
-		embed.set_thumbnail(url='https://cdn.discordapp.com/attachments/656732430442430465/665625102888730644/th.png')
-		embed2 = discord.Embed()
-		embed2.set_image(url='https://cdn.discordapp.com/attachments/656732430442430465/665625410393866260/th.png')
-		await client.send_message(message.channel, embed=embed2, content='Hi', file='th.png')
 
 
 client.loop.create_task(my_background_task())
