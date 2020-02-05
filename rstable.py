@@ -902,6 +902,7 @@ async def on_message(message):
 		bet = getvalue(message.author.id,"bet","bj")
 		sent = await client.get_message(message.server.get_channel(channelid), messageid)
 
+		enough=True
 		if message.content=='dd':
 			if current>=bet:
 				update_money(message.author.id, bet*-1, currency)
@@ -915,33 +916,35 @@ async def on_message(message):
 					profit(False, currency, bet)
 					c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 			else:
+				enough=False
 				await client.send_message(message.channel, "You don't have enough money to double down!")
 
-		cards=getvalue(message.author.id,"botcards","bj")
-		botscore=scorebj(message.author.id,cards,False)
-		while botscore<17:
-			drawcard(message.author.id,False)
+		if enough:
 			cards=getvalue(message.author.id,"botcards","bj")
 			botscore=scorebj(message.author.id,cards,False)
+			while botscore<17:
+				drawcard(message.author.id,False)
+				cards=getvalue(message.author.id,"botcards","bj")
+				botscore=scorebj(message.author.id,cards,False)
 
-		win=False
+			win=False
 
-		if botscore>21:
-			await client.edit_message(sent, embed=printbj(message.author, True, "Dealer Busts. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
-			update_money(message.author.id, bet*2, currency)
-			win=True
-		elif botscore==playerscore:
-			await client.edit_message(sent, embed=printbj(message.author, True, "Tie! Money Back.", 16776960))
-			update_money(message.author.id, bet, currency)
-		elif playerscore>botscore:
-			await client.edit_message(sent, embed=printbj(message.author, True, "Your score is higher than the dealer's. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
-			update_money(message.author.id, bet*2, currency)
-			win=True
-		elif botscore>playerscore:
-			await client.edit_message(sent, embed=printbj(message.author, True, "The dealer's score is higher than yours. You lose.", 16711718))
+			if botscore>21:
+				await client.edit_message(sent, embed=printbj(message.author, True, "Dealer Busts. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
+				update_money(message.author.id, bet*2, currency)
+				win=True
+			elif botscore==playerscore:
+				await client.edit_message(sent, embed=printbj(message.author, True, "Tie! Money Back.", 16776960))
+				update_money(message.author.id, bet, currency)
+			elif playerscore>botscore:
+				await client.edit_message(sent, embed=printbj(message.author, True, "Your score is higher than the dealer's. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
+				update_money(message.author.id, bet*2, currency)
+				win=True
+			elif botscore>playerscore:
+				await client.edit_message(sent, embed=printbj(message.author, True, "The dealer's score is higher than yours. You lose.", 16711718))
 
-		profit(win, currency, bet)
-		c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
+			profit(win, currency, bet)
+			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 	################################
 	elif message.content==("$keys") or message.content==("$k"):
 		bronze=getvalue(message.author.id, "bronze", "rsmoney")
