@@ -930,11 +930,12 @@ async def on_message(message):
 
 			win=False
 
+			print(playercards)
 			if botscore>21:
 				await client.edit_message(sent, embed=printbj(message.author, True, "Dealer Busts. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
 				update_money(message.author.id, bet*2, currency)
 				win=True
-			elif 'a' in playercards and ('10' or 'j' or 'q' or 'k') in playercards and playerscore==21:
+			elif 'a' in playercards and (playercards.count('10')==1 or playercards.count('j')==1 or playercards.count('q')==1 or playercards.count('k')==1):
 				await client.edit_message(sent, embed=printbj(message.author, True, "You got a blackjack! You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
 				update_money(message.author.id, bet*2, currency)
 			elif botscore==playerscore:
