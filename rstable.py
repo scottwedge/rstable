@@ -896,7 +896,7 @@ async def on_message(message):
 	elif message.content==("stand") or message.content=='dd':
 		currency = getvalue(message.author.id,"currency","bj")
 		playerscore = getvalue(message.author.id,"playerscore","bj")
-		playercards = getvalue(message.auhor.id,"playercards","bj")
+		playercards = getvalue(message.author.id,"playercards","bj")
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		current = getvalue(int(message.author.id), currency, "rsmoney")
