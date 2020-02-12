@@ -896,6 +896,7 @@ async def on_message(message):
 	elif message.content==("stand") or message.content=='dd':
 		currency = getvalue(message.author.id,"currency","bj")
 		playerscore = getvalue(message.author.id,"playerscore","bj")
+		playercards = getvalue(message.auhor.id,"playercards","bj")
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		current = getvalue(int(message.author.id), currency, "rsmoney")
@@ -933,6 +934,9 @@ async def on_message(message):
 				await client.edit_message(sent, embed=printbj(message.author, True, "Dealer Busts. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
 				update_money(message.author.id, bet*2, currency)
 				win=True
+			elif 'a' in playercards and ('10' or 'j' or 'q' or 'k') in playercards and playerscore==21:
+				await client.edit_message(sent, embed=printbj(message.author, True, "You got a blackjack! You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
+				update_money(message.author.id, bet*2, currency)
 			elif botscore==playerscore:
 				await client.edit_message(sent, embed=printbj(message.author, True, "Tie! Money Back.", 16776960))
 				update_money(message.author.id, bet, currency)
@@ -1403,6 +1407,12 @@ client.run(str(Bot_Token))
 
 
 """
+$weekly timer fix
+
+Cross-Server Compatability
+
+Jackpot Rework
+
 Profile system
 	XP For:
 	- Chatting
