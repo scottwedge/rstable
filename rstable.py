@@ -1325,7 +1325,7 @@ async def on_message(message):
 				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(str(datetime.datetime.now()), message.author.id))
 				words='Your weekly keys have been given!'
 			else:
-				words='You have **'+str(days)+'** day(s), **'+str(hours)+'** hour(s), and **'+str(minutes)'** minute(s)** left until you can collect your weekly keys.'
+				words='You have **'+str(days)+'** day(s), **'+str(hours)+'** hour(s), and **'+str(minutes)+'** minute(s)** left until you can collect your weekly keys.'
 			embed = discord.Embed(description=words, color=65348)
 			embed.set_author(name="Weekly Keys", icon_url=str(message.author.avatar_url))
 			await client.send_message(message.channel, embed=embed)
