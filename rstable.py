@@ -1312,7 +1312,7 @@ async def on_message(message):
 		minutes = int(difference.seconds / 60)
 
 		if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
-			if dayspast>=7:
+			if days>=7:
 				if bronze in message.author.roles:
 					bkeys=getvalue(int(message.author.id),'bronze','rsmoney')
 					c.execute('UPDATE rsmoney SET bronze={} WHERE id={}'.format(bkeys+5, message.author.id))
@@ -1322,7 +1322,7 @@ async def on_message(message):
 				elif gold in message.author.roles:
 					gkeys=getvalue(int(message.author.id),'gold','rsmoney')
 					c.execute('UPDATE rsmoney SET gold={} WHERE id={}'.format(gkeys+5, message.author.id))
-				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(str(datetime.datetime.now()), message.author.id))
+				c.execute("UPDATE rsmoney SET weeklydate='{}' WHERE id={}".format(str(datetime.datetime.now())[:-7], message.author.id))
 				words='Your weekly keys have been given!'
 			else:
 				words='You have **'+str(days)+'** day(s), **'+str(hours)+'** hour(s), and **'+str(minutes)+'** minute(s)** left until you can collect your weekly keys.'
