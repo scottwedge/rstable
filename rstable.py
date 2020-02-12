@@ -1307,9 +1307,9 @@ async def on_message(message):
 		lastdate = getvalue(message.author.id,'weeklydate','rsmoney')
 		date_format = "%Y-%m-%d %H:%M:%S"
 		difference = datetime.datetime.strptime(str(datetime.datetime.now())[:-7], date_format) - datetime.datetime.strptime(lastdate, date_format)
-		days = difference.days
-		hours = int(difference.seconds / 3600)
-		minutes = int(difference.seconds / 60)
+		days = 6-difference.days
+		hours = 23-int(difference.seconds / 3600)
+		minutes = 60-int(difference.seconds / 60)
 
 		if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
 			if days>=7:
@@ -1325,7 +1325,7 @@ async def on_message(message):
 				c.execute("UPDATE rsmoney SET weeklydate='{}' WHERE id={}".format(str(datetime.datetime.now())[:-7], message.author.id))
 				words='Your weekly keys have been given!'
 			else:
-				words='You have **'+str(days)+'** day(s), **'+str(hours)+'** hour(s), and **'+str(minutes)+'** minute(s)** left until you can collect your weekly keys.'
+				words='You have **'+str(days)+'** day(s), **'+str(hours)+'** hour(s), and **'+str(minutes)+'** minute(s) left until you can collect your weekly keys.'
 			embed = discord.Embed(description=words, color=65348)
 			embed.set_author(name="Weekly Keys", icon_url=str(message.author.avatar_url))
 			await client.send_message(message.channel, embed=embed)
