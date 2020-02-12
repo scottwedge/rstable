@@ -29,9 +29,9 @@ conn.set_session(autocommit=True)
 # 				silver integer,
 # 				gold integer,
 # 				tickets integer,
-#				weeklydate integer
+#				weeklydate text
 # 				)""")
-# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0,20191201))
+# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0,"2020-01-01 00:00:00"))
 # conn.commit()
 
 # c.execute("DROP TABLE data")
@@ -81,10 +81,11 @@ conn.commit()
 client = discord.Client()
 
 def add_member(userid,rs3,osrs):
-	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0,2019120100))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0,"2020-01-01 00:00:00"))
 
 def getvalue(userid,value,table):
-	strings=["clientseed","seedreset","serverseed","yesterdayseed","deck","botcards","playercards","currency","messageid","channelid","bets","streak"]
+	strings=["clientseed","seedreset","serverseed","yesterdayseed","deck","botcards","playercards","currency","messageid","channelid","bets","streak","weeklydate"]
+
 	if value=="07":
 		value="osrs"
 	try:
@@ -930,7 +931,6 @@ async def on_message(message):
 
 			win=False
 
-			print(playercards)
 			if botscore>21:
 				await client.edit_message(sent, embed=printbj(message.author, True, "Dealer Busts. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
 				update_money(message.author.id, bet*2, currency)
@@ -1174,7 +1174,7 @@ async def on_message(message):
 		except:
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$fp (Amount) (rs3 or 07)`.")
 	###############################
-	elif message.content.startswith("$top"):
+	elif message.content.startswith("$leaderboard"):
 		game=(message.content).split(" ")[1]
 		if game=="rs3" or game=="osrs" or game=="07":
 			if game=="rs3":
@@ -1301,15 +1301,15 @@ async def on_message(message):
 			await client.send_message(message.channel, "Admin Command Only!")
 	#######################################
 	elif message.content==('$weekly'):
-		bronze=get(message.server.roles, name='Bronze Donor')
-		silver=get(message.server.roles, name='Silver Donor')
-		gold=get(message.server.roles, name='Gold Donor')
-		lastdate=str(getvalue(int(message.author.id),'weeklydate','rsmoney'))
-		hours=int(lastdate[8:])-int(time.strftime('%H'))
-		if hours<=0:
-			hours=hours+24
-		lastdate=datetime.date(int(lastdate[:4]),int(lastdate[4:-4]),int(lastdate[6:-2]))
-		dayspast=(datetime.date.today()-lastdate).days
+		bronze = get(message.server.roles, name='Bronze Donor')
+		silver = get(message.server.roles, name='Silver Donor')
+		gold = get(message.server.roles, name='Gold Donor')
+		lastdate = getvalue(message.author.id,'weeklydate','rsmoney')
+		date_format = "%Y-%m-%d %H:%M:%S"
+		difference = datetime.datetime.strptime(str(datetime.datetime.now())[:-7], date_format) - datetime.datetime.strptime(lastdate, date_format)
+		days = difference.days
+		hours = int(difference.seconds / 3600)
+		minutes = int(difference.seconds / 60)
 
 		if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
 			if dayspast>=7:
@@ -1322,10 +1322,10 @@ async def on_message(message):
 				elif gold in message.author.roles:
 					gkeys=getvalue(int(message.author.id),'gold','rsmoney')
 					c.execute('UPDATE rsmoney SET gold={} WHERE id={}'.format(gkeys+5, message.author.id))
-				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(int(time.strftime('%Y%m%d%H')), message.author.id))
+				c.execute('UPDATE rsmoney SET weeklydate={} WHERE id={}'.format(str(datetime.datetime.now()), message.author.id))
 				words='Your weekly keys have been given!'
 			else:
-				words='You have **'+str(6-dayspast)+' day(s)** and **'+str(hours)+' hour(s)** left until you can collect your weekly keys.'
+				words='You have **'+str(days)+'** day(s), **'+str(hours)+'** hour(s), and **'+str(minutes)'** minute(s)** left until you can collect your weekly keys.'
 			embed = discord.Embed(description=words, color=65348)
 			embed.set_author(name="Weekly Keys", icon_url=str(message.author.avatar_url))
 			await client.send_message(message.channel, embed=embed)
@@ -1408,6 +1408,8 @@ client.run(str(Bot_Token))
 
 
 """
+$leaderboard 07
+
 $weekly timer fix
 
 Cross-Server Compatability
