@@ -1315,7 +1315,7 @@ async def on_message(message):
 		minutes = time // 60
 		
 		if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
-			if days>=0:
+			if 1==0:
 				if bronze in message.author.roles:
 					bkeys=getvalue(int(message.author.id),'bronze','rsmoney')
 					c.execute('UPDATE rsmoney SET bronze={} WHERE id={}'.format(bkeys+5, message.author.id))
