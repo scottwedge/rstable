@@ -1307,7 +1307,11 @@ async def on_message(message):
 		lastdate = getvalue(message.author.id,'weeklydate','rsmoney')
 		date_format = "%Y-%m-%d %H:%M:%S"
 		difference = datetime.datetime.strptime(str(datetime.datetime.now())[:-7], date_format) - datetime.datetime.strptime(lastdate, date_format)
-		days, hours, minutes = difference.days, difference.seconds // 3600, difference.seconds // 60 % 60
+		seconds = difference.seconds % (24 * 3600)
+		hours = seconds // 3600
+		seconds %= 3600
+		minutes = seconds // 60
+		days = difference.days
 
 		
 		if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
