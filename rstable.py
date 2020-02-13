@@ -1311,7 +1311,7 @@ async def on_message(message):
 
 		
 		if bronze in message.author.roles or silver in message.author.roles or gold in message.author.roles:
-			if days<=-1:
+			if days<=0:
 				if bronze in message.author.roles:
 					bkeys=getvalue(int(message.author.id),'bronze','rsmoney')
 					c.execute('UPDATE rsmoney SET bronze={} WHERE id={}'.format(bkeys+5, message.author.id))
