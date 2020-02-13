@@ -1307,7 +1307,7 @@ async def on_message(message):
 		lastdate = getvalue(message.author.id,'weeklydate','rsmoney')
 		date_format = "%Y-%m-%d %H:%M:%S"
 		difference = datetime.datetime.strptime(str(datetime.datetime.now())[:-7], date_format) - datetime.datetime.strptime(lastdate, date_format)
-		seconds = difference.seconds % (24 * 3600)
+		seconds = (604800 - difference.seconds) % (24 * 3600)
 		hours = seconds // 3600
 		seconds %= 3600
 		minutes = seconds // 60
