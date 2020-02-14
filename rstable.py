@@ -723,111 +723,123 @@ async def on_message(message):
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$transfer (@user) (Amount you want to give) (rs3 or 07)`.")
 	###################################
 	elif message.content.startswith("$53") or message.content.startswith("$50") or message.content.startswith("$75") or message.content.startswith("$95"):
-		try:
-			if len((message.content).split(" "))==2:
-				currency='07'
-			else:
-				currency=str(message.content).split(" ")[2]
-			bet=formatok(str(message.content).split(" ")[1], currency)
-			current=getvalue(message.author.id, currency,"rsmoney")
-
-			if isenough(bet, currency)[0]:
-				if message.content.startswith("$53x2") or message.content.startswith("$53"):
-					title="53x2"
-					odds=54
-					multiplier=2
-				elif message.content.startswith("$50x1.8") or message.content.startswith("$50"):
-					title="50x1.8"
-					odds=51
-					multiplier=1.8
-				elif message.content.startswith("$75x3") or message.content.startswith("$75"):
-					title="75x3"
-					odds=76
-					multiplier=3
-				elif message.content.startswith("$95x7") or message.content.startswith("$95"):
-					title="95x7"
-					odds=96
-					multiplier=7
-
-				if current>=bet:
-					roll=getrandint(message.author.id)
-
-					if roll in range(1,odds):
-						winnings=bet
-						words="Rolled **"+str(roll)+"** out of **100**. You lost **"+str(formatfromk(bet, currency))+"** "+str(currency)+"."
-						sidecolor=16718121
-						gains=bet*-1
-						win=False
-					else:
-						winnings=int(bet*multiplier)
-						winnings=formatfromk(winnings, currency)
-						words="Rolled **"+str(roll)+"** out of **100**. You won **"+str(winnings)+"** "+str(currency)+"."	
-						winnings=formatok(winnings, currency)
-						sidecolor=3997475
-						gains=(bet*multiplier)-(bet)
-						win=True
-
-					update_money(int(message.author.id), gains, currency)
-
-					c.execute("SELECT nonce FROM data")
-					nonce=int(c.fetchone()[0])
-					clientseed=getvalue(message.author.id, "clientseed", "rsmoney")
-
-					embed = discord.Embed(color=sidecolor)
-					embed.set_author(name=str(message.author), icon_url=str(message.author.avatar_url))
-					embed.add_field(name=title, value=words, inline=True)
-					embed.set_footer(text="Nonce: "+str(nonce-1)+" | Client Seed: \""+str(clientseed)+"\"")
-					await client.send_message(message.channel, embed=embed)
-
-					ticketbets(message.author.id, bet, currency)
-					profit(win, currency, winnings)
-
+		if str(message.server.id)=='512158131674152973':
+			try:
+				if len((message.content).split(" "))==2:
+					currency='07'
 				else:
-					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
-			else:
-				await client.send_message(message.channel, (isenough(bet, currency))[1])
-		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$(50, 53, 75, or 95) (BET) (rs3 or 07)`.")
+					currency=str(message.content).split(" ")[2]
+				bet=formatok(str(message.content).split(" ")[1], currency)
+				current=getvalue(message.author.id, currency,"rsmoney")
+
+				if isenough(bet, currency)[0]:
+					if message.content.startswith("$53x2") or message.content.startswith("$53"):
+						title="53x2"
+						odds=54
+						multiplier=2
+					elif message.content.startswith("$50x1.8") or message.content.startswith("$50"):
+						title="50x1.8"
+						odds=51
+						multiplier=1.8
+					elif message.content.startswith("$75x3") or message.content.startswith("$75"):
+						title="75x3"
+						odds=76
+						multiplier=3
+					elif message.content.startswith("$95x7") or message.content.startswith("$95"):
+						title="95x7"
+						odds=96
+						multiplier=7
+
+					if current>=bet:
+						roll=getrandint(message.author.id)
+
+						if roll in range(1,odds):
+							winnings=bet
+							words="Rolled **"+str(roll)+"** out of **100**. You lost **"+str(formatfromk(bet, currency))+"** "+str(currency)+"."
+							sidecolor=16718121
+							gains=bet*-1
+							win=False
+						else:
+							winnings=int(bet*multiplier)
+							winnings=formatfromk(winnings, currency)
+							words="Rolled **"+str(roll)+"** out of **100**. You won **"+str(winnings)+"** "+str(currency)+"."	
+							winnings=formatok(winnings, currency)
+							sidecolor=3997475
+							gains=(bet*multiplier)-(bet)
+							win=True
+
+						update_money(int(message.author.id), gains, currency)
+
+						c.execute("SELECT nonce FROM data")
+						nonce=int(c.fetchone()[0])
+						clientseed=getvalue(message.author.id, "clientseed", "rsmoney")
+
+						embed = discord.Embed(color=sidecolor)
+						embed.set_author(name=str(message.author), icon_url=str(message.author.avatar_url))
+						embed.add_field(name=title, value=words, inline=True)
+						embed.set_footer(text="Nonce: "+str(nonce-1)+" | Client Seed: \""+str(clientseed)+"\"")
+						await client.send_message(message.channel, embed=embed)
+
+						ticketbets(message.author.id, bet, currency)
+						profit(win, currency, winnings)
+
+					else:
+						await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+				else:
+					await client.send_message(message.channel, (isenough(bet, currency))[1])
+			except:
+				await client.send_message(message.channel, "An **error** has occured. Make sure you use `$(50, 53, 75, or 95) (BET) (rs3 or 07)`.")
+		else:
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	#############################
 	elif message.content==("$wager") or message.content==("$total bet") or message.content==("$tb"):
-		rs3total=getvalue(message.author.id, "rs3total","rsmoney")
-		osrstotal=getvalue(message.author.id, "osrstotal","rsmoney")
+		if str(message.server.id)=='512158131674152973':
+			rs3total=getvalue(message.author.id, "rs3total","rsmoney")
+			osrstotal=getvalue(message.author.id, "osrstotal","rsmoney")
 
-		osrs=formatfromk(osrstotal, "osrs")
-		rs3=formatfromk(rs3total, "rs3")
+			osrs=formatfromk(osrstotal, "osrs")
+			rs3=formatfromk(rs3total, "rs3")
 
-		embed = discord.Embed(color=16766463)
-		embed.set_author(name=(str(message.author))[:-5]+"'s Total Bets", icon_url=str(message.author.avatar_url))
-		embed.add_field(name="RS3 Total Bets", value=rs3, inline=True)
-		embed.add_field(name="07 Total Bets", value=osrs, inline=True)
-		c.execute('SELECT * FROM jackpot')
-		bets=c.fetchall()
-		total=sum(x[1] for x in bets)
-		embed.set_footer(text="Checkout our new Jackpot game, the current pot is up to "+formatfromk(total, '07')+"!")
-		await client.send_message(message.channel, embed=embed)
-	###############################
-	elif message.content=="$thisweek":
-		rs3week=getvalue(message.author.id, "rs3week","rsmoney")
-		osrsweek=getvalue(message.author.id, "osrsweek","rsmoney")
-
-		osrs=formatfromk(osrsweek, "osrs")
-		rs3=formatfromk(rs3week, "rs3")
-
-		embed = discord.Embed(color=16766463)
-		embed.set_author(name=(str(message.author))[:-5]+"'s Weekly Bets", icon_url=str(message.author.avatar_url))
-		embed.add_field(name="RS3 Weekly Bets", value=rs3, inline=True)
-		embed.add_field(name="07 Weekly Bets", value=osrs, inline=True)
-		await client.send_message(message.channel, embed=embed)
-	################################
-	elif message.content=="$reset thisweek":
-		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-			c.execute("UPDATE rsmoney SET rs3week={}".format(0))
-			c.execute("UPDATE rsmoney SET osrsweek={}".format(0))
-			embed = discord.Embed(description="All weekly bets have been reset.", color=5174318)
-			embed.set_author(name="Weekly Bets Reset", icon_url=str(message.server.icon_url))
+			embed = discord.Embed(color=16766463)
+			embed.set_author(name=(str(message.author))[:-5]+"'s Total Bets", icon_url=str(message.author.avatar_url))
+			embed.add_field(name="RS3 Total Bets", value=rs3, inline=True)
+			embed.add_field(name="07 Total Bets", value=osrs, inline=True)
+			c.execute('SELECT * FROM jackpot')
+			bets=c.fetchall()
+			total=sum(x[1] for x in bets)
+			embed.set_footer(text="Checkout our new Jackpot game, the current pot is up to "+formatfromk(total, '07')+"!")
 			await client.send_message(message.channel, embed=embed)
 		else:
-			await client.send_message(message.channel, "Admin Command Only!")
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
+	###############################
+	elif message.content=="$thisweek":
+		if str(message.server.id)=='512158131674152973':
+			rs3week=getvalue(message.author.id, "rs3week","rsmoney")
+			osrsweek=getvalue(message.author.id, "osrsweek","rsmoney")
+
+			osrs=formatfromk(osrsweek, "osrs")
+			rs3=formatfromk(rs3week, "rs3")
+
+			embed = discord.Embed(color=16766463)
+			embed.set_author(name=(str(message.author))[:-5]+"'s Weekly Bets", icon_url=str(message.author.avatar_url))
+			embed.add_field(name="RS3 Weekly Bets", value=rs3, inline=True)
+			embed.add_field(name="07 Weekly Bets", value=osrs, inline=True)
+			await client.send_message(message.channel, embed=embed)
+		else:
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
+	################################
+	elif message.content=="$reset thisweek":
+		if str(message.server.id)=='512158131674152973':
+			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+				c.execute("UPDATE rsmoney SET rs3week={}".format(0))
+				c.execute("UPDATE rsmoney SET osrsweek={}".format(0))
+				embed = discord.Embed(description="All weekly bets have been reset.", color=5174318)
+				embed.set_author(name="Weekly Bets Reset", icon_url=str(message.server.icon_url))
+				await client.send_message(message.channel, embed=embed)
+			else:
+				await client.send_message(message.channel, "Admin Command Only!")
+		else:
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	###############################
 	elif message.content=="$privacy on":
 		c.execute("UPDATE rsmoney SET privacy=True WHERE id={}".format(message.author.id))
@@ -842,40 +854,43 @@ async def on_message(message):
 		await client.send_message(message.channel, embed=embed)
 	#################################
 	elif message.content.startswith("$bj"):
-		try:
-			deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
-			if len((message.content).split(" "))==2:
-				currency='07'
-			else:
-				currency=(message.content).split(" ")[2]
-			bet=formatok((message.content).split(" ")[1], currency)
-			current=getvalue(int(message.author.id), currency,"rsmoney")
-			if isenough(bet, currency)[0]:
-				if current>=bet:
-					try:
-						c.execute("SELECT playerscore FROM bj WHERE id={}".format(message.author.id))
-						tester=int(c.fetchone()[0])
-						await client.send_message(message.channel, "You are already in a game of blackjack! Type `hit`, `stand`, or `dd` to continue the game!")
-					except:
-						update_money(message.author.id, bet*-1, currency)
-						ticketbets(message.author.id, bet, currency)
-						c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id,deck,"","",0,0,bet,currency,"",str(message.channel.id)))
-						drawcard(message.author.id, True)
-						drawcard(message.author.id, True)
-						drawcard(message.author.id, False)
-						drawcard(message.author.id, False)
-						botcards=getvalue(message.author.id, "botcards", "bj")
-						playercards=getvalue(message.author.id, "playercards", "bj")
-						scorebj(message.author.id,botcards, False)
-						scorebj(message.author.id,playercards, True)
-						sent=await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
-						c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
+		if str(message.server.id)=='512158131674152973':
+			try:
+				deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
+				if len((message.content).split(" "))==2:
+					currency='07'
 				else:
-					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
-			else:
-				await client.send_message(message.channel, isenough(bet, game)[1])
-		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bj (Amount) (rs3 or 07)`.")
+					currency=(message.content).split(" ")[2]
+				bet=formatok((message.content).split(" ")[1], currency)
+				current=getvalue(int(message.author.id), currency,"rsmoney")
+				if isenough(bet, currency)[0]:
+					if current>=bet:
+						try:
+							c.execute("SELECT playerscore FROM bj WHERE id={}".format(message.author.id))
+							tester=int(c.fetchone()[0])
+							await client.send_message(message.channel, "You are already in a game of blackjack! Type `hit`, `stand`, or `dd` to continue the game!")
+						except:
+							update_money(message.author.id, bet*-1, currency)
+							ticketbets(message.author.id, bet, currency)
+							c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id,deck,"","",0,0,bet,currency,"",str(message.channel.id)))
+							drawcard(message.author.id, True)
+							drawcard(message.author.id, True)
+							drawcard(message.author.id, False)
+							drawcard(message.author.id, False)
+							botcards=getvalue(message.author.id, "botcards", "bj")
+							playercards=getvalue(message.author.id, "playercards", "bj")
+							scorebj(message.author.id,botcards, False)
+							scorebj(message.author.id,playercards, True)
+							sent=await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
+							c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
+					else:
+						await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+				else:
+					await client.send_message(message.channel, isenough(bet, game)[1])
+			except:
+				await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bj (Amount) (rs3 or 07)`.")
+		else:
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	################################
 	elif message.content==("hit"):
 		drawcard(message.author.id,True)
@@ -1126,177 +1141,195 @@ async def on_message(message):
 			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$giftkey (@user) (Kind)`.")
 	################################
 	elif message.content.startswith("$fp"):
-		try:
-			if len((message.content).split(" "))==2:
-				game='07'
-			else:
-				game=(message.content).split(" ")[2]
-			bet=formatok(str(message.content).split(" ")[1], game)
-			current=getvalue(message.author.id, game,"rsmoney")
-			ticketbets(message.author.id, bet, game)
-
-			if isenough(bet, game)[0]:
-				if current>=bet:
-					botflowers=[]
-					playerflowers=[]
-					for i in range(5):
-						botflowers.append(pickflower())
-						playerflowers.append(pickflower())
-
-					pprint=""
-					bprint=""
-					#flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
-					emojis=["rf","blf","yf","puf","of","pf","raf","bf","wf"]
-					for i in playerflowers:
-						pprint+=str(get(client.get_all_emojis(), name=emojis[i]))
-					for i in botflowers:
-						bprint+=str(get(client.get_all_emojis(), name=emojis[i]))
-
-					if scorefp(playerflowers)[0]==scorefp(botflowers)[0]:
-						embed = discord.Embed(description="Tie! 10% commission taken.", color=16776960)
-						update_money(message.author.id, bet*-0.1, game)
-					elif scorefp(playerflowers)[0]>scorefp(botflowers)[0]:
-						embed = discord.Embed(description="Congratulations! You won **"+formatfromk(bet*2, game)+"**!", color=3997475)
-						update_money(message.author.id, bet, game)
-					elif scorefp(playerflowers)[0]<scorefp(botflowers)[0]:
-						embed = discord.Embed(description="House wins. You lost "+formatfromk(bet, game)+".", color=16718121)
-						update_money(message.author.id, bet*-1, game)
-
-					embed.add_field(name="Player Hand", value=pprint+"\nResult: "+scorefp(playerflowers)[1], inline=True)
-					embed.add_field(name="House Hand", value=bprint+"\nResult: "+scorefp(botflowers)[1], inline=True)
-					embed.set_author(name="Flower Poker", icon_url=str(message.author.avatar_url))
-					await client.send_message(message.channel, embed=embed)
-
-				else:
-					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
-			else:
-				await client.send_message(message.channel, (isenough(bet, game))[1])
-		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$fp (Amount) (rs3 or 07)`.")
-	###############################
-	elif message.content.startswith("$leaderboard"):
-		game=(message.content).split(" ")[1]
-		if game=="rs3" or game=="osrs" or game=="07":
-			if game=="rs3":
-				c.execute("SELECT * From rsmoney ORDER BY rs3week DESC LIMIT 8")
-				number=5
-				prizes=["None", "None", "None", "None", "None", "None", "None", "None"]
-			elif game=="osrs" or game=="07":
-				c.execute("SELECT * From rsmoney ORDER BY osrsweek DESC LIMIT 8")
-				number=6
-				prizes=["5 Silver Keys", "3 Silver Keys", "1 Silver Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key"]
-				
-			top=c.fetchall()
-			words=""
-			for counter, i in enumerate(top):
-				userid=i[0]
-				total=i[number]
-				total=formatfromk(int(total),game)
-				words+=(str(counter+1)+". <@"+str(userid)+"> - **"+total+"**\n\n")# - **"+prizes[counter]+"**\n\n")
-
-			embed = discord.Embed(color=557823, description=words)
-			embed.set_author(name="Top "+game.upper()+" Thisweek Wager", icon_url=str(message.server.icon_url))
-			await client.send_message(message.channel, embed=embed)
-		else:
-			None
-	###########################################
-	elif message.content==("$please"):
-		if str(message.channel.id)=='621787403778129934':
-			if roulette!=41:
-				await client.send_message(message.channel, "There is already a roulette game going on!")
-			else:
-				roulette=40
-				embed = discord.Embed(description="A game of roulette has started! Use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
-				embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
-				embed.add_field(name="Time Left", value="**40** Seconds", inline=True)
-				gif=random.choice(['https://bit.ly/2znjmak','https://bit.ly/2Zqh2dx','https://bit.ly/2NuBqHN'])
-				embed.set_image(url=gif)
-				roulettemsg = await client.send_message(message.channel, embed=embed)
-		else:
-			await client.send_message(message.channel, "This command can only be used in <#621787403778129934>.")
-	###########################################
-	elif message.content.startswith("bet "):
-		try:
-			if roulette!=41:
-				areas=['1st','2nd','3rd','high','low','black','red','green','odd','even','00','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
-				if len((message.content).split(" "))==3:
+		if str(message.server.id)=='512158131674152973':
+			try:
+				if len((message.content).split(" "))==2:
 					game='07'
 				else:
-					game=(message.content).split(" ")[3]
-				bet=formatok(str(message.content).split(" ")[2], game)
-				area=str(message.content).split(" ")[1]
-				if area not in areas:
-					await client.send_message(message.channel, "You can only bet on `1st/2nd/3rd`, `0-36`, `High/Low`, `Black/Red/Green`, and `Odd/Even`")
-				else:
-					current=getvalue(message.author.id, game,"rsmoney")
-					ticketbets(message.author.id, bet, game)
+					game=(message.content).split(" ")[2]
+				bet=formatok(str(message.content).split(" ")[1], game)
+				current=getvalue(message.author.id, game,"rsmoney")
+				ticketbets(message.author.id, bet, game)
 
-					if isenough(bet, game)[0]:
-						if current>=bet:
+				if isenough(bet, game)[0]:
+					if current>=bet:
+						botflowers=[]
+						playerflowers=[]
+						for i in range(5):
+							botflowers.append(pickflower())
+							playerflowers.append(pickflower())
+
+						pprint=""
+						bprint=""
+						#flowers=["Red","Orange","Yellow","Assorted","Blue","Purple","Mixed","Black","White"]
+						emojis=["rf","blf","yf","puf","of","pf","raf","bf","wf"]
+						for i in playerflowers:
+							pprint+=str(get(client.get_all_emojis(), name=emojis[i]))
+						for i in botflowers:
+							bprint+=str(get(client.get_all_emojis(), name=emojis[i]))
+
+						if scorefp(playerflowers)[0]==scorefp(botflowers)[0]:
+							embed = discord.Embed(description="Tie! 10% commission taken.", color=16776960)
+							update_money(message.author.id, bet*-0.1, game)
+						elif scorefp(playerflowers)[0]>scorefp(botflowers)[0]:
+							embed = discord.Embed(description="Congratulations! You won **"+formatfromk(bet*2, game)+"**!", color=3997475)
+							update_money(message.author.id, bet, game)
+						elif scorefp(playerflowers)[0]<scorefp(botflowers)[0]:
+							embed = discord.Embed(description="House wins. You lost "+formatfromk(bet, game)+".", color=16718121)
 							update_money(message.author.id, bet*-1, game)
-							c.execute("INSERT INTO roulette VALUES (%s, %s, %s, %s)", (message.author.id,bet,game,area))
-							await client.add_reaction(message,"✅")
-						else:
-							await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+
+						embed.add_field(name="Player Hand", value=pprint+"\nResult: "+scorefp(playerflowers)[1], inline=True)
+						embed.add_field(name="House Hand", value=bprint+"\nResult: "+scorefp(botflowers)[1], inline=True)
+						embed.set_author(name="Flower Poker", icon_url=str(message.author.avatar_url))
+						await client.send_message(message.channel, embed=embed)
+
 					else:
-						await client.send_message(message.channel, (isenough(bet, game))[1])
+						await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+				else:
+					await client.send_message(message.channel, (isenough(bet, game))[1])
+			except:
+				await client.send_message(message.channel, "An **error** has occured. Make sure you use `$fp (Amount) (rs3 or 07)`.")
+		else:
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
+	###############################
+	elif message.content.startswith("$leaderboard"):
+		if str(message.server.id)=='512158131674152973':
+			game=(message.content).split(" ")[1]
+			if game=="rs3" or game=="osrs" or game=="07":
+				if game=="rs3":
+					c.execute("SELECT * From rsmoney ORDER BY rs3week DESC LIMIT 8")
+					number=5
+					prizes=["None", "None", "None", "None", "None", "None", "None", "None"]
+				elif game=="osrs" or game=="07":
+					c.execute("SELECT * From rsmoney ORDER BY osrsweek DESC LIMIT 8")
+					number=6
+					prizes=["5 Silver Keys", "3 Silver Keys", "1 Silver Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key"]
+					
+				top=c.fetchall()
+				words=""
+				for counter, i in enumerate(top):
+					userid=i[0]
+					total=i[number]
+					total=formatfromk(int(total),game)
+					words+=(str(counter+1)+". <@"+str(userid)+"> - **"+total+"**\n\n")# - **"+prizes[counter]+"**\n\n")
+
+				embed = discord.Embed(color=557823, description=words)
+				embed.set_author(name="Top "+game.upper()+" Thisweek Wager", icon_url=str(message.server.icon_url))
+				await client.send_message(message.channel, embed=embed)
 			else:
-				await client.send_message(message.channel, "`Ask nicely and she will spin the wheel, say $please`")
-		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)`.")
+				None
+		else:
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	###########################################
-	elif message.content==("$menu"):
-		embed = discord.Embed(description="""1. Blurberry Special\n
-											2. Chef's Delight\n
-											3. Cider\n
-											4. Dragon Bitter\n
-											5. Karamjan Rum\n
-											6. Legendary Cocktail\n
-											7. Nice Beer\n
-											8. Purple Lumbridge\n
-											9. Short Green Guy\n
-											10. Wine of Zamorak\n
-											11. Wizard's Mind Bomb\n
-											""", color=3800857)
-		embed.set_author(name="Drink Menu", icon_url=str(message.server.icon_url))
-		await client.send_message(message.channel, embed=embed)
+	elif message.content==("$please"):
+		if str(message.server.id)=='512158131674152973':
+			if str(message.channel.id)=='621787403778129934':
+				if roulette!=41:
+					await client.send_message(message.channel, "There is already a roulette game going on!")
+				else:
+					roulette=40
+					embed = discord.Embed(description="A game of roulette has started! Use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
+					embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
+					embed.add_field(name="Time Left", value="**40** Seconds", inline=True)
+					gif=random.choice(['https://bit.ly/2znjmak','https://bit.ly/2Zqh2dx','https://bit.ly/2NuBqHN'])
+					embed.set_image(url=gif)
+					roulettemsg = await client.send_message(message.channel, embed=embed)
+			else:
+				await client.send_message(message.channel, "This command can only be used in <#621787403778129934>.")
+		else:
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
+	###########################################
+	elif message.content.startswith("bet "):
+		if str(message.server.id)=='512158131674152973':
+			try:
+				if roulette!=41:
+					areas=['1st','2nd','3rd','high','low','black','red','green','odd','even','00','0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36']
+					if len((message.content).split(" "))==3:
+						game='07'
+					else:
+						game=(message.content).split(" ")[3]
+					bet=formatok(str(message.content).split(" ")[2], game)
+					area=str(message.content).split(" ")[1]
+					if area not in areas:
+						await client.send_message(message.channel, "You can only bet on `1st/2nd/3rd`, `0-36`, `High/Low`, `Black/Red/Green`, and `Odd/Even`")
+					else:
+						current=getvalue(message.author.id, game,"rsmoney")
+						ticketbets(message.author.id, bet, game)
+
+						if isenough(bet, game)[0]:
+							if current>=bet:
+								update_money(message.author.id, bet*-1, game)
+								c.execute("INSERT INTO roulette VALUES (%s, %s, %s, %s)", (message.author.id,bet,game,area))
+								await client.add_reaction(message,"✅")
+							else:
+								await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+						else:
+							await client.send_message(message.channel, (isenough(bet, game))[1])
+				else:
+					await client.send_message(message.channel, "`Ask nicely and she will spin the wheel, say $please`")
+			except:
+				await client.send_message(message.channel, "An **error** has occured. Make sure you use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)`.")
+		else:
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
+	###########################################
+	# elif message.content==("$menu"):
+	# 	embed = discord.Embed(description="""1. Blurberry Special\n
+	# 										2. Chef's Delight\n
+	# 										3. Cider\n
+	# 										4. Dragon Bitter\n
+	# 										5. Karamjan Rum\n
+	# 										6. Legendary Cocktail\n
+	# 										7. Nice Beer\n
+	# 										8. Purple Lumbridge\n
+	# 										9. Short Green Guy\n
+	# 										10. Wine of Zamorak\n
+	# 										11. Wizard's Mind Bomb\n
+	# 										""", color=3800857)
+	# 	embed.set_author(name="Drink Menu", icon_url=str(message.server.icon_url))
+	# 	await client.send_message(message.channel, embed=embed)
 	###############################################
 	elif message.content==("$drawraffle"):
-		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-			c.execute("SELECT id,tickets FROM rsmoney")
-			tickets=c.fetchall()
-			print(tickets)
-			entered=[]
-			for i in tickets:
-				for x in range(i[1]):
-					entered.append(str(i[0]))
-			winner=random.choice(entered)
-			c.execute("UPDATE rsmoney SET tickets=0")
+		if str(message.server.id)=='512158131674152973':
+			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+				c.execute("SELECT id,tickets FROM rsmoney")
+				tickets=c.fetchall()
+				print(tickets)
+				entered=[]
+				for i in tickets:
+					for x in range(i[1]):
+						entered.append(str(i[0]))
+				winner=random.choice(entered)
+				c.execute("UPDATE rsmoney SET tickets=0")
 
-			embed = discord.Embed(description="<@"+winner+"> has won the raffle!", color=16729241)
-			embed.set_author(name="Raffle Winner", icon_url=str(message.server.icon_url))
-			await client.send_message(message.channel, embed=embed)
+				embed = discord.Embed(description="<@"+winner+"> has won the raffle!", color=16729241)
+				embed.set_author(name="Raffle Winner", icon_url=str(message.server.icon_url))
+				await client.send_message(message.channel, embed=embed)
+			else:
+				await client.send_message(message.channel, "Admin Command Only!")
 		else:
-			await client.send_message(message.channel, "Admin Command Only!")
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	########################################
 	elif message.content.startswith("$ticket"):
-		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-			amount=int((message.content).split(" ")[2])
-			try:
-				int(str(message.content).split(" ")[1][2:3])
-				member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
-			except:
-				member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
-			tickets=getvalue(int(member.id),"tickets","rsmoney")
-			c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+amount, member.id))
-			await client.send_message(message.channel, "Tickets updated.")
+		if str(message.server.id)=='512158131674152973':
+			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+				amount=int((message.content).split(" ")[2])
+				try:
+					int(str(message.content).split(" ")[1][2:3])
+					member=message.server.get_member(str(message.content).split(" ")[1][2:-1])
+				except:
+					member=message.server.get_member(str(message.content).split(" ")[1][3:-1])
+				tickets=getvalue(int(member.id),"tickets","rsmoney")
+				c.execute("UPDATE rsmoney SET tickets={} WHERE id={}".format(tickets+amount, member.id))
+				await client.send_message(message.channel, "Tickets updated.")
+			else:
+				await client.send_message(message.channel, "Admin Command Only!")
 		else:
-			await client.send_message(message.channel, "Admin Command Only!")
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	########################################
 	elif message.content.startswith("$override"):
 		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 			override=int((message.content).split(" ")[1])
-			await cliend.send_message(message.channel, "Overridden")
+			await client.send_message(message.channel, "Overridden")
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
 	#######################################
@@ -1340,67 +1373,73 @@ async def on_message(message):
 			await client.send_message(message.channel, embed=embed)
 	#######################################
 	elif message.content.startswith('$add'):
-		bet=formatok(str(message.content).split(" ")[1], '07')
-		current=getvalue(message.author.id, '07','rsmoney')
+		if str(message.server.id)=='512158131674152973':
+			bet=formatok(str(message.content).split(" ")[1], '07')
+			current=getvalue(message.author.id, '07','rsmoney')
 
-		if isenough(bet, '07')[0]:
-			if current>=bet:
-				update_money(message.author.id, bet*-1, '07')
-				c.execute('SELECT * FROM jackpot')
-				bets=c.fetchall()
+			if isenough(bet, '07')[0]:
+				if current>=bet:
+					update_money(message.author.id, bet*-1, '07')
+					c.execute('SELECT * FROM jackpot')
+					bets=c.fetchall()
 
-				alreadyin=False
-				for y in bets:
-					if int(message.author.id) in y:
-						c.execute('UPDATE jackpot SET bet={} WHERE id={}'.format(bet+y[1], message.author.id))
-						alreadyin=True
+					alreadyin=False
+					for y in bets:
+						if int(message.author.id) in y:
+							c.execute('UPDATE jackpot SET bet={} WHERE id={}'.format(bet+y[1], message.author.id))
+							alreadyin=True
 
-				if alreadyin==False:
-					c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (int(message.author.id), bet, 0))
+					if alreadyin==False:
+						c.execute("INSERT INTO jackpot VALUES (%s, %s, %s)", (int(message.author.id), bet, 0))
 
-				await client.add_reaction(message,"✅")
+					await client.add_reaction(message,"✅")
 
+					c.execute('SELECT * FROM jackpot')
+					bets=c.fetchall()
+					total=sum(x[1] for x in bets)
+					embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
+
+					for i in bets:
+						chance=round(i[1]/total*100, 3)
+						c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), i[0]))
+						embed.add_field(name=message.server.get_member(str(i[0])).name, value='Bet - *'+formatfromk(i[1], '07')+'* | Chance of Winning - *'+str(chance)+'%*', inline=False)
+					embed.set_author(name="Jackpot Bets", icon_url=str(message.server.icon_url))
+					embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
+					await client.send_message(message.channel, embed=embed)
+				else:
+					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+			else:
+				await client.send_message(message.channel, (isenough(bet, '07'))[1])
+		else:
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
+	######################################
+	elif message.content==('$endjackpot'):
+		if str(message.server.id)=='512158131674152973':
+			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 				c.execute('SELECT * FROM jackpot')
 				bets=c.fetchall()
 				total=sum(x[1] for x in bets)
-				embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
+				chances=[]
 
 				for i in bets:
-					chance=round(i[1]/total*100, 3)
-					c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), i[0]))
-					embed.add_field(name=message.server.get_member(str(i[0])).name, value='Bet - *'+formatfromk(i[1], '07')+'* | Chance of Winning - *'+str(chance)+'%*', inline=False)
-				embed.set_author(name="Jackpot Bets", icon_url=str(message.server.icon_url))
-				embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
+					chances.append(i[2]/100)
+				winner=random.choices(population=bets, weights=chances, k=1)[0]
+
+				update_money(winner[0], total-total*0.05, '07')
+				c.execute("DROP TABLE jackpot")
+				c.execute("""CREATE TABLE jackpot (
+								id bigint,
+								bet integer,
+								chance real
+								)""")
+				embed = discord.Embed(description='<@'+str(winner[0])+'> has won **'+formatfromk(int(total-total*0.05),'07')+'** from the jackpot with a chance of **'+str(winner[2])+'%**!', color=5056466)
+				embed.set_footer(text="Use '$add (amount)' to start a new jackpot game")
+				embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
 				await client.send_message(message.channel, embed=embed)
 			else:
-				await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+				await client.send_message(message.channel, "Only admins can end a jackpot. Please tag one if necessary.")
 		else:
-			await client.send_message(message.channel, (isenough(bet, '07'))[1])
-	######################################
-	elif message.content==('$endjackpot'):
-		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-			c.execute('SELECT * FROM jackpot')
-			bets=c.fetchall()
-			total=sum(x[1] for x in bets)
-			chances=[]
-
-			for i in bets:
-				chances.append(i[2]/100)
-			winner=random.choices(population=bets, weights=chances, k=1)[0]
-
-			update_money(winner[0], total-total*0.05, '07')
-			c.execute("DROP TABLE jackpot")
-			c.execute("""CREATE TABLE jackpot (
-							id bigint,
-							bet integer,
-							chance real
-							)""")
-			embed = discord.Embed(description='<@'+str(winner[0])+'> has won **'+formatfromk(int(total-total*0.05),'07')+'** from the jackpot with a chance of **'+str(winner[2])+'%**!', color=5056466)
-			embed.set_footer(text="Use '$add (amount)' to start a new jackpot game")
-			embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
-			await client.send_message(message.channel, embed=embed)
-		else:
-			await client.send_message(message.channel, "Only admins can end a jackpot. Please tag one if necessary.")
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 
 
 client.loop.create_task(my_background_task())
@@ -1412,8 +1451,6 @@ client.run(str(Bot_Token))
 
 """
 $leaderboard 07
-
-$weekly timer fix
 
 Cross-Server Compatability
 
