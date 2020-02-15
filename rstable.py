@@ -1341,6 +1341,7 @@ async def on_message(message):
 		date_format = "%Y-%m-%d %H:%M:%S"
 		difference = datetime.datetime.strptime(str(datetime.datetime.now())[:-7], date_format) - datetime.datetime.strptime(lastdate, date_format)
 		time = (604800 - difference.seconds)
+		go = False
 		if time <= 0:
 			go = True
 		else:
