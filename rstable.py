@@ -276,7 +276,7 @@ def endjackpot():
 					)""")
 	embed = discord.Embed(description='<@'+str(winner[0])+'> has won **'+formatfromk(int(total-total*0.05),'07')+'** from the jackpot with a chance of **'+str(winner[2])+'%**!', color=5056466)
 	embed.set_footer(text="Use '$add (amount)' to start a new jackpot game")
-	embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
+	embed.set_author(name="Jackpot")
 	return embed
 ######################################################################################
 
@@ -1411,7 +1411,7 @@ async def on_message(message):
 			current = getvalue(message.author.id, '07','rsmoney')
 			c.execute("SELECT jackpotroll FROM data")
 			rollamount = int(c.fetchone()[0])
-			
+
 			if isenough(bet, '07')[0]:
 				if current>=bet:
 					update_money(message.author.id, bet*-1, '07')
