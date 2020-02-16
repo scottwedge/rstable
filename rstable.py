@@ -1361,8 +1361,8 @@ async def on_message(message):
 		gold = get(message.server.roles, name='Gold Donor')
 		lastdate = getvalue(message.author.id,'weeklydate','rsmoney')
 		date_format = "%Y-%m-%d %H:%M:%S"
-		difference = datetime.datetime.strptime(str(datetime.datetime.now())[:-7], date_format) - datetime.datetime.strptime(lastdate, date_format)
-		time = (604800 - difference.seconds)
+		difference = time.mktime(time.strptime(str(datetime.datetime.now())[:-7], date_format)) - time.mktime(time.strptime(lastdate, date_format))
+		time = (604800 - int(difference.seconds))
 		go = False
 		if time <= 0:
 			go = True
@@ -1476,8 +1476,6 @@ client.run(str(Bot_Token))
 $leaderboard 07
 
 Cross-Server Compatability
-
-Jackpot Rework
 
 Profile system
 	XP For:
