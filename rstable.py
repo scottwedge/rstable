@@ -276,7 +276,7 @@ def endjackpot():
 					)""")
 	embed = discord.Embed(description='<@'+str(winner[0])+'> has won **'+formatfromk(int(total-total*0.05),'07')+'** from the jackpot with a chance of **'+str(winner[2])+'%**!', color=5056466)
 	embed.set_footer(text="Use '$add (amount)' to start a new jackpot game")
-	embed.set_author(name="Jackpot")
+	embed.set_author(name="Jackpot Winner")
 	return embed
 ######################################################################################
 
@@ -1399,11 +1399,15 @@ async def on_message(message):
 			await client.send_message(message.channel, embed=embed)
 	#######################################
 	elif message.content.startswith('$jackpot'):
-		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-			rollamount = formatok(message.content.split(' ')[1])
-			c.execute("UPDATE data SET jackpotroll={}".format(rollamount))
+		if str(message.server.id)=='512158131674152973':
+			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+				rollamount = formatok(message.content.split(' ')[1], '07')
+				c.execute("UPDATE data SET jackpotroll={}".format(rollamount))
+				await client.send_message(message.channel, 'The jackpot will now end once the pot reaches **'+formatfromk(rollamount, '07')+'**.')
+			else:
+				await client.send_message(message.channel, "Only admins can change the amount at which a jackpot will end. Please tag one if necessary.")
 		else:
-			await client.send_message(message.channel, "Only admins can change the amount at which a jackpot will end. Please tag one if necessary.")
+			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	#######################################
 	elif message.content.startswith('$add'):
 		if str(message.server.id)=='512158131674152973':
@@ -1432,7 +1436,7 @@ async def on_message(message):
 					c.execute('SELECT * FROM jackpot')
 					bets=c.fetchall()
 					total=sum(x[1] for x in bets)
-					embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\n*This jackpot will end once the pot reaches: **'+formatfromk(rollamount, '07')+'***\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
+					embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\n*This jackpot will end once the pot reaches: **'+formatfromk(rollamount, '07')+'***\n\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
 
 					for i in bets:
 						chance=round(i[1]/total*100, 3)
