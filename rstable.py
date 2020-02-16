@@ -1409,7 +1409,7 @@ async def on_message(message):
 		if str(message.server.id)=='512158131674152973':
 			bet = formatok(str(message.content).split(" ")[1], '07')
 			current = getvalue(message.author.id, '07','rsmoney')
-			rollamount = getvalue(message.author.id, 'rollamount', 'data')
+			rollamount = getvalue(message.author.id, 'jackpotroll', 'data')
 
 			if isenough(bet, '07')[0]:
 				if current>=bet:
