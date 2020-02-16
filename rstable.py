@@ -41,10 +41,11 @@ conn.set_session(autocommit=True)
 # 				yesterdayseed text,
 # 				nonce integer,
 # 				rs3profit bigint,
-# 				osrsprofit bigint
+# 				osrsprofit bigint,
+#				jackpotroll integer
 # 				)""")
-# c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0, 0))
-conn.commit()
+# c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0, 0, 1000))
+#conn.commit()
 
 c.execute("DROP TABLE bj")
 c.execute("""CREATE TABLE bj (
@@ -256,6 +257,27 @@ def openkey(kind):
 		
 	return random.choices(population=range(0, len(ranges)), weights=chances, k=1)
 
+def endjackpot():
+	c.execute('SELECT * FROM jackpot')
+	bets=c.fetchall()
+	total=sum(x[1] for x in bets)
+	chances=[]
+
+	for i in bets:
+		chances.append(i[2]/100)
+	winner=random.choices(population=bets, weights=chances, k=1)[0]
+
+	update_money(winner[0], total-total*0.05, '07')
+	c.execute("DROP TABLE jackpot")
+	c.execute("""CREATE TABLE jackpot (
+					id bigint,
+					bet integer,
+					chance real
+					)""")
+	embed = discord.Embed(description='<@'+str(winner[0])+'> has won **'+formatfromk(int(total-total*0.05),'07')+'** from the jackpot with a chance of **'+str(winner[2])+'%**!', color=5056466)
+	embed.set_footer(text="Use '$add (amount)' to start a new jackpot game")
+	embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
+	return embed
 ######################################################################################
 
 #Predefined Variables
@@ -1376,10 +1398,18 @@ async def on_message(message):
 			embed.set_footer(text="Bronze, Silver, and Gold Subscriptions Available")
 			await client.send_message(message.channel, embed=embed)
 	#######################################
+	elif message.content.startswith('$jackpot'):
+		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+			rollamount = formatok(message.content.split(' ')[1])
+			c.execute("UPDATE data SET jackpotroll={}".format(rollamount))
+		else:
+			await client.send_message(message.channel, "Only admins can change the amount at which a jackpot will end. Please tag one if necessary.")
+	#######################################
 	elif message.content.startswith('$add'):
 		if str(message.server.id)=='512158131674152973':
-			bet=formatok(str(message.content).split(" ")[1], '07')
-			current=getvalue(message.author.id, '07','rsmoney')
+			bet = formatok(str(message.content).split(" ")[1], '07')
+			current = getvalue(message.author.id, '07','rsmoney')
+			rollamount = getvalue(message.author.id, 'rollamount', 'data')
 
 			if isenough(bet, '07')[0]:
 				if current>=bet:
@@ -1401,7 +1431,7 @@ async def on_message(message):
 					c.execute('SELECT * FROM jackpot')
 					bets=c.fetchall()
 					total=sum(x[1] for x in bets)
-					embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
+					embed = discord.Embed(description='Jackpot Value: **'+formatfromk(total, '07')+'**\n*This jackpot will end once the pot reaches: **'+formatfromk(rollamount, '07')+'***\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
 
 					for i in bets:
 						chance=round(i[1]/total*100, 3)
@@ -1410,6 +1440,9 @@ async def on_message(message):
 					embed.set_author(name="Jackpot Bets", icon_url=str(message.server.icon_url))
 					embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
 					await client.send_message(message.channel, embed=embed)
+
+					if total >= rollamount:
+						await client.send_message(message.channel, embed=endjackpot())
 				else:
 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 			else:
@@ -1420,26 +1453,7 @@ async def on_message(message):
 	elif message.content==('$endjackpot'):
 		if str(message.server.id)=='512158131674152973':
 			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-				c.execute('SELECT * FROM jackpot')
-				bets=c.fetchall()
-				total=sum(x[1] for x in bets)
-				chances=[]
-
-				for i in bets:
-					chances.append(i[2]/100)
-				winner=random.choices(population=bets, weights=chances, k=1)[0]
-
-				update_money(winner[0], total-total*0.05, '07')
-				c.execute("DROP TABLE jackpot")
-				c.execute("""CREATE TABLE jackpot (
-								id bigint,
-								bet integer,
-								chance real
-								)""")
-				embed = discord.Embed(description='<@'+str(winner[0])+'> has won **'+formatfromk(int(total-total*0.05),'07')+'** from the jackpot with a chance of **'+str(winner[2])+'%**!', color=5056466)
-				embed.set_footer(text="Use '$add (amount)' to start a new jackpot game")
-				embed.set_author(name="Jackpot", icon_url=str(message.server.icon_url))
-				await client.send_message(message.channel, embed=embed)
+				await client.send_message(message.channel, embed=endjackpot())
 			else:
 				await client.send_message(message.channel, "Only admins can end a jackpot. Please tag one if necessary.")
 		else:
