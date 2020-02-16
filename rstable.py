@@ -1362,7 +1362,7 @@ async def on_message(message):
 		lastdate = getvalue(message.author.id,'weeklydate','rsmoney')
 		date_format = "%Y-%m-%d %H:%M:%S"
 		difference = time.mktime(time.strptime(str(datetime.datetime.now())[:-7], date_format)) - time.mktime(time.strptime(lastdate, date_format))
-		times = (604800 - int(difference.seconds))
+		times = (604800 - int(difference))
 		go = False
 		if times <= 0:
 			go = True
