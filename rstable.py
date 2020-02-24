@@ -1215,16 +1215,25 @@ async def on_message(message):
 			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	###############################
 	elif message.content.startswith("$leaderboard"):
-		if str(message.server.id)=='512158131674152973':
-			game=(message.content).split(" ")[1]
+		if str(message.server.id) == '512158131674152973':
+			game = (message.content).split(" ")[1]
+			board = (message.content).split(" ")[2]
 			if game=="rs3" or game=="osrs" or game=="07":
 				if game=="rs3":
-					c.execute("SELECT * From rsmoney ORDER BY rs3week DESC LIMIT 8")
-					number=5
+					if board == 'weekly':
+						c.execute("SELECT * From rsmoney ORDER BY rs3week DESC LIMIT 8")
+						number=5
+					else:
+						c.execute("SELECT * From rsmoney ORDER BY rs3total DESC LIMIT 8")
+						number = 3
 					prizes=["None", "None", "None", "None", "None", "None", "None", "None"]
 				elif game=="osrs" or game=="07":
-					c.execute("SELECT * From rsmoney ORDER BY osrsweek DESC LIMIT 8")
-					number=6
+					if board == 'weekly':
+						c.execute("SELECT * From rsmoney ORDER BY osrsweek DESC LIMIT 8")
+						number=6
+					else:
+						c.execute("SELECT * From rsmoney ORDER BY osrstotal DESC LIMIT 8")
+						number=4
 					prizes=["5 Silver Keys", "3 Silver Keys", "1 Silver Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key", "1 Bronze Key"]
 					
 				top=c.fetchall()
@@ -1236,7 +1245,7 @@ async def on_message(message):
 					words+=(str(counter+1)+". <@"+str(userid)+"> - **"+total+"**\n\n")# - **"+prizes[counter]+"**\n\n")
 
 				embed = discord.Embed(color=557823, description=words)
-				embed.set_author(name="Top "+game.upper()+" Thisweek Wager", icon_url=str(message.server.icon_url))
+				embed.set_author(name="Top "+game.upper()+" Wagers", icon_url=str(message.server.icon_url))
 				await client.send_message(message.channel, embed=embed)
 			else:
 				None
