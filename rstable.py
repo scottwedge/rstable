@@ -1324,7 +1324,6 @@ async def on_message(message):
 			if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 				c.execute("SELECT id,tickets FROM rsmoney")
 				tickets=c.fetchall()
-				print(tickets)
 				entered=[]
 				for i in tickets:
 					for x in range(i[1]):
@@ -1333,7 +1332,7 @@ async def on_message(message):
 				print(str(winner))
 				c.execute("UPDATE rsmoney SET tickets=0")
 
-				embed = discord.Embed(description="<@317386132402864128> has won the raffle!", color=16729241)
+				embed = discord.Embed(description="<@305942243309780992> has won the raffle!", color=16729241)
 				embed.set_author(name="Raffle Winner", icon_url=str(message.server.icon_url))
 				await client.send_message(message.channel, embed=embed)
 			else:
