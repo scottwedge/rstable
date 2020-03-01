@@ -884,7 +884,7 @@ async def on_message(message):
 				else:
 					currency=(message.content).split(" ")[2]
 				bet=formatok((message.content).split(" ")[1], currency)
-				current=getvalue(int(message.author.id), currency,"rsmoney")
+				current=getvalue(int(message.author.id), currency, "rsmoney")
 				if isenough(bet, currency)[0]:
 					if current>=bet:
 						try:
@@ -908,7 +908,7 @@ async def on_message(message):
 					else:
 						await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
 				else:
-					await client.send_message(message.channel, isenough(bet, game)[1])
+					await client.send_message(message.channel, isenough(bet, currency)[1])
 			except:
 				await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bj (Amount) (rs3 or 07)`.")
 		else:
