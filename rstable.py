@@ -1290,7 +1290,6 @@ async def on_message(message):
 						if isenough(bet, game)[0]:
 							if current>=bet:
 								update_money(message.author.id, bet*-1, game)
-								ticketbets(message.author.id, bet, game)
 								c.execute("INSERT INTO roulette VALUES (%s, %s, %s, %s)", (message.author.id,bet,game,area))
 								await client.add_reaction(message,"✅")
 							else:
