@@ -118,14 +118,14 @@ def update_money(userid,amount,currency):
 def isenough(amount, currency):
 	global words
 	if currency=="rs3":
-		if amount<1000:
-			words="The minimum amount you can bet is **1m** gp RS3."
+		if amount<100:
+			words="The minimum amount you can bet is **100k** gp RS3."
 			return False, words
 		else:
 			return True, " "
 	elif currency=="07":
-		if amount<100:
-			words="The minimum amount you can bet is **100k** gp 07."
+		if amount<10:
+			words="The minimum amount you can bet is **10k** gp 07."
 			return False, words
 		else:
 			return True, " "
