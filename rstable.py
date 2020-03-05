@@ -972,7 +972,7 @@ async def on_message(message):
 				await client.edit_message(sent, embed=printbj(message.author, True, "Dealer Busts. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
 				update_money(message.author.id, bet*2, currency)
 				win=True
-			elif playercards.count('a')==1 and (playercards.count('10')==1 or playercards.count('j')==1 or playercards.count('q')==1 or playercards.count('k')==1):
+			elif playerscore==21 and playercards.count('a')==1 and (playercards.count('10')==1 or playercards.count('j')==1 or playercards.count('q')==1 or playercards.count('k')==1):
 				await client.edit_message(sent, embed=printbj(message.author, True, "You got a blackjack! You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
 				update_money(message.author.id, bet*2, currency)
 			elif botscore==playerscore:
