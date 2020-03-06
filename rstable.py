@@ -965,6 +965,10 @@ async def on_message(message):
 				drawcard(message.author.id,False)
 				cards=getvalue(message.author.id,"botcards","bj")
 				botscore=scorebj(message.author.id,cards,False)
+                        if playerscore>botscore:
+                                drawcard(message.author.id, False)
+                                cards=getvalue(message.author.id,"botcards","bj")
+                                botscore=scorebj(message.author.id,cards,False)
 
 			win=False
 
