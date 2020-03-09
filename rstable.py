@@ -1481,14 +1481,14 @@ async def on_message(message):
 		else:
 			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	######################################
-	elif message.content==('$level'):
+	elif message.content==('$rank'):
 		messages = getvalue(message.author.id, 'messages', 'rsmoney')
 		embed = discord.Embed(description=
 					"Level: **" + str(int(messages/500)+1) + "**\n" +
 					"Messages sent: **" + str(messages) + "**\n" +
 					"Rank: ", color=7995152)
 		embed.set_author(name=(str(message.author))[:-5]+"'s Levels", icon_url=str(message.server.icon_url))
-		embed.set_image(url=str(message.author.avatar_url))
+		embed.set_thumbnail(url=str(message.author.avatar_url))
 		embed.set_footer(text="Send messages to level up!")
 		await client.send_message(message.channel, embed=embed)
 
