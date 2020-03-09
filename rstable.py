@@ -29,9 +29,10 @@ conn.set_session(autocommit=True)
 # 				silver integer,
 # 				gold integer,
 # 				tickets integer,
-#				weeklydate text
+#				weeklydate text,
+#				messages integer
 # 				)""")
-# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0,"2020-01-01 00:00:00"))
+# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0,"2020-01-01 00:00:00",0))
 # conn.commit()
 
 # c.execute("DROP TABLE data")
@@ -82,7 +83,7 @@ conn.commit()
 client = discord.Client()
 
 def add_member(userid,rs3,osrs):
-	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0,"2020-01-01 00:00:00"))
+	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0,"2020-01-01 00:00:00",0))
 
 def getvalue(userid,value,table):
 	strings=["clientseed","seedreset","serverseed","yesterdayseed","deck","botcards","playercards","currency","messageid","channelid","bets","streak","weeklydate"]
@@ -450,6 +451,8 @@ async def on_ready():
 @client.event
 async def on_message(message):
 	global roulette,roulettemsg,gif,nextgiveaway,participants,override
+	messages = getvalue(message.author.id, 'messages', 'rsmoney')
+	c.execute("UPDATE rsmoney SET messages={} WHERE id={}".format(messages+1, message.author.id))
 	message.content=(message.content).lower()
 
 	# if nextgiveaway<=7 and message.channel.id=="580153388402999308" and message.server.id=="518832231532331018":
@@ -1477,6 +1480,17 @@ async def on_message(message):
 				await client.send_message(message.channel, "Only admins can end a jackpot. Please tag one if necessary.")
 		else:
 			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
+	######################################
+	elif message.content==('$level'):
+		messages = getvalue(message.author.id, 'messages', 'rsmoney')
+		embed = discord.Embed(description=
+					"Level: **" + str(int(messages/500)+1) + "**\n" +
+					"Messages sent: **" + str(messages) + "**\n" +
+					"Rank: ", color=7995152)
+		embed.set_author(name=(str(member))[:-5]+"'s Levels", icon_url=str(message.server.icon_url))
+		embed.set_image(url=str(message.author.avatar_url))
+		embed.set_footer(text="Send messages to level up!")
+		await client.send_message(message.channel, embed=embed)
 
 
 client.loop.create_task(my_background_task())
@@ -1487,10 +1501,6 @@ client.run(str(Bot_Token))
 
 
 """
-$leaderboard 07
-
-Cross-Server Compatability
-
 Profile system
 	XP For:
 	- Chatting
