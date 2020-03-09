@@ -1485,7 +1485,7 @@ async def on_message(message):
 		messages = getvalue(message.author.id, 'messages', 'rsmoney')
 		embed = discord.Embed(description=
 					"Level: **" + str(int(messages/500)+1) + "**\n" +
-					"Messages sent: **" + str(messages) + "**\n" +
+					"Total XP: **" + str(messages) + "**\n" +
 					"Rank: ", color=7995152)
 		embed.set_author(name=(str(message.author))[:-5]+"'s Levels", icon_url=str(message.server.icon_url))
 		embed.set_thumbnail(url=str(message.author.avatar_url))
