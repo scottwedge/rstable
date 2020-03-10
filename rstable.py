@@ -1498,7 +1498,7 @@ async def on_message(message):
 		leaderboard = c.fetchall()
 		for counter, i in enumerate(leaderboard):
 			if i[0] == xp:
-				rank = counter
+				rank = counter + 1
 
 		level = ((xp-1000)/500)+1
 		if level < 1:
