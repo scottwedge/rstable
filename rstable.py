@@ -461,7 +461,7 @@ async def on_message(message):
 	if str(message.author.id) != '580511336598077511':
 		xp = getvalue(message.author.id, 'xp', 'rsmoney')
 		c.execute("UPDATE rsmoney SET xp={} WHERE id={}".format(xp + 10, message.author.id))
-		if xp + 10/1500
+		#if xp + 10/1500
 
 	message.content=(message.content).lower()
 
