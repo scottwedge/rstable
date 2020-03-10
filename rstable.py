@@ -451,8 +451,11 @@ async def on_ready():
 @client.event
 async def on_message(message):
 	global roulette,roulettemsg,gif,nextgiveaway,participants,override
-	xp = getvalue(message.author.id, 'xp', 'rsmoney')
-	c.execute("UPDATE rsmoney SET xp={} WHERE id={}".format(xp+10, message.author.id))
+
+	if str(message.author.id) != '580511336598077511':
+		xp = getvalue(message.author.id, 'xp', 'rsmoney')
+		c.execute("UPDATE rsmoney SET xp={} WHERE id={}".format(xp+10, message.author.id))
+		
 	message.content=(message.content).lower()
 
 	# if nextgiveaway<=7 and message.channel.id=="580153388402999308" and message.server.id=="518832231532331018":
@@ -1485,7 +1488,10 @@ async def on_message(message):
 		xp = getvalue(message.author.id, 'xp', 'rsmoney')
 		c.execute("SELECT xp FROM rsmoney WHERE xp!=0 ORDER BY xp DESC")
 		leaderboard = c.fetchall()
+		print(leaderboard)
 		for counter, i in enumerate(leaderboard):
+			print(i)
+			print(xp)
 			if i == xp:
 				rank = counter
 
