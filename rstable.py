@@ -1500,13 +1500,12 @@ async def on_message(message):
 			if i[0] == xp:
 				rank = counter
 
-		level = (xp-1000)/500
-		if level < 0:
-			level = 1
+		level = ((xp-1000)/500)+1
+		if level < 1:
+			level = 0
 		else:
 			level = int(math.sqrt(level))
-		if level == 0: level = 1
-		
+
 		embed = discord.Embed(description=
 					"Level: **" + str(level) + "**\n" +
 					"Total XP: **" + str(xp) + "**\n" +
