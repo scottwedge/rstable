@@ -30,7 +30,7 @@ conn.set_session(autocommit=True)
 # 				gold integer,
 # 				tickets integer,
 #				weeklydate text,
-#				messages integer
+#				xp integer
 # 				)""")
 # c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0,"2020-01-01 00:00:00",0))
 # conn.commit()
@@ -451,8 +451,8 @@ async def on_ready():
 @client.event
 async def on_message(message):
 	global roulette,roulettemsg,gif,nextgiveaway,participants,override
-	messages = getvalue(message.author.id, 'messages', 'rsmoney')
-	c.execute("UPDATE rsmoney SET messages={} WHERE id={}".format(messages+1, message.author.id))
+	xp = getvalue(message.author.id, 'xp', 'rsmoney')
+	c.execute("UPDATE rsmoney SET xp={} WHERE id={}".format(xp+10, message.author.id))
 	message.content=(message.content).lower()
 
 	# if nextgiveaway<=7 and message.channel.id=="580153388402999308" and message.server.id=="518832231532331018":
@@ -1482,11 +1482,17 @@ async def on_message(message):
 			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	######################################
 	elif message.content==('$rank'):
-		messages = getvalue(message.author.id, 'messages', 'rsmoney')
+		xp = getvalue(message.author.id, 'xp', 'rsmoney')
+		c.execute("SELECT xp FROM rsmoney WHERE xp!=0 ORDER BY xp DESC")
+		leaderboard = c.fetchall()
+		for counter, i in enumerate(leaderboard):
+			if i == xp:
+				rank = counter
+
 		embed = discord.Embed(description=
-					"Level: **" + str(int(messages/500)+1) + "**\n" +
-					"Total XP: **" + str(messages) + "**\n" +
-					"Rank: ", color=7995152)
+					"Level: **" + str(int(xp/500)+1) + "**\n" +
+					"Total XP: **" + str(xp) + "**\n" +
+					"Rank: **#"+ str(rank) + "** of **" + str(len(leaderboard)) + "**", color=7995152)
 		embed.set_author(name=(str(message.author))[:-5]+"'s Levels", icon_url=str(message.server.icon_url))
 		embed.set_thumbnail(url=str(message.author.avatar_url))
 		embed.set_footer(text="Send messages to level up!")
