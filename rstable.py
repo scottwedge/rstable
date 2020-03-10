@@ -5,6 +5,7 @@ import time
 import datetime
 import os
 import psycopg2
+import math
 import hashslingingslasher as hasher
 from discord.utils import get
 from utilities import isstaff, formatok, formatfromk, pickflower, scorefp
@@ -1499,7 +1500,7 @@ async def on_message(message):
 			if i[0] == xp:
 				rank = counter
 
-		level = int(sqrt((xp-1000)/500))
+		level = int(math.sqrt((xp-1000)/500))
 		if level == 0: level = 1
 		if level < 0: level = 0
 		embed = discord.Embed(description=
