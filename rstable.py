@@ -299,7 +299,12 @@ async def my_background_task():
 		c.execute("SELECT seedreset FROM data")
 		lastdate=str(c.fetchone()[0])
 		today=str(time.gmtime()[2])
+
 		if today!=lastdate:
+
+			if datetime.datetime.today().weekday() == 0:
+				c.execute("UPDATE rsmoney SET rs3week=0")
+				c.execute("UPDATE rsmoney SET osrsweek=0")
 
 			c.execute("SELECT serverseed FROM data")
 			serverseed=str(c.fetchone()[0])
@@ -316,6 +321,7 @@ async def my_background_task():
 			embed.add_field(name="Today's Server Seed Hashed", value=hasher.hash(newseed), inline=True)
 			#embed.add_field(name="Today's Server Seed Unhashed", value=newseed, inline=True)
 			await client.send_message(channel, embed=embed)
+
 		else:
 			if roulette<1:
 				if override!=100:
@@ -454,7 +460,8 @@ async def on_message(message):
 
 	if str(message.author.id) != '580511336598077511':
 		xp = getvalue(message.author.id, 'xp', 'rsmoney')
-		c.execute("UPDATE rsmoney SET xp={} WHERE id={}".format(xp+10, message.author.id))
+		c.execute("UPDATE rsmoney SET xp={} WHERE id={}".format(xp + 10, message.author.id))
+		if xp + 10/1500
 
 	message.content=(message.content).lower()
 
