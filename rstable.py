@@ -1524,7 +1524,7 @@ async def on_message(message):
 		embed.set_thumbnail(url=str(message.author.avatar_url))
 		embed.set_footer(text="Send messages to level up!")
 		await client.send_message(message.channel, embed=embed)
-		await client.send_file(message.channel, 'rankbar.png')
+		await client.send_file(message.channel, 'edited.png')
 	##############################
 	elif message.content==('$levels'):
 		c.execute("SELECT id, xp From rsmoney ORDER BY xp DESC LIMIT 10")
