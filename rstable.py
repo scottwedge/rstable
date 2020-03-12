@@ -1514,7 +1514,6 @@ async def on_message(message):
 		cv2.line(template, (165, 108), (200, 108), (110, 238, 77), 15)
 		cv2.putText(template,  str(message.author)[:-5] + "'s Level", (200, 70), 5, 1.4, (255,255,255), 1, cv2.LINE_AA)
 		cv2.imwrite('edited.png', template)
-		file = discord.file()
 
 		embed = discord.Embed(description=
 					"Level: **" + str(level) + "**\n" +
