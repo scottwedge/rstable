@@ -1511,7 +1511,7 @@ async def on_message(message):
 		if level == 0: left = 1000
 
 		template = cv2.imread('rankbar.png', 1)
-		cv2.line(template, (165, 108), (200, 108), (110, 238, 77), 15)
+		cv2.line(template, (165, 108), (170+((xp/(xp+left))*322), 108), (110, 238, 77), 15)
 		cv2.putText(template,  str(message.author)[:-5] + "'s Level", (200, 70), 5, 1.4, (255,255,255), 1, cv2.LINE_AA)
 		cv2.imwrite('edited.png', template)
 
@@ -1522,9 +1522,9 @@ async def on_message(message):
 					"Rank: **#"+ str(rank) + "** of **" + str(len(leaderboard)) + "**", color=7995152)
 		embed.set_author(name=(str(message.author))[:-5]+"'s Levels", icon_url=str(message.server.icon_url))
 		embed.set_thumbnail(url=str(message.author.avatar_url))
+		embed.set_image(url='edited.png')
 		embed.set_footer(text="Send messages to level up!")
 		await client.send_message(message.channel, embed=embed)
-		await client.send_file(message.channel, 'edited.png')
 	##############################
 	elif message.content==('$levels'):
 		c.execute("SELECT id, xp From rsmoney ORDER BY xp DESC LIMIT 10")
