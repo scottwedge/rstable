@@ -1541,7 +1541,7 @@ async def on_message(message):
 			words+=(str(counter+1)+". <@"+str(userid)+"> - **Level: "+str(level)+" | XP: "+str(xp)+"**\n\n")
 
 		embed = discord.Embed(color=557823, description=words)
-		embed.set_author(name="Top "+game.upper()+" Levels and XP", icon_url=str(message.server.icon_url))
+		embed.set_author(name="Top Levels and XP", icon_url=str(message.server.icon_url))
 		await client.send_message(message.channel, embed=embed)
 
 client.loop.create_task(my_background_task())
