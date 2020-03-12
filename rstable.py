@@ -1525,7 +1525,24 @@ async def on_message(message):
 		embed.set_footer(text="Send messages to level up!")
 		await client.send_message(message.channel, embed=embed)
 		#await client.send_file(message.channel, template)
+	##############################
+	elif message.content==('$levels'):
+		c.execute("SELECT id, xp From rsmoney ORDER BY xp DESC LIMIT 10")
+		top=c.fetchall()
+		words=""
+		for counter, i in enumerate(top):
+			userid=i[0]
+			xp=i[1]
+			level = ((xp-1000)/500)+1
+			if level < 1:
+				level = 0
+			else:
+				level = int(math.sqrt(level))
+			words+=(str(counter+1)+". <@"+str(userid)+"> - **Level: "+str(level)+" | XP: "+str(xp)+"**\n\n")
 
+		embed = discord.Embed(color=557823, description=words)
+		embed.set_author(name="Top "+game.upper()+" Levels and XP", icon_url=str(message.server.icon_url))
+		await client.send_message(message.channel, embed=embed)
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
