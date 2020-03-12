@@ -1502,10 +1502,10 @@ async def on_message(message):
 				rank = counter + 1
 
 		level = int((xp-1000)/500)
-		if level < 0:
+		if level <= 0:
 			level = 0
 		else:
-			level = math.sqrt(level)+1
+			level = int(math.sqrt(level)+1)
 
 		left = 500*((level+1)**2)+1000-xp
 		if level == 0: left = 1000
