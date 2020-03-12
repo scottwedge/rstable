@@ -1523,7 +1523,7 @@ async def on_message(message):
 		embed.set_author(name=(str(message.author))[:-5]+"'s Levels", icon_url=str(message.server.icon_url))
 		embed.set_thumbnail(url=str(message.author.avatar_url))
 		embed.set_footer(text="Send messages to level up!")
-		await client.send_message(message.channel, file=template, embed=embed)
+		await client.send_message(message.channel, template, embed=embed)
 
 
 client.loop.create_task(my_background_task())
