@@ -4,6 +4,7 @@ import random
 import time
 import datetime
 import os
+import cv2
 import psycopg2
 import math
 import hashslingingslasher as hasher
@@ -1509,6 +1510,11 @@ async def on_message(message):
 		left = 500*((level+1)**2)+1000-xp
 		if level == 0: left = 1000
 
+		template = cv2.imread('rankbar.png', 1)
+		cv2.line(template, (165, 108), (200, 108), (110, 238, 77), 15)
+		cv2.putText(img1,  str(message.author)[:-5] + "'s Level", (200, 70), 5, 1.4, (255,255,255), 1, cv2.LINE_AA)
+		# edited = discord.File(template)
+
 		embed = discord.Embed(description=
 					"Level: **" + str(level) + "**\n" +
 					"Total XP: **" + str(xp) + "**\n" +
@@ -1517,7 +1523,7 @@ async def on_message(message):
 		embed.set_author(name=(str(message.author))[:-5]+"'s Levels", icon_url=str(message.server.icon_url))
 		embed.set_thumbnail(url=str(message.author.avatar_url))
 		embed.set_footer(text="Send messages to level up!")
-		await client.send_message(message.channel, embed=embed)
+		await client.send_message(message.channel, file=template, embed=embed)
 
 
 client.loop.create_task(my_background_task())
