@@ -1514,6 +1514,7 @@ async def on_message(message):
 		cv2.line(template, (165, 108), (200, 108), (110, 238, 77), 15)
 		cv2.putText(template,  str(message.author)[:-5] + "'s Level", (200, 70), 5, 1.4, (255,255,255), 1, cv2.LINE_AA)
 		cv2.imwrite('edited.png', template)
+		file = discord.file()
 
 		embed = discord.Embed(description=
 					"Level: **" + str(level) + "**\n" +
@@ -1523,8 +1524,7 @@ async def on_message(message):
 		embed.set_author(name=(str(message.author))[:-5]+"'s Levels", icon_url=str(message.server.icon_url))
 		embed.set_thumbnail(url=str(message.author.avatar_url))
 		embed.set_footer(text="Send messages to level up!")
-		await client.send_message(message.channel, embed=embed)
-		#await client.send_file(message.channel, template)
+		await client.send_message(message.channel, open("edited.png"), embed=embed)
 	##############################
 	elif message.content==('$levels'):
 		c.execute("SELECT id, xp From rsmoney ORDER BY xp DESC LIMIT 10")
