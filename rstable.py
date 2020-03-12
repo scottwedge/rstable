@@ -1501,14 +1501,14 @@ async def on_message(message):
 			if i[0] == xp:
 				rank = counter + 1
 
-		level = int((xp-1000)/500)
-		if level <= 0:
+		level = (xp-1000)/500
+		if level < 0:
 			level = 0
 		else:
-			level = int(math.sqrt(level)+1)
+			level = int(math.sqrt(int(level))+1)
 
 		left = 500*((level+1)**2)+1000-xp
-		if level == 0: left = 1000
+		if level == 0: left = 1000-xp
 
 		template = cv2.imread('rankbar.png', 1)
 		cv2.line(template, (165, 108), (170+int(((xp-500*(level**2)+1000)/(xp+left))*322), 108), (110, 238, 77), 15)
