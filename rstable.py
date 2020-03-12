@@ -1507,13 +1507,12 @@ async def on_message(message):
 		else:
 			level = int(math.sqrt(int(level))+1)
 
-		left = 500*((level+1)**2)+1000-xp
-		if level == 0: left = 1000-xp
-
+		left = 500*(level**2)+1000-xp
 		if level == 0:
+			left = 1000-xp
 			progress = int((xp/(xp+left))*322)
 		else:
-			progress = int(((xp-500*((level-1)**2)+1000)/(xp+left))*322)
+			progress = int(((xp-(500*((level-1)**2)+1000))/(xp+left))*322)
 		template = cv2.imread('rankbar.png', 1)
 		cv2.line(template, (165, 108), (170+progress, 108), (110, 238, 77), 15)
 		cv2.putText(template,  str(message.author)[:-5] + "'s Level", (200, 70), 5, 1.4, (255,255,255), 1, cv2.LINE_AA)
