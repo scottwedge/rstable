@@ -1,5 +1,4 @@
 discord.py==0.16.12
 psycopg2
-opencv-python
+opencv-python-headless
 NumPy
-SciPy
