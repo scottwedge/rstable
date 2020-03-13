@@ -1281,7 +1281,7 @@ async def on_message(message):
 					embed = discord.Embed(description="A game of roulette has started! Use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
 					embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
 					embed.add_field(name="Time Left", value="**40** Seconds", inline=True)
-					gif=random.choice(['https://bit.ly/2znjmak','https://bit.ly/2Zqh2dx','https://bit.ly/2NuBqHN'])
+					gif=random.choice(['https://bit.ly/2TK7mL6','https://bit.ly/2Zqh2dx','https://bit.ly/2NuBqHN','https://bit.ly/3d4Gq0q','https://bit.ly/33cI8s5'])
 					embed.set_image(url=gif)
 					roulettemsg = await client.send_message(message.channel, embed=embed)
 			else:
@@ -1512,11 +1512,15 @@ async def on_message(message):
 			left = 1000-xp
 			progress = int((xp/(xp+left))*322)
 		else:
-			progress = int(((xp-(500*((level-1)**2)+1000))/(xp+left))*322)
+			levelxp = (xp-(500*((level-1)**2)+1000))
+			progress = int((levelxp/(levelxp+left))*322)
+			
 		template = cv2.imread('rankbar.png', 1)
-		cv2.line(template, (165, 108), (170+progress, 108), (110, 238, 77), 15)
+		cv2.line(template, (165, 108), (170 + progress, 108), (110, 238, 77), 15)
 		cv2.putText(template,  str(message.author)[:-5] + "'s Level", (200, 70), 5, 1.4, (255,255,255), 1, cv2.LINE_AA)
-		cv2.imwrite('edited.png', template)
+		avatar = cv2.imread(str(message.author.avatar_url), 1)
+		avatar = cv2.resize(avatar, (80, 80))
+		cv2.imwrite('edited.png', template + avatar)
 
 		embed = discord.Embed(description=
 					"Level: **" + str(level) + "**\n" +
@@ -1524,8 +1528,6 @@ async def on_message(message):
 					"XP Until Level " + str(level+1) + ": **" + str(left) + "**\n" +
 					"Rank: **#"+ str(rank) + "** of **" + str(len(leaderboard)) + "**", color=7995152)
 		embed.set_author(name=(str(message.author))[:-5]+"'s Levels", icon_url=str(message.server.icon_url))
-		embed.set_thumbnail(url=str(message.author.avatar_url))
-		#embed.set_image(url='edited.png')
 		embed.set_footer(text="Send messages to level up!")
 		await client.send_message(message.channel, embed=embed)
 		await client.send_file(message.channel, 'edited.png')
