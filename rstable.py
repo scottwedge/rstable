@@ -1514,13 +1514,13 @@ async def on_message(message):
 		else:
 			levelxp = (xp-(500*((level-1)**2)+1000))
 			progress = int((levelxp/(levelxp+left))*322)
-			
+
 		template = cv2.imread('rankbar.png', 1)
 		cv2.line(template, (165, 108), (170 + progress, 108), (110, 238, 77), 15)
 		cv2.putText(template,  str(message.author)[:-5] + "'s Level", (200, 70), 5, 1.4, (255,255,255), 1, cv2.LINE_AA)
 		avatar = cv2.imread(str(message.author.avatar_url), 1)
-		avatar = cv2.resize(avatar, (80, 80))
-		cv2.imwrite('edited.png', template + avatar)
+		resized = cv2.resize(avatar, (80, 80))
+		cv2.imwrite('edited.png', template + resized)
 
 		embed = discord.Embed(description=
 					"Level: **" + str(level) + "**\n" +
