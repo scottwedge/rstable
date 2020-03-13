@@ -1524,7 +1524,9 @@ async def on_message(message):
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
 		avatar = cv2.imdecode(arr, -1)
 		resized = cv2.resize(avatar, (80, 80))
-		cv2.imwrite('edited.png', template + resized)
+		template[30:120, 55:145] = resized
+		cv2.circle(template, (100, 75), 45, (255, 255, 255), 1)
+		cv2.imwrite('edited.png', template)
 
 		embed = discord.Embed(description=
 					"Level: **" + str(level) + "**\n" +
