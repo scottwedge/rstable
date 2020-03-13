@@ -1512,30 +1512,25 @@ async def on_message(message):
 		left = 500*(level**2)+1000-xp
 		if level == 0:
 			left = 1000-xp
-			progress = int((xp/(xp+left))*322)
+			progress = int((xp/(xp+left))*495)
 		else:
 			levelxp = (xp-(500*((level-1)**2)+1000))
-			progress = int((levelxp/(levelxp+left))*322)
+			progress = int((levelxp/(levelxp+left))*495)
 
 		template = cv2.imread('rankbar.png', 1)
-		cv2.line(template, (165, 108), (170 + progress, 108), (110, 238, 77), 15)
-		cv2.putText(template,  str(message.author)[:-5] + "'s Level", (200, 70), 5, 1.4, (255,255,255), 1, cv2.LINE_AA)
+		cv2.line(template, (50, 160), (550, 160), (136, 128, 122), 15)
+		cv2.line(template, (50, 160), (50 + progress, 160), (110, 238, 77), 15)
+		cv2.rectangle(template, (0, 0), (600, 200), (110, 238,77), 3)
+		cv2.putText(template, str(message.author)[:-5], (250, 40), 5, 1.5, (255,255,255), 2, cv2.LINE_AA)
+		cv2.putText(template, 'Level: ' + str(level) + ' | Rank: #' + str(rank) + ' of ' + str(len(leaderboard)), (150, 80), 5, 1, (255,255,255), 1, cv2.LINE_AA)
+		cv2.putText(template, 'XP: ' + str(xp) + ' | XP Until Level ' + str(level+1) + ': '+ str(left), (150, 120), 5, 1, (255,255,255), 1, cv2.LINE_AA)
 		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
 		avatar = cv2.imdecode(arr, 1)
-		resized = cv2.resize(avatar, (90, 90))
-		template[30:120, 55:145] = resized
-		cv2.circle(template, (100, 75), 45, (255, 255, 255), 1)
+		resized = cv2.resize(avatar, (100,100), interpolation = cv2.INTER_AREA)
+		template[25:125, 30:130] = resized
+		cv2.circle(template, (80, 75), 50, (255, 255, 255), 1)
 		cv2.imwrite('edited.png', template)
-
-		embed = discord.Embed(description=
-					"Level: **" + str(level) + "**\n" +
-					"Total XP: **" + str(xp) + "**\n" +
-					"XP Until Level " + str(level+1) + ": **" + str(left) + "**\n" +
-					"Rank: **#"+ str(rank) + "** of **" + str(len(leaderboard)) + "**", color=7995152)
-		embed.set_author(name=(str(message.author))[:-5]+"'s Levels", icon_url=str(message.server.icon_url))
-		embed.set_footer(text="Send messages to level up!")
-		await client.send_message(message.channel, embed=embed)
 		await client.send_file(message.channel, 'edited.png')
 	##############################
 	elif message.content==('$levels'):
