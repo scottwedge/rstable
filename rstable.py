@@ -463,9 +463,11 @@ async def on_message(message):
 	global roulette,roulettemsg,gif,nextgiveaway,participants,override
 
 	if str(message.author.id) != '580511336598077511':
-		xp = getvalue(message.author.id, 'xp', 'rsmoney')
-		c.execute("UPDATE rsmoney SET xp={} WHERE id={}".format(xp + 10, message.author.id))
-		#if xp + 10/1500
+		if message.content.startswith('$'):
+			None
+		else:
+			xp = getvalue(message.author.id, 'xp', 'rsmoney')
+			c.execute("UPDATE rsmoney SET xp={} WHERE id={}".format(xp + 10, message.author.id))
 
 	message.content=(message.content).lower()
 
@@ -1529,7 +1531,7 @@ async def on_message(message):
 		avatar = cv2.imdecode(arr, 1)
 		resized = cv2.resize(avatar, (100,100), interpolation = cv2.INTER_AREA)
 		template[25:125, 30:130] = resized
-		cv2.circle(template, (80, 75), 50, (255, 255, 255), 1)
+		# cv2.circle(template, (80, 75), 50, (255, 255, 255), 1)
 		cv2.imwrite('edited.png', template)
 		await client.send_file(message.channel, 'edited.png')
 	##############################
