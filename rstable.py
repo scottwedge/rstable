@@ -7,6 +7,7 @@ import os
 import cv2
 import psycopg2
 import math
+import numpy as np
 import hashslingingslasher as hasher
 from urllib.request import Request, urlopen
 from discord.utils import get
