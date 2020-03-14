@@ -1525,11 +1525,11 @@ async def on_message(message):
 		if level < 5:
 			badges.append('pictures/rookie.png', (520, 590))
 		elif level < 10 and level > 4:
-			badges.append('pictures/pro.png', [440:510])
+			badges.append('pictures/pro.png', [440, 510])
 		elif level < 15 and level > 9:
-			badges.append('pictures/allstars.png', [360:430])
+			badges.append('pictures/allstars.png', [360, 430])
 		elif level < 20 and level > 14:
-			badges.append('pictures/halloffamers.png', [280:350])
+			badges.append('pictures/halloffamers.png', [280, 350])
 		
 		template = cv2.imread('pictures/rankbar.png', 1)
 		cv2.line(template, (50, 160), (550, 160), (136, 128, 122), 15)
