@@ -1506,7 +1506,7 @@ async def on_message(message):
 				rank = counter + 1
 
 		role = None
-		badge = 'None'
+		badge = ''
 		badges = []
 		progress = int((xp/2000)*495)
 		levelxp = 2000
@@ -1556,10 +1556,10 @@ async def on_message(message):
 			req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
 			arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
 			avatar = cv2.imdecode(arr, 1)
+			resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
 		except:
-			print('except')
 			avatar = cv2.imread('pictures/defaultavatar.png', 1)
-		resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
+			resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
 		template[30:130, 30:130] = resized
 		
 		for i in badges:
