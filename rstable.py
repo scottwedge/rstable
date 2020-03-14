@@ -1557,6 +1557,7 @@ async def on_message(message):
 			arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
 			avatar = cv2.imdecode(arr, 1)
 		except:
+			print('except')
 			avatar = cv2.imread('pictures/defaultavatar.png', 1)
 		resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
 		template[30:130, 30:130] = resized
