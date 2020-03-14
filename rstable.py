@@ -1505,41 +1505,45 @@ async def on_message(message):
 			if i[0] == xp:
 				rank = counter + 1
 
-		level = (xp-100)/100
-		if level < 0:
-			level = 0
-		else:
-			level = int(math.sqrt(int(level))+1)
-
-		levelxp = 100*(level**2)+100
-		previous = 100*((level-1)**2)+100
-		progress = int(((xp-previous)/(levelxp-previous))*495)
-
 		badges = []
 		color = (52, 48, 47)
-		if level > -1:
+		role = None
+		if xp >= 2000:
+			role = get(message.server.roles, name='🎒Rookie')
+			badge = 'Rookie'
 			badges.append(('pictures/rookie.png', (510, 590)))
+			progress = int(xp/2000)*495
 			color = (29, 50, 171)
-		if level > 4:
+		if level >= 5000:
+			role = get(message.server.roles, name='💎Pro')
+			badge = 'Pro'
 			badges.append(('pictures/pro.png', (420, 500)))
+			progress = int((xp-2000)/5000)*495
 			color = (209, 149, 97)
-		if level > 9:
+		if level >= 11500:
+			role = get(message.server.roles, name='⭐All-Star')
+			badge = 'All Star'
 			badges.append(('pictures/allstars.png', (330, 410)))
+			progress = int((xp-5000)/11500)*495
 			color = (92, 214, 217)
-		if level > 14:
+		if level >= 25000:
+			role = get(message.server.roles, name='🎾Hall of Famer')
+			badge = 'Hall of Famer'
 			badges.append(('pictures/halloffamers.png', (240, 320)))
+			progress = int((xp-11500)/25000)*495
 			color = (85, 195, 141)
-		
+
+		if role!=None:
+			if role not in message.author.roles:
+				await client.add_roles(message.author, role)
+
 		template = cv2.imread('pictures/rankbar.png', 1)
 		cv2.line(template, (50, 160), (550, 160), (136, 128, 122), 15)
 		cv2.line(template, (50, 160), (50 + progress, 160), color, 15)
 		width, height = (cv2.getTextSize(str(message.author)[:-5], 5, 1, 2))[0]
 		cv2.putText(template, str(message.author)[:-5], (150, 130), 5, 1.3, (255,255,255), 2, cv2.LINE_AA)
-		cv2.putText(template, str(message.author)[-5:], (180 + width, 130), 2, 0.6, (60, 60, 60), 2, cv2.LINE_AA)
-		# cv2.putText(template, 'RANK', (150, 50), 2, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-		# cv2.putText(template, '#' + str(rank), (200, 50), 5, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
-		cv2.putText(template, 'LEVEL', (150, 50), 2, 0.5, color, 1, cv2.LINE_AA)
-		cv2.putText(template, str(level), (200, 50), 5, 1.5, color, 2, cv2.LINE_AA)
+		cv2.putText(template, str(message.author)[-5:], (180 + width, 130), 2, 0.6, (70, 70, 70), 2, cv2.LINE_AA)
+		cv2.putText(template, badge, (150, 50), 2, 0.5, color, 1, cv2.LINE_AA)
 		cv2.putText(template, str('{:,}'.format(xp)) + '/' + str('{:,}'.format(levelxp)) + 'XP', (430, 130), 5, 0.7, (255, 255, 255), 1, cv2.LINE_AA)
 		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
