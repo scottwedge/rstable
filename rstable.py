@@ -1517,7 +1517,7 @@ async def on_message(message):
 			progress = int((xp/(xp+left))*495)
 			levelxp = 300
 		else:
-			levelxp = (xp-(250*((level-1)**2)+300))
+			levelxp = (xp-(250*(level**2)+300))
 			progress = int((levelxp/(levelxp+left))*495)
 
 		if level < 5:
@@ -1536,9 +1536,9 @@ async def on_message(message):
 		cv2.rectangle(template, (0, 0), (600, 200), (52, 48, 47), 4)
 		cv2.rectangle(template, (7, 7), (593, 193), (52, 48, 47), 3)
 		cv2.putText(template, str(message.author), (150, 130), 5, 1.3, (255,255,255), 2, cv2.LINE_AA)
-		cv2.putText(template, 'RANK', (150, 53), 2, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+		cv2.putText(template, 'RANK', (150, 50), 2, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 		cv2.putText(template, '#' + str(rank), (200, 50), 5, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
-		cv2.putText(template, 'LEVEL', (300, 53), 2, 0.5, (110, 238, 77), 1, cv2.LINE_AA)
+		cv2.putText(template, 'LEVEL', (300, 50), 2, 0.5, (110, 238, 77), 1, cv2.LINE_AA)
 		cv2.putText(template, str(level), (350, 50), 5, 1.5, (110, 238, 77), 2, cv2.LINE_AA)
 		cv2.putText(template, str('{:,}'.format(xp)) + '/' + str('{:,}'.format(levelxp)) + ' XP', (450, 130), 5, 0.8, (255, 255, 255), 1, cv2.LINE_AA)
 		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
