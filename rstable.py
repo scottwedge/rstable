@@ -984,7 +984,7 @@ async def on_message(message):
 				drawcard(message.author.id,False)
 				cards=getvalue(message.author.id,"botcards","bj")
 				botscore=scorebj(message.author.id,cards,False)
-			if playerscore>botscore:
+			while playerscore>botscore:
 				drawcard(message.author.id, False)
 				cards=getvalue(message.author.id,"botcards","bj")
 				botscore=scorebj(message.author.id,cards,False)
@@ -1523,14 +1523,15 @@ async def on_message(message):
 		cv2.line(template, (50, 160), (550, 160), (136, 128, 122), 15)
 		cv2.line(template, (50, 160), (50 + progress, 160), (110, 238, 77), 15)
 		cv2.rectangle(template, (0, 0), (600, 200), (110, 238,77), 3)
-		cv2.putText(template, str(message.author)[:-5], (250, 40), 5, 1.5, (255,255,255), 2, cv2.LINE_AA)
-		cv2.putText(template, 'Level: ' + str(level) + ' | Rank: #' + str(rank) + ' of ' + str(len(leaderboard)), (150, 80), 5, 1, (255,255,255), 1, cv2.LINE_AA)
-		cv2.putText(template, 'XP: ' + str(xp) + ' | XP Until Level ' + str(level+1) + ': '+ str(left), (150, 120), 5, 1, (255,255,255), 1, cv2.LINE_AA)
+		cv2.rectangle(template, (7, 7), (593, 193), (110, 238,77), 2)
+		cv2.putText(template, str(message.author), (150, 130), 5, 1.3, (255,255,255), 2, cv2.LINE_AA)
+		cv2.putText(template, 'Level ' + str(level) + ' | Rank #' + str(rank) + '/' + str(len(message.server.members)), (220, 60), 5, 1.2, (255,255,255), 1, cv2.LINE_AA)
+		cv2.putText(template, str('{:,}'.format(xp)) + ' / ' + str('{:,}'.format(left)) + ' XP', (420, 130), 5, 0.8, (245, 108, 240), 1, cv2.LINE_AA)
 		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
 		avatar = cv2.imdecode(arr, 1)
 		resized = cv2.resize(avatar, (100,100), interpolation = cv2.INTER_AREA)
-		template[25:125, 30:130] = resized
+		template[30:130, 30:130] = resized
 		# cv2.circle(template, (80, 75), 50, (255, 255, 255), 1)
 		cv2.imwrite('edited.png', template)
 		await client.send_file(message.channel, 'edited.png')
