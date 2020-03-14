@@ -1520,15 +1520,15 @@ async def on_message(message):
 			progress = int((levelxp/(levelxp+left))*495)
 
 		if level < 5:
-			badge = 'https://imgur.com/a/Wbm9zaQ'
+			badge = 'pictures\\rookie.png'
 		elif level < 10 and level > 4:
-			badge = 'https://imgur.com/a/eyc4dh1'
+			badge = 'pictures\\pro.png'
 		elif level < 15 and level > 9:
-			badge = 'https://imgur.com/a/ubZZXcP'
+			badge = 'pictures\\allstars.png'
 		elif level < 20 and level > 14:
-			badge = 'https://imgur.com/a/6NLsZBj'
+			badge = 'pictures\\halloffamers.png'
 		
-		template = cv2.imread('rankbar.png', 1)
+		template = cv2.imread('pictures\\rankbar.png', 1)
 		badge = cv2.imread(badge, 1)
 		cv2.line(template, (50, 160), (550, 160), (136, 128, 122), 15)
 		cv2.line(template, (50, 160), (50 + progress, 160), (110, 238, 77), 15)

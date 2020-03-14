@@ -11,14 +11,17 @@ def formatok(amount, currency):
 	#takes amount as string from message.content
 	#returns an integer in K
 	#amount=str(amount)
-	if (amount[-1:]).lower()=="m":
-		return int(float(str(amount[:-1]))*1000)
-	elif (amount[-1:]).lower()=="k":
-		return int(float(str(amount[:-1])))
-	elif (amount[-1:]).lower()=="b":
-		return int(float(str(amount[:-1]))*1000000)
-	else:
-		return int(float(amount)*1000)
+	try:
+		if (amount[-1:]).lower()=="m":
+			return int(float(str(amount[:-1]))*1000)
+		elif (amount[-1:]).lower()=="k":
+			return int(float(str(amount[:-1])))
+		elif (amount[-1:]).lower()=="b":
+			return int(float(str(amount[:-1]))*1000000)
+		else:
+			return int(float(amount)*1000)
+	except:
+		return
 
 def formatfromk(amount, currency):
 	#takes amount as integer in K
