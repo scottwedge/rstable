@@ -1545,7 +1545,7 @@ async def on_message(message):
 		avatar = cv2.imdecode(arr, 1)
 		resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
 		newbadge = cv2.resize(badge, (50, 50), interpolation = cv2.INTER_AREA)
-		template[10:60, 500:550] = newbadge
+		#template[10:60, 500:550] = newbadge
 		template[30:130, 30:130] = resized
 		# cv2.circle(template, (80, 75), 50, (255, 255, 255), 1)
 		cv2.imwrite('edited.png', template)
