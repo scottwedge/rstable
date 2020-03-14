@@ -1513,7 +1513,7 @@ async def on_message(message):
 
 		levelxp = 100*(level**2)+100
 		previous = 100*((level-1)**2)+100
-		progress = int((xp-previous/levelxp)*495)
+		progress = int(((xp-previous)/levelxp)*495)
 
 		badges = []
 		color = (52, 48, 47)
