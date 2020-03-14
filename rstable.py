@@ -1535,7 +1535,7 @@ async def on_message(message):
 		cv2.line(template, (50, 160), (50 + progress, 160), color, 15)
 		width, height = (cv2.getTextSize(str(message.author)[:-5], 5, 1, 2))[0]
 		cv2.putText(template, str(message.author)[:-5], (150, 130), 5, 1.3, (255,255,255), 2, cv2.LINE_AA)
-		cv2.putText(template, str(message.author)[-5:], (170+width, 130), 2, 0.6, (60, 60, 60), 2, cv2.LINE_AA)
+		cv2.putText(template, str(message.author)[-5:], (180 + width, 130), 2, 0.6, (60, 60, 60), 2, cv2.LINE_AA)
 		# cv2.putText(template, 'RANK', (150, 50), 2, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 		# cv2.putText(template, '#' + str(rank), (200, 50), 5, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
 		cv2.putText(template, 'LEVEL', (150, 50), 2, 0.5, color, 1, cv2.LINE_AA)
