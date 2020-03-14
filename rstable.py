@@ -1511,34 +1511,33 @@ async def on_message(message):
 		else:
 			level = int(math.sqrt(int(level))+1)
 
-		left = 100*(level**2)+100-xp
-		if level == 0:
-			left = 100-xp
-			progress = int((xp/(xp+left))*495)
-			levelxp = 100
-		else:
-			levelxp = (xp-(100*(level**2)+100))
-			progress = int((levelxp/(levelxp+left))*495)
+		levelxp = 100*(level**2)+100
+		previous = 100*((level-1)**2)+100
+		progress = int((xp-previous/levelxp)*495)
 
 		badges = []
 		color = (52, 48, 47)
 		if level < 5:
 			badges.append(('pictures/rookie.png', (520, 590)))
+			color = (29, 50, 171)
 		elif level < 10 and level > 4:
 			badges.append(('pictures/pro.png', (440, 510)))
+			color = (209, 149, 97)
 		elif level < 15 and level > 9:
 			badges.append(('pictures/allstars.png', (360, 430)))
+			color = (92, 214, 217)
 		elif level < 20 and level > 14:
 			badges.append(('pictures/halloffamers.png', (280, 350)))
+			color = (85, 195, 141)
 		
 		template = cv2.imread('pictures/rankbar.png', 1)
 		cv2.line(template, (50, 160), (550, 160), (136, 128, 122), 15)
 		cv2.line(template, (50, 160), (50 + progress, 160), (110, 238, 77), 15)
 		cv2.putText(template, str(message.author), (150, 130), 5, 1.3, (255,255,255), 2, cv2.LINE_AA)
-		cv2.putText(template, 'RANK', (150, 50), 2, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-		cv2.putText(template, '#' + str(rank), (200, 50), 5, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
-		cv2.putText(template, 'LEVEL', (300, 50), 2, 0.5, (110, 238, 77), 1, cv2.LINE_AA)
-		cv2.putText(template, str(level), (350, 50), 5, 1.5, (110, 238, 77), 2, cv2.LINE_AA)
+		# cv2.putText(template, 'RANK', (150, 50), 2, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+		# cv2.putText(template, '#' + str(rank), (200, 50), 5, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+		# cv2.putText(template, 'LEVEL', (300, 50), 2, 0.5, (110, 238, 77), 1, cv2.LINE_AA)
+		# cv2.putText(template, str(level), (350, 50), 5, 1.5, (110, 238, 77), 2, cv2.LINE_AA)
 		cv2.putText(template, str('{:,}'.format(xp)) + '/' + str('{:,}'.format(levelxp)) + ' XP', (450, 130), 5, 0.8, (255, 255, 255), 1, cv2.LINE_AA)
 		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
