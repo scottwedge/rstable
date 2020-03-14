@@ -1550,7 +1550,7 @@ async def on_message(message):
 		width, height = (cv2.getTextSize(str(message.author)[:-5], 5, 1, 2))[0]
 		cv2.putText(template, str(message.author)[:-5], (150, 130), 5, 1.3, (255,255,255), 2, cv2.LINE_AA)
 		cv2.putText(template, str(message.author)[-5:], (180 + width, 130), 2, 0.6, (70, 70, 70), 2, cv2.LINE_AA)
-		cv2.putText(template, badge, (150, 50), 2, 0.7, color, 2, cv2.LINE_AA)
+		cv2.putText(template, badge, (150, 50), 2, 0.7, color, 1, cv2.LINE_AA)
 		cv2.putText(template, str('{:,}'.format(xp)) + '/' + str('{:,}'.format(levelxp)) + 'XP', (430, 130), 5, 0.7, (255, 255, 255), 1, cv2.LINE_AA)
 		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
