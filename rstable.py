@@ -1528,7 +1528,7 @@ async def on_message(message):
 		elif level < 20 and level > 14:
 			badge = 'pictures/halloffamers.png'
 		
-		template = cv2.imread('pictures\\rankbar.png', 1)
+		template = cv2.imread('pictures/rankbar.png', 1)
 		badge = cv2.imread(badge, 1)
 		cv2.line(template, (50, 160), (550, 160), (136, 128, 122), 15)
 		cv2.line(template, (50, 160), (50 + progress, 160), (110, 238, 77), 15)
@@ -1545,7 +1545,7 @@ async def on_message(message):
 		avatar = cv2.imdecode(arr, 1)
 		resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
 		newbadge = cv2.resize(badge, (50, 50), interpolation = cv2.INTER_AREA)
-		#template[10:60, 500:550] = newbadge
+		template[10:60, 500:550] = newbadge
 		template[30:130, 30:130] = resized
 		# cv2.circle(template, (80, 75), 50, (255, 255, 255), 1)
 		cv2.imwrite('edited.png', template)
