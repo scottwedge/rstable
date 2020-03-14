@@ -1520,7 +1520,7 @@ async def on_message(message):
 			progress = int((levelxp/(levelxp+left))*495)
 
 		if level < 5:
-			badge = 'https://imgur.com/a/hl13Q69'
+			badge = 'https://imgur.com/a/Wbm9zaQ'
 		elif level < 10 and level > 4:
 			badge = 'https://imgur.com/a/eyc4dh1'
 		elif level < 15 and level > 9:
