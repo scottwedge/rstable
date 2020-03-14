@@ -1520,13 +1520,13 @@ async def on_message(message):
 			progress = int((levelxp/(levelxp+left))*495)
 
 		if level < 5:
-			badge = 'https://cdn.discordapp.com/attachments/539166773820391443/688224143522529295/row-1-col-1.png'
+			badge = 'https://imgur.com/a/hl13Q69'
 		elif level < 10 and level > 4:
-			badge = 'https://cdn.discordapp.com/attachments/539166773820391443/688224142373552192/row-1-col-2.png'
+			badge = 'https://imgur.com/a/eyc4dh1'
 		elif level < 15 and level > 9:
-			badge = 'https://cdn.discordapp.com/attachments/539166773820391443/688224141379502187/row-2-col-2.png'
+			badge = 'https://imgur.com/a/ubZZXcP'
 		elif level < 20 and level > 14:
-			badge = 'https://cdn.discordapp.com/attachments/539166773820391443/688224141144490109/row-2-col-1.png'
+			badge = 'https://imgur.com/a/6NLsZBj'
 		
 		template = cv2.imread('rankbar.png', 1)
 		badge = cv2.imread(badge, 1)
@@ -1543,9 +1543,6 @@ async def on_message(message):
 		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
 		avatar = cv2.imdecode(arr, 1)
-		req = Request(badge, headers={'User-Agent': 'Mozilla/5.0'})
-		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
-		badge = cv2.imdecode(arr, 1)
 		resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
 		newbadge = cv2.resize(badge, (50, 50), interpolation = cv2.INTER_AREA)
 		template[10:60, 500:550] = newbadge
