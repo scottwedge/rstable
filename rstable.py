@@ -1513,24 +1513,28 @@ async def on_message(message):
 			badge = 'Rookie'
 			badges.append(('pictures/rookie.png', (510, 590)))
 			progress = int(xp/2000)*495
+			levelxp = 2000
 			color = (29, 50, 171)
-		if level >= 5000:
+		if xp >= 5000:
 			role = get(message.server.roles, name='💎Pro')
 			badge = 'Pro'
 			badges.append(('pictures/pro.png', (420, 500)))
 			progress = int((xp-2000)/5000)*495
+			levelxp = 5000
 			color = (209, 149, 97)
-		if level >= 11500:
+		if xp >= 11500:
 			role = get(message.server.roles, name='⭐All-Star')
 			badge = 'All Star'
 			badges.append(('pictures/allstars.png', (330, 410)))
 			progress = int((xp-5000)/11500)*495
+			levelxp = 11500
 			color = (92, 214, 217)
-		if level >= 25000:
+		if xp >= 25000:
 			role = get(message.server.roles, name='🎾Hall of Famer')
 			badge = 'Hall of Famer'
 			badges.append(('pictures/halloffamers.png', (240, 320)))
 			progress = int((xp-11500)/25000)*495
+			levelxp = 25000
 			color = (85, 195, 141)
 
 		if role!=None:
