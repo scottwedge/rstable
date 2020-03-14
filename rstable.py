@@ -1520,20 +1520,22 @@ async def on_message(message):
 		if level < 5:
 			badges.append(('pictures/rookie.png', (520, 590)))
 			color = (29, 50, 171)
-		elif level < 10 and level > 4:
+		if level < 10 and level > 4:
 			badges.append(('pictures/pro.png', (440, 510)))
 			color = (209, 149, 97)
-		elif level < 15 and level > 9:
+		if level < 15 and level > 9:
 			badges.append(('pictures/allstars.png', (360, 430)))
 			color = (92, 214, 217)
-		elif level < 20 and level > 14:
+		if level < 20 and level > 14:
 			badges.append(('pictures/halloffamers.png', (280, 350)))
 			color = (85, 195, 141)
 		
 		template = cv2.imread('pictures/rankbar.png', 1)
 		cv2.line(template, (50, 160), (550, 160), (136, 128, 122), 15)
 		cv2.line(template, (50, 160), (50 + progress, 160), (110, 238, 77), 15)
+		width, height = (cv2.getTextSize(message.author, 5, 1, 2))[0]
 		cv2.putText(template, str(message.author), (150, 130), 5, 1.3, (255,255,255), 2, cv2.LINE_AA)
+		cv2.putText(template, str(message.author)[-5:], (200+width, 130), 2, 0.8, (52, 48, 47), 1, cv2.LINE_AA)
 		# cv2.putText(template, 'RANK', (150, 50), 2, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 		# cv2.putText(template, '#' + str(rank), (200, 50), 5, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
 		# cv2.putText(template, 'LEVEL', (300, 50), 2, 0.5, (110, 238, 77), 1, cv2.LINE_AA)
@@ -1549,9 +1551,6 @@ async def on_message(message):
 			badge = cv2.imread(i[0], 1)
 			newbadge = cv2.resize(badge, (70, 70), interpolation = cv2.INTER_AREA)
 			template[10:80, i[1][0]:i[1][1]] = newbadge
-			cv2.imwrite('edited.png', template)
-			await client.send_file(message.channel, 'edited.png')
-
 
 		cv2.rectangle(template, (0, 0), (600, 200), color, 5)
 		cv2.imwrite('edited.png', template)
