@@ -1505,36 +1505,35 @@ async def on_message(message):
 			if i[0] == xp:
 				rank = counter + 1
 
-		level = (xp-300)/250
+		level = (xp-100)/100
 		if level < 0:
 			level = 0
 		else:
 			level = int(math.sqrt(int(level))+1)
 
-		left = 250*(level**2)+300-xp
+		left = 100*(level**2)+100-xp
 		if level == 0:
-			left = 300-xp
+			left = 100-xp
 			progress = int((xp/(xp+left))*495)
-			levelxp = 300
+			levelxp = 100
 		else:
-			levelxp = (xp-(250*(level**2)+300))
+			levelxp = (xp-(100*(level**2)+100))
 			progress = int((levelxp/(levelxp+left))*495)
 
+		badges = []
+		color = (52, 48, 47)
 		if level < 5:
-			badge = 'pictures/rookie.png'
+			badges.append('pictures/rookie.png', (520, 590))
 		elif level < 10 and level > 4:
-			badge = 'pictures/pro.png'
+			badges.append('pictures/pro.png', [440:510])
 		elif level < 15 and level > 9:
-			badge = 'pictures/allstars.png'
+			badges.append('pictures/allstars.png', [360:430])
 		elif level < 20 and level > 14:
-			badge = 'pictures/halloffamers.png'
+			badges.append('pictures/halloffamers.png', [280:350])
 		
 		template = cv2.imread('pictures/rankbar.png', 1)
-		badge = cv2.imread(badge, 1)
 		cv2.line(template, (50, 160), (550, 160), (136, 128, 122), 15)
 		cv2.line(template, (50, 160), (50 + progress, 160), (110, 238, 77), 15)
-		cv2.rectangle(template, (0, 0), (600, 200), (52, 48, 47), 4)
-		cv2.rectangle(template, (7, 7), (593, 193), (52, 48, 47), 3)
 		cv2.putText(template, str(message.author), (150, 130), 5, 1.3, (255,255,255), 2, cv2.LINE_AA)
 		cv2.putText(template, 'RANK', (150, 50), 2, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 		cv2.putText(template, '#' + str(rank), (200, 50), 5, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
@@ -1545,10 +1544,15 @@ async def on_message(message):
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
 		avatar = cv2.imdecode(arr, 1)
 		resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
-		newbadge = cv2.resize(badge, (70, 70), interpolation = cv2.INTER_AREA)
-		template[10:80, 520:590] = newbadge
 		template[30:130, 30:130] = resized
-		# cv2.circle(template, (80, 75), 50, (255, 255, 255), 1)
+
+		for i in badges:
+			badge = cv2.imread(i[0], 1)
+			newbadge = cv2.resize(badge, (70, 70), interpolation = cv2.INTER_AREA)
+			template[10:80, i[1][0]:i[1][1]] = newbadge
+
+		cv2.rectangle(template, (0, 0), (600, 200), color, 4)
+		cv2.rectangle(template, (7, 7), (593, 193), color, 3)
 		cv2.imwrite('edited.png', template)
 		await client.send_file(message.channel, 'edited.png')
 	##############################
@@ -1559,7 +1563,7 @@ async def on_message(message):
 		for counter, i in enumerate(top):
 			userid=i[0]
 			xp=i[1]
-			level = ((xp-300)/250)+1
+			level = ((xp-100)/100)+1
 			if level < 1:
 				level = 0
 			else:
