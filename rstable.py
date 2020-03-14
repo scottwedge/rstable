@@ -1552,12 +1552,15 @@ async def on_message(message):
 		cv2.putText(template, str(message.author)[-5:], (180 + width, 130), 2, 0.6, (70, 70, 70), 1, cv2.LINE_AA)
 		cv2.putText(template, badge, (150, 50), 2, 0.7, color, 1, cv2.LINE_AA)
 		cv2.putText(template, str('{:,}'.format(xp)) + '/' + str('{:,}'.format(levelxp)) + ' XP', (430, 130), 5, 0.7, (255, 255, 255), 1, cv2.LINE_AA)
-		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
-		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
-		avatar = cv2.imdecode(arr, 1)
+		try:
+			req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
+			arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
+			avatar = cv2.imdecode(arr, 1)
+		except:
+			avatar = cv2.imread('pictures/defaultavatar.png', 1)
 		resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
 		template[30:130, 30:130] = resized
-
+		
 		for i in badges:
 			badge = cv2.imread(i[0], 1)
 			newbadge = cv2.resize(badge, (90, 90), interpolation = cv2.INTER_AREA)
@@ -1574,12 +1577,7 @@ async def on_message(message):
 		for counter, i in enumerate(top):
 			userid=i[0]
 			xp=i[1]
-			level = ((xp-100)/100)+1
-			if level < 1:
-				level = 0
-			else:
-				level = int(math.sqrt(level))
-			words+=(str(counter+1)+". <@"+str(userid)+"> - **Level: "+str(level)+" | XP: "+str(xp)+"**\n\n")
+			words+=(str(counter+1)+". <@"+str(userid)+"> - **XP: "+str(xp)+"**\n\n")
 
 		embed = discord.Embed(color=557823, description=words)
 		embed.set_author(name="Top Levels and XP", icon_url=str(message.server.icon_url))
