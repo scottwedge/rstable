@@ -1543,6 +1543,9 @@ async def on_message(message):
 		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
 		avatar = cv2.imdecode(arr, 1)
+		req = Request(badge, headers={'User-Agent': 'Mozilla/5.0'})
+		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
+		badge = cv2.imdecode(arr, 1)
 		resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
 		newbadge = cv2.resize(badge, (50, 50), interpolation = cv2.INTER_AREA)
 		template[10:60, 500:550] = newbadge
