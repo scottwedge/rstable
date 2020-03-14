@@ -395,7 +395,7 @@ async def my_background_task():
 				else:
 					embed = discord.Embed(description="The roulette wheel landed on **"+str(roll)+"**! Winners have been paid out!", color=3800857)
 				embed.set_author(name="Roulette Results", icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
-				embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/614584339841155072/unknown.png')
+				embed.set_image(url=random.choice(['https://bit.ly/3aUQk2J', 'https://bit.ly/2Wb3wwc']))
 				channel = discord.Object(id='621787403778129934')
 				await client.send_message(channel, embed=embed)
 				if winnerids=="":
