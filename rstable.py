@@ -1499,7 +1499,7 @@ async def on_message(message):
 	######################################
 	elif message.content==('$rank'):
 		xp = getvalue(message.author.id, 'xp', 'rsmoney')
-		c.execute("SELECT xp FROM rsmoney WHERE xp!=0 ORDER BY xp DESC")
+		c.execute("SELECT xp FROM rsmoney ORDER BY xp DESC")
 		leaderboard = c.fetchall()
 		for counter, i in enumerate(leaderboard):
 			if i[0] == xp:
@@ -1515,6 +1515,7 @@ async def on_message(message):
 		if level == 0:
 			left = 300-xp
 			progress = int((xp/(xp+left))*495)
+			levelxp = 300
 		else:
 			levelxp = (xp-(250*((level-1)**2)+300))
 			progress = int((levelxp/(levelxp+left))*495)
