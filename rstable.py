@@ -1513,7 +1513,7 @@ async def on_message(message):
 
 		levelxp = 100*(level**2)+100
 		previous = 100*((level-1)**2)+100
-		progress = int(((xp-previous)/levelxp)*495)
+		progress = int(((xp-previous)/levelxp-previous)*495)
 
 		badges = []
 		color = (52, 48, 47)
@@ -1538,14 +1538,14 @@ async def on_message(message):
 		# cv2.putText(template, '#' + str(rank), (200, 50), 5, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
 		# cv2.putText(template, 'LEVEL', (300, 50), 2, 0.5, (110, 238, 77), 1, cv2.LINE_AA)
 		# cv2.putText(template, str(level), (350, 50), 5, 1.5, (110, 238, 77), 2, cv2.LINE_AA)
-		cv2.putText(template, str('{:,}'.format(xp)) + '/' + str('{:,}'.format(levelxp)) + ' XP', (450, 130), 5, 0.8, (255, 255, 255), 1, cv2.LINE_AA)
+		cv2.putText(template, str('{:,}'.format(xp)) + '/' + str('{:,}'.format(levelxp)) + 'XP', (450, 130), 5, 0.7, (255, 255, 255), 1, cv2.LINE_AA)
 		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
 		avatar = cv2.imdecode(arr, 1)
 		resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
 		template[30:130, 30:130] = resized
 
-		for i in badges:
+		for i in reversed(badges):
 			badge = cv2.imread(i[0], 1)
 			newbadge = cv2.resize(badge, (70, 70), interpolation = cv2.INTER_AREA)
 			template[10:80, i[1][0]:i[1][1]] = newbadge
