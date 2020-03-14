@@ -1505,35 +1505,47 @@ async def on_message(message):
 			if i[0] == xp:
 				rank = counter + 1
 
-		level = (xp-1000)/500
+		level = (xp-300)/250
 		if level < 0:
 			level = 0
 		else:
 			level = int(math.sqrt(int(level))+1)
 
-		left = 500*(level**2)+1000-xp
+		left = 250*(level**2)+300-xp
 		if level == 0:
-			left = 1000-xp
+			left = 300-xp
 			progress = int((xp/(xp+left))*495)
 		else:
-			levelxp = (xp-(500*((level-1)**2)+1000))
+			levelxp = (xp-(250*((level-1)**2)+300))
 			progress = int((levelxp/(levelxp+left))*495)
 
+		if level < 5:
+			badge = 'https://cdn.discordapp.com/attachments/539166773820391443/688224143522529295/row-1-col-1.png'
+		elif level < 10 and level > 4:
+			badge = 'https://cdn.discordapp.com/attachments/539166773820391443/688224142373552192/row-1-col-2.png'
+		elif level < 15 and level > 9:
+			badge = 'https://cdn.discordapp.com/attachments/539166773820391443/688224141379502187/row-2-col-2.png'
+		elif level < 20 and level > 14:
+			badge = 'https://cdn.discordapp.com/attachments/539166773820391443/688224141144490109/row-2-col-1.png'
+		
 		template = cv2.imread('rankbar.png', 1)
+		badge = cv2.imread(badge, 1)
 		cv2.line(template, (50, 160), (550, 160), (136, 128, 122), 15)
 		cv2.line(template, (50, 160), (50 + progress, 160), (110, 238, 77), 15)
 		cv2.rectangle(template, (0, 0), (600, 200), (52, 48, 47), 4)
 		cv2.rectangle(template, (7, 7), (593, 193), (52, 48, 47), 3)
 		cv2.putText(template, str(message.author), (150, 130), 5, 1.3, (255,255,255), 2, cv2.LINE_AA)
-		cv2.putText(template, 'RANK', (350, 55), 5, 1, (255, 255, 255), 1, cv2.LINE_AA)
-		cv2.putText(template, '#' + str(rank), (400, 50), 5, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
-		cv2.putText(template, 'LEVEL', (450, 55), 5, 1, (110, 238, 77), 1, cv2.LINE_AA)
-		cv2.putText(template, str(level), (500, 50), 5, 1.5, (110, 238, 77), 2, cv2.LINE_AA)
+		cv2.putText(template, 'RANK', (150, 55), 5, 1, (255, 255, 255), 1, cv2.LINE_AA)
+		cv2.putText(template, '#' + str(rank), (250, 50), 5, 1.5, (255, 255, 255), 2, cv2.LINE_AA)
+		cv2.putText(template, 'LEVEL', (300, 55), 5, 1, (110, 238, 77), 1, cv2.LINE_AA)
+		cv2.putText(template, str(level), (400, 50), 5, 1.5, (110, 238, 77), 2, cv2.LINE_AA)
 		cv2.putText(template, str('{:,}'.format(xp)) + '/' + str('{:,}'.format(levelxp)) + ' XP', (420, 130), 5, 0.8, (255, 255, 255), 1, cv2.LINE_AA)
 		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
 		avatar = cv2.imdecode(arr, 1)
-		resized = cv2.resize(avatar, (100,100), interpolation = cv2.INTER_AREA)
+		resized = cv2.resize(avatar, (100, 100), interpolation = cv2.INTER_AREA)
+		newbadge = cv2.resize(badge, (50, 50), interpolation = cv2.INTER_AREA)
+		template[10:60, 500:550] = newbadge
 		template[30:130, 30:130] = resized
 		# cv2.circle(template, (80, 75), 50, (255, 255, 255), 1)
 		cv2.imwrite('edited.png', template)
@@ -1546,7 +1558,7 @@ async def on_message(message):
 		for counter, i in enumerate(top):
 			userid=i[0]
 			xp=i[1]
-			level = ((xp-1000)/500)+1
+			level = ((xp-300)/250)+1
 			if level < 1:
 				level = 0
 			else:
