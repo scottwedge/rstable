@@ -1510,32 +1510,32 @@ async def on_message(message):
 		badges = []
 		progress = int((xp/2000)*495)
 		levelxp = 2000
-		color = (52, 48, 47)
+		color = (255, 255, 255)
 		if xp >= 2000:
 			role = get(message.server.roles, name='🎒Rookie')
 			badge = 'Rookie'
-			badges.append(('pictures/rookie.png', (510, 590)))
-			progress = int((xp/5000)*495)
+			badges.append(('pictures/rookie.png', (500, 590)))
+			progress = int(((xp-2000)/5000)*495)
 			levelxp = 5000
 			color = (29, 50, 171)
 		if xp >= 5000:
 			role = get(message.server.roles, name='💎Pro')
 			badge = 'Pro'
-			badges.append(('pictures/pro.png', (420, 500)))
+			badges.append(('pictures/pro.png', (400, 490)))
 			progress = int(((xp-5000)/11500)*495)
 			levelxp = 11500
 			color = (209, 149, 97)
 		if xp >= 11500:
 			role = get(message.server.roles, name='⭐All-Star')
 			badge = 'All Star'
-			badges.append(('pictures/allstars.png', (330, 410)))
+			badges.append(('pictures/allstars.png', (300, 390)))
 			progress = int(((xp-11500)/25000)*495)
 			levelxp = 25000
 			color = (92, 214, 217)
 		if xp >= 25000:
 			role = get(message.server.roles, name='🎾Hall of Famer')
 			badge = 'Hall of Famer'
-			badges.append(('pictures/halloffamers.png', (240, 320)))
+			badges.append(('pictures/halloffamers.png', (200, 290)))
 			progress = int(((xp-25000)/100000)*495)
 			levelxp = 100000
 			color = (85, 195, 141)
@@ -1550,7 +1550,7 @@ async def on_message(message):
 		width, height = (cv2.getTextSize(str(message.author)[:-5], 5, 1, 2))[0]
 		cv2.putText(template, str(message.author)[:-5], (150, 130), 5, 1.3, (255,255,255), 2, cv2.LINE_AA)
 		cv2.putText(template, str(message.author)[-5:], (180 + width, 130), 2, 0.6, (70, 70, 70), 2, cv2.LINE_AA)
-		cv2.putText(template, badge, (150, 50), 2, 0.5, color, 1, cv2.LINE_AA)
+		cv2.putText(template, badge, (150, 50), 2, 0.7, color, 2, cv2.LINE_AA)
 		cv2.putText(template, str('{:,}'.format(xp)) + '/' + str('{:,}'.format(levelxp)) + 'XP', (430, 130), 5, 0.7, (255, 255, 255), 1, cv2.LINE_AA)
 		req = Request(str(message.author.avatar_url), headers={'User-Agent': 'Mozilla/5.0'})
 		arr = np.asarray(bytearray(urlopen(req).read()), dtype=np.uint8)
@@ -1560,8 +1560,8 @@ async def on_message(message):
 
 		for i in badges:
 			badge = cv2.imread(i[0], 1)
-			newbadge = cv2.resize(badge, (80, 80), interpolation = cv2.INTER_AREA)
-			template[10:90, i[1][0]:i[1][1]] = newbadge
+			newbadge = cv2.resize(badge, (90, 90), interpolation = cv2.INTER_AREA)
+			template[10:100, i[1][0]:i[1][1]] = newbadge
 
 		cv2.rectangle(template, (0, 0), (600, 200), color, 5)
 		cv2.imwrite('edited.png', template)
