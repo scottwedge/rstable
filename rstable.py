@@ -1521,21 +1521,21 @@ async def on_message(message):
 		if xp >= 5000:
 			role = get(message.server.roles, name='💎Pro')
 			badge = 'Pro'
-			badges.append(('pictures/pro.png', (400, 490)))
+			badges.append(('pictures/pro.png', (410, 500)))
 			progress = int(((xp-5000)/6500)*495)
 			levelxp = 11500
 			color = (209, 149, 97)
 		if xp >= 11500:
 			role = get(message.server.roles, name='⭐All-Star')
 			badge = 'All Star'
-			badges.append(('pictures/allstars.png', (300, 390)))
+			badges.append(('pictures/allstars.png', (320, 410)))
 			progress = int(((xp-11500)/13500)*495)
 			levelxp = 25000
 			color = (92, 214, 217)
 		if xp >= 25000:
 			role = get(message.server.roles, name='🎾Hall of Famer')
 			badge = 'Hall of Famer'
-			badges.append(('pictures/halloffamers.png', (200, 290)))
+			badges.append(('pictures/halloffamers.png', (230, 320)))
 			progress = int(((xp-25000)/100000)*495)
 			levelxp = 100000
 			color = (85, 195, 141)
