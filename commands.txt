@@ -1,0 +1,38 @@
+$w or $wallet|checks your own wallet and displays rs3, 07, and ticket balance.
+$w (@USER) or $wallet (@USER)|checks the given user's wallet and displays their rs3, 07, and ticket balance.
+$transfer (@USER) (AMOUNT) (rs3 or 07)|transfers the given user that amount of money from your wallet to theirs.
+$privacy (on or off)|toggles wallet privacy mode. (Stops other users from looking at your wallet)
+$clear (rs3 or 07) (@USER) - ADMIN|clears the given user's wallet of rs3 or 07 currency.
+$deposit (@USER) (AMOUNT) (rs3 or 07) - ADMIN|adds that amount of money to the given user's wallet.
+$withdraw (@USER) (AMOUNT) (rs3 or 07) - ADMIN|removes that amount of money from the given user's wallet.
+$ticket (@USER) (AMOUNT) - ADMIN|adds that amount of tickets to the given user's wallet.
+$wager, $total bet, or $tb|displays your total wager (The sum of all bets you've ever placed)
+$thisweek|displays your wager for this week - resets each Monday.
+$leaderboard (rs3 or 07) (total or weekly)|displays the top 8 users with the highest wagers.
+$reset thisweek - ADMIN|manually resets weekly wager.
+$k or $keys|displays how many keys you have of each type.
+$buykey (AMOUNT) (KEY TYPE)|buys that amonut of the given key type. (250k Bronze, 750k Silver, 2m Gold)
+$open (KEY TYPE)|opens a chest of the given key type, consuming one key.
+$weekly - SUBSCRIPTION REQUIRED|adds 5 keys to your balance; the type depends on what subscription tier you have.
+$giftkey (@USER) (KEY TYPE)|opens a chest of the given key type and gifts the prize to the specified user, consuming one key.
+$updatekey (@USER) (KEY TYPE) (AMOUNT) - ADMIN|updates the number of keys the given user has.
+$50 (BET) (rs3 or 07)|starts a provably fair dicing game - roll over 50 to win, x1.8 payout.
+$53 (BET) (rs3 or 07)|starts a provably fair dicing game - roll over 53 to win, x2 payout.
+$75 (BET) (rs3 or 07)|starts a provably fair dicing game - roll over 75 to win, x3 payout.
+$95 (BET) (rs3 or 07)|starts a provably fair dicing game - roll over 95 to win, x7 payout.
+$bj (BET) (rs3 or 07)|starts a blackjack game against the bot ai.
+$fp (AMOUNT) (rs3 or 07)|starts a flower poker game against the bot.
+$please|starts a roulette game.
+bet (CATEGORY) (AMOUNT)|adds a bet to the roulette wheel.
+$add (AMOUNT)|adds the given amount to the jackpot.
+$jackpot (AMOUNT) - ADMIN|changes the amount at which the jackpot game ends.
+$endjackpot - ADMIN|manually ends a jackpot game.
+$commands|displays the command list. (Obviously)
+$help (COMMAND NAME)|gives a description of the given command. (Woah this is meta)
+$rank|displays your current rank and xp in a beautiful visual.
+$levels|displays the top 10 users with the highest xp.
+$setseed (SEED)|changes your client seed for provably fair gambling.
+$userinfo (@USER)|displays stalker-like information about the given user.
+$poll (QUESTION)|creates a poll with the given question.
+$colorpicker|displays a random color and hexadecimal value.
+$drawraffle - ADIMN|draws a user for the monthly 100m raffle and resets everyone's ticket count.

@@ -654,7 +654,7 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, "Admin Command Only!")
 		except:
-			await client.send_message(message.channel, "An **error** occured. Make sure you use `$clear (rs3 or 07) (@user)`")
+			await client.send_message(message.channel, "An **error** occurred. Make sure you use `$clear (rs3 or 07) (@user)`")
 	###########################################
 	elif message.content.startswith("$deposit") or message.content.startswith("$withdraw"):
 		try:
@@ -691,37 +691,46 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, "Admin Command Only!")
 		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$update (@user) (amount) (rs3 or 07)`.")
+			await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$update (@user) (amount) (rs3 or 07)`.")
 	############################################
-	elif message.content.startswith("$help") or message.content.startswith("$commands"):
-		embed = discord.Embed(description=  #"\n `$colorpicker` - Shows a random color\n" +
-											#"\n `$start unscramble` - Starts a game where you unscramble a word\n" +
-											#"\n `$start hangman` - Starts a game of hangman\n" +
-											#"\n `$random (SIZE)` - Starts a game where you guess a number between 1 and the given size\n" +
-											#"\n `$poll (QUESTION)` - Starts a Yes/No poll with the given question\n" +
-											"\n `$w` or `$wallet` - Checks your own wallet\n" +
-											"\n `$w (@USER)` or `$wallet (@USER)` - Checks that user's wallet\n" +
-											"\n `$k` or `$keys` - Checks how many keys of each kind you have\n" +
-											"\n `$open (KEY TYPE)` - Opens that type of chest\n" +
-											#"\n `$flower (AMOUNT) (hot or cold)` - Hot or cold gives x2, 5% \\of auto loss\n" +
-											"\n `$50 (BET) (rs3 or 07)` - Must roll above 50, x1.8 payout\n" +
-											"\n `$53 (BET) (rs3 or 07)` - Must roll above 53, x2 payout\n" +
-											"\n `$75 (BET) (rs3 or 07)` - Must roll above 75, x3 payout\n" +
-											"\n `$95 (BET) (rs3 or 07)` - Must roll above 95, x7 payout\n" +
-											#"\n `$swap (rs3 or 07) (AMOUNT)` - Swaps that amount of gold to the other game" +
-											#"\n `$rates` - Shows the swapping rates between currencies" +
-											"\n `$bj (BET) (rs3 or 07)` - Starts a game of blackjack with the bot\n" +
-											#"\n `$deposit (rs3 or 07) (AMOUNT)` - Notifes a cashier that you want to deposit the amount to your wallet\n" +
-											#"\n `$withdraw (rs3 or 07) (AMOUNT)` - Notifes a cashier that you want to withdraw the amount from your wallet\n" +
-											"\n `$transfer (@USER) (AMOUNT) (rs3 or 07)` - Transfers that amount from your wallet to the user's wallet\n" +
-											"\n `$wager`, `$total bet` or `$tb` - Shows your total amount bet for rs3 and 07\n" +
-											"\n `$thisweek` - Shows your total amount bet for rs3 and 07 this week\n" +
-											"\n `$fp (AMOUNT) (rs3 or 07)` - Starts flower poker against the bot\n" +
-											"\n `$setseed (SEED)` - Sets your client seed for provably fair gambling\n", color=16771099)
+	elif  message.content == ('$commands'):
+		walletcmds, wagercmds, keycmds, gamecmds, misccmds = []
 
+		f = open('commands.txt')
+		for counter, i in enumerate(f):
+			if counter<8:
+				walletcmds.append((i.strip("\n")).split("|")[0])
+			elif counter>7 and counter<12:
+				wagercmds.append((i.strip("\n")).split("|")[0])
+			elif counter>11 and counter<18:
+				keycmds.append((i.strip("\n")).split("|")[0])
+			elif counter>17 and counter<29:
+				gamecmds.append((i.strip("\n")).split("|")[0])
+			else:
+				misccmds.append((i.strip("\n")).split("|")[0])
+
+		embed = discord.Embed(description='Use `$help (COMMAND NAME)` for a description of what that command does. *e.g. $help $wallet*', color=16771099)
 		embed.set_author(name="Bot Commands", icon_url=str(message.server.icon_url))
+		embed.add_field(name='Wallet Commands', value=walletcmds, inline=False)
+		embed.add_field(name='Wager Commands', value=wagercmds, inline=False)
+		embed.add_field(name='Mystery Box Commands', value=keycmds, inline=False)
+		embed.add_field(name='Game Commands', value=gamecmds, inline=False)
+		embed.add_field(name='Miscellaneous Commands', value=misccmds, inline=False)
 		await client.send_message(message.channel, embed=embed)
-		# await client.send_message(message.channel, "The commands have been sent to your private messages.")
+
+	elif message.content.startswith('$help'):
+		try:
+			command = (message.content).split(' ')[1]
+			f = open('commands.txt')
+			for i in f:
+				if command in (i.strip('\n')).split('|')[0]:
+					description = (i.strip('\n')).split('|')[1]
+					break
+			embed = discord.Embed(description='This command ' + str(description), color=16771099)
+			embed.set_author(name="Command Explanation", icon_url=str(message.server.icon_url))
+			await client.send_message(message.channel, embed=embed)
+		except:
+			await client.send_message(message.channel, 'That command could not be found, use `$commands` for a list of commands.')
 	###################################
 	elif message.content.startswith("$transfer"):
 		try:
@@ -761,7 +770,7 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, "You must transfer at least **1k** "+currency+".")
 		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$transfer (@user) (Amount you want to give) (rs3 or 07)`.")
+			await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$transfer (@user) (Amount you want to give) (rs3 or 07)`.")
 	###################################
 	elif message.content.startswith("$53") or message.content.startswith("$50") or message.content.startswith("$75") or message.content.startswith("$95"):
 		if str(message.server.id)=='512158131674152973':
@@ -829,7 +838,7 @@ async def on_message(message):
 				else:
 					await client.send_message(message.channel, (isenough(bet, currency))[1])
 			except:
-				await client.send_message(message.channel, "An **error** has occured. Make sure you use `$(50, 53, 75, or 95) (BET) (rs3 or 07)`.")
+				await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$(50, 53, 75, or 95) (BET) (rs3 or 07)`.")
 		else:
 			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	#############################
@@ -929,7 +938,7 @@ async def on_message(message):
 				else:
 					await client.send_message(message.channel, isenough(bet, currency)[1])
 			except:
-				await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bj (Amount) (rs3 or 07)`.")
+				await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$bj (Amount) (rs3 or 07)`.")
 		else:
 			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	################################
@@ -1060,7 +1069,7 @@ async def on_message(message):
 					update_money(message.author.id, -2000*amount, "07")
 					await client.send_message(message.channel, embed=embed)
 		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$bukey (amount) (bronze, silver, or gold)`.")
+			await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$bukey (amount) (bronze, silver, or gold)`.")
 	###############################
 	elif message.content.startswith("$open"):
 		try:
@@ -1103,7 +1112,7 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, "You don't have any *"+kind+"* keys to open!")
 		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$open (bronze, silver, or gold)`.")
+			await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$open (bronze, silver, or gold)`.")
 	################################
 	elif message.content.startswith("$updatekey"):
 		try:
@@ -1131,7 +1140,7 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, "Admin Command Only!")
 		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$updatekey (@user) (Kind) (Number of Keys)`.")
+			await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$updatekey (@user) (Kind) (Number of Keys)`.")
 	################################
 	elif message.content.startswith('$giftkey'):
 		try:
@@ -1183,7 +1192,7 @@ async def on_message(message):
 			else:
 				await client.send_message(message.channel, 'This is a subscriber-only command.')
 		except:
-			await client.send_message(message.channel, "An **error** has occured. Make sure you use `$giftkey (@user) (Kind)`.")
+			await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$giftkey (@user) (Kind)`.")
 	################################
 	elif message.content.startswith("$fp"):
 		if str(message.server.id)=='512158131674152973':
@@ -1233,7 +1242,7 @@ async def on_message(message):
 				else:
 					await client.send_message(message.channel, (isenough(bet, game))[1])
 			except:
-				await client.send_message(message.channel, "An **error** has occured. Make sure you use `$fp (Amount) (rs3 or 07)`.")
+				await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$fp (Amount) (rs3 or 07)`.")
 		else:
 			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	###############################
@@ -1322,7 +1331,7 @@ async def on_message(message):
 				else:
 					await client.send_message(message.channel, "`Ask nicely and she will spin the wheel, say $please`")
 			except:
-				await client.send_message(message.channel, "An **error** has occured. Make sure you use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)`.")
+				await client.send_message(message.channel, "An **error** has occurred. Make sure you use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)`.")
 		else:
 			await client.send_message(message.channel, "This command can only be used in the **RS Tablegames Server** https://discord.gg/2TY3gF5")
 	###########################################
