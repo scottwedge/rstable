@@ -711,11 +711,11 @@ async def on_message(message):
 
 		embed = discord.Embed(description='Use `$help (COMMAND NAME)` for a description of what that command does.\n*Example: $help $wallet*', color=16771099)
 		embed.set_author(name="Bot Commands", icon_url=str(message.server.icon_url))
-		embed.add_field(name='Wallet Commands', value=''.join(walletcmds), inline=False)
+		embed.add_field(name='Wallet Commands', value=''.join(walletcmds), inline=True)
 		embed.add_field(name='Wager Commands', value=''.join(wagercmds), inline=True)
-		embed.add_field(name='Mystery Box Commands', value=''.join(keycmds), inline=False)
+		embed.add_field(name='Mystery Box Commands', value=''.join(keycmds), inline=True)
 		embed.add_field(name='Game Commands', value=''.join(gamecmds), inline=True)
-		embed.add_field(name='Miscellaneous Commands', value=''.join(misccmds), inline=False)
+		embed.add_field(name='Miscellaneous Commands', value=''.join(misccmds), inline=True)
 		await client.send_message(message.channel, embed=embed)
 
 	elif message.content.startswith('$help'):
