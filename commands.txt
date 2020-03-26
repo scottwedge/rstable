@@ -6,7 +6,7 @@ $clear (rs3 or 07) (@USER) - ADMIN|clears the given user's wallet of rs3 or 07 c
 $deposit (@USER) (AMOUNT) (rs3 or 07) - ADMIN|adds that amount of money to the given user's wallet.
 $withdraw (@USER) (AMOUNT) (rs3 or 07) - ADMIN|removes that amount of money from the given user's wallet.
 $ticket (@USER) (AMOUNT) - ADMIN|adds that amount of tickets to the given user's wallet.
-$wager, $total bet, or $tb|displays your total wager (The sum of all bets you've ever placed)
+$wager|displays your total wager (The sum of all bets you've ever placed)
 $thisweek|displays your wager for this week - resets each Monday.
 $leaderboard (rs3 or 07) (total or weekly)|displays the top 8 users with the highest wagers.
 $reset thisweek - ADMIN|manually resets weekly wager.
