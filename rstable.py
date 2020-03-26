@@ -693,7 +693,7 @@ async def on_message(message):
 		except:
 			await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$update (@user) (amount) (rs3 or 07)`.")
 	############################################
-	elif  message.content == ('$commands'):
+	elif  message.content == ('$commands') or message.content == ('$cmds'):
 		walletcmds, wagercmds, keycmds, gamecmds, misccmds = [], [], [], [], []
 
 		f = open('commands.txt')
@@ -724,7 +724,7 @@ async def on_message(message):
 			f = open('commands.txt')
 			for i in f:
 				if command in (i.strip('\n')).split('|')[0]:
-					description = (i.strip('\n')).split('|')[2] + ' | Usage: `' + i.split('|')[1] + '`'
+					description = (i.strip('\n')).split('|')[2] + '\n\nUsage: `' + i.split('|')[1] + '`'
 					break
 			embed = discord.Embed(description='This command ' + str(description), color=16771099)
 			embed.set_author(name="Command Explanation", icon_url=str(message.server.icon_url))
