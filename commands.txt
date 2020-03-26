@@ -1,20 +1,20 @@
 $w or $wallet|$w or $wallet for your own wallet, $w (@USER) or $wallet (@USER) for someone else's wallet|checks your own or someone else's wallet and displays the rs3, 07, and ticket balance.
 $transfer|$transfer (@USER) (AMOUNT) (rs3 or 07)|transfers the given user that amount of money from your wallet to theirs.
 $privacy|$privacy (on or off)|toggles wallet privacy mode. (Stops other users from looking at your wallet)
-$clear|$clear (rs3 or 07) (@USER) - ADMIN|clears the given user's wallet of rs3 or 07 currency.
-$deposit|$deposit (@USER) (AMOUNT) (rs3 or 07) - ADMIN|adds that amount of money to the given user's wallet.
-$withdraw|$withdraw (@USER) (AMOUNT) (rs3 or 07) - ADMIN|removes that amount of money from the given user's wallet.
-$ticket|$ticket (@USER) (AMOUNT) - ADMIN|adds that amount of tickets to the given user's wallet.
+$clear - ADMIN|$clear (rs3 or 07) (@USER) - ADMIN|clears the given user's wallet of rs3 or 07 currency.
+$deposit - ADMIN|$deposit (@USER) (AMOUNT) (rs3 or 07) - ADMIN|adds that amount of money to the given user's wallet.
+$withdraw - ADMIN|$withdraw (@USER) (AMOUNT) (rs3 or 07) - ADMIN|removes that amount of money from the given user's wallet.
+$ticket - ADMIN|$ticket (@USER) (AMOUNT) - ADMIN|adds that amount of tickets to the given user's wallet.
 $wager|$wager|displays your total wager (The sum of all bets you've ever placed)
 $thisweek|$thisweek|displays your wager for this week - resets each Monday.
 $leaderboard|$leaderboard (rs3 or 07) (total or weekly)|displays the top 8 users with the highest wagers.
-$reset thisweek|$reset thisweek - ADMIN|manually resets weekly wager.
+$reset thisweek - ADMIN|$reset thisweek - ADMIN|manually resets weekly wager.
 $k or $keys|$k or $keys|displays how many keys you have of each type.
 $buykey|$buykey (AMOUNT) (KEY TYPE)|buys that amonut of the given key type. (250k Bronze, 750k Silver, 2m Gold)
 $open|$open (KEY TYPE)|opens a chest of the given key type, consuming one key.
 $weekly|$weekly - SUBSCRIPTION REQUIRED|adds 5 keys to your balance; the type depends on what subscription tier you have.
 $giftkey|$giftkey (@USER) (KEY TYPE)|opens a chest of the given key type and gifts the prize to the specified user, consuming one key.
-$updatekey|$updatekey (@USER) (KEY TYPE) (AMOUNT) - ADMIN|updates the number of keys the given user has.
+$updatekey - ADMIN|$updatekey (@USER) (KEY TYPE) (AMOUNT) - ADMIN|updates the number of keys the given user has.
 $50|$50 (BET) (rs3 or 07)|starts a provably fair dicing game - roll over 50 to win, x1.8 payout.
 $53|$53 (BET) (rs3 or 07)|starts a provably fair dicing game - roll over 53 to win, x2 payout.
 $75|$75 (BET) (rs3 or 07)|starts a provably fair dicing game - roll over 75 to win, x3 payout.
@@ -24,8 +24,8 @@ $fp|$fp (AMOUNT) (rs3 or 07)|starts a flower poker game against the bot.
 $please|$please|starts a roulette game.
 bet|bet (CATEGORY) (AMOUNT)|adds a bet to the roulette wheel.
 $add|$add (AMOUNT)|adds the given amount to the jackpot.
-$jackpot|$jackpot (AMOUNT) - ADMIN|changes the amount at which the jackpot game ends.
-$endjackpot|$endjackpot - ADMIN|manually ends a jackpot game.
+$jackpot - ADMIN|$jackpot (AMOUNT) - ADMIN|changes the amount at which the jackpot game ends.
+$endjackpot - ADMIN|$endjackpot - ADMIN|manually ends a jackpot game.
 $commands or $cmds|$commands or $cmds|displays the command list. (Obviously)
 $help|$help (COMMAND NAME)|gives a description of the given command. (Woah this is meta)
 $rank|$rank|displays your current rank and xp in a beautiful visual.
@@ -34,4 +34,4 @@ $setseed|$setseed (SEED)|changes your client seed for provably fair gambling.
 $userinfo|$userinfo (@USER)|displays stalker-like information about the given user.
 $poll|$poll (QUESTION)|creates a poll with the given question.
 $colorpicker|$colorpicker|displays a random color and hexadecimal value.
-$drawraffle|$drawraffle - ADIMN|draws a user for the monthly 100m raffle and resets everyone's ticket count.
+$drawraffle - ADMIN|$drawraffle - ADIMN|draws a user for the monthly 100m raffle and resets everyone's ticket count.
