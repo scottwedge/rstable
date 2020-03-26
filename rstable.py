@@ -1592,6 +1592,16 @@ async def on_message(message):
 		embed = discord.Embed(color=557823, description=words)
 		embed.set_author(name="Top Levels and XP", icon_url=str(message.server.icon_url))
 		await client.send_message(message.channel, embed=embed)
+	################################
+	elif message.content.startswith('$purge'):
+		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
+			purged = int((message.content).split(' ')[1])
+			await client.purge_from(message.channel, limit = purged)
+			await client.send_message(message.channel, "Deleted **" + str(purged) + "** messages!")
+		else:
+			await client.send_message(message.channel, "Admin Command Only!")
+
+
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
