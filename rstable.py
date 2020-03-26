@@ -724,7 +724,7 @@ async def on_message(message):
 			f = open('commands.txt')
 			for i in f:
 				if command in (i.strip('\n')).split('|')[0]:
-					description = (i.strip('\n')).split('|')[1]
+					description = (i.strip('\n')).split('|')[2] + ' | Usage: `' + i.split('|')[1] + '`'
 					break
 			embed = discord.Embed(description='This command ' + str(description), color=16771099)
 			embed.set_author(name="Command Explanation", icon_url=str(message.server.icon_url))
