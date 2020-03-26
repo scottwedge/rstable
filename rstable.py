@@ -1601,7 +1601,7 @@ async def on_message(message):
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
 	################################
-	elif messagee.content.startswith('$sayin'):
+	elif message.content.startswith('$sayin'):
 		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 			channel = client.get_channel(str((message.content).split(' ')[1]))
 			await client.send_message(channel, str((message.content).split(' ')[2]))
