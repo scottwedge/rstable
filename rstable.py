@@ -709,13 +709,13 @@ async def on_message(message):
 			else:
 				misccmds.append(i.split("|")[0] + '\n')
 
-		embed = discord.Embed(description='Use `$help (COMMAND NAME)` for a description of what that command does. *e.g. $help $wallet*', color=16771099)
+		embed = discord.Embed(description='Use `$help (COMMAND NAME)` for a description of what that command does.\n*Example: $help $wallet*', color=16771099)
 		embed.set_author(name="Bot Commands", icon_url=str(message.server.icon_url))
-		embed.add_field(name='Wallet Commands', value=walletcmds, inline=False)
-		embed.add_field(name='Wager Commands', value=wagercmds, inline=False)
-		embed.add_field(name='Mystery Box Commands', value=keycmds, inline=False)
-		embed.add_field(name='Game Commands', value=gamecmds, inline=False)
-		embed.add_field(name='Miscellaneous Commands', value=misccmds, inline=False)
+		embed.add_field(name='Wallet Commands', value=''.join(walletcmds), inline=False)
+		embed.add_field(name='Wager Commands', value=''.join(wagercmds), inline=False)
+		embed.add_field(name='Mystery Box Commands', value=''.join(keycmds), inline=False)
+		embed.add_field(name='Game Commands', value=''.join(gamecmds), inline=False)
+		embed.add_field(name='Miscellaneous Commands', value=''.join(misccmds), inline=False)
 		await client.send_message(message.channel, embed=embed)
 
 	elif message.content.startswith('$help'):
