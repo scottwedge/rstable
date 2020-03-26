@@ -699,15 +699,15 @@ async def on_message(message):
 		f = open('commands.txt')
 		for counter, i in enumerate(f):
 			if counter<8:
-				walletcmds.append((i.strip("\n")).split("|")[0])
+				walletcmds.append(i.split("|")[0] + '\n')
 			elif counter>7 and counter<12:
-				wagercmds.append((i.strip("\n")).split("|")[0])
+				wagercmds.append(i.split("|")[0] + '\n')
 			elif counter>11 and counter<18:
-				keycmds.append((i.strip("\n")).split("|")[0])
+				keycmds.append(i.split("|")[0] + '\n')
 			elif counter>17 and counter<29:
-				gamecmds.append((i.strip("\n")).split("|")[0])
+				gamecmds.append(i.split("|")[0] + '\n')
 			else:
-				misccmds.append((i.strip("\n")).split("|")[0])
+				misccmds.append(i.split("|")[0] + '\n')
 
 		embed = discord.Embed(description='Use `$help (COMMAND NAME)` for a description of what that command does. *e.g. $help $wallet*', color=16771099)
 		embed.set_author(name="Bot Commands", icon_url=str(message.server.icon_url))
