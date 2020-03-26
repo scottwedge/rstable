@@ -26,7 +26,7 @@ bet|bet (CATEGORY) (AMOUNT)|adds a bet to the roulette wheel.
 $add|$add (AMOUNT)|adds the given amount to the jackpot.
 $jackpot|$jackpot (AMOUNT) - ADMIN|changes the amount at which the jackpot game ends.
 $endjackpot|$endjackpot - ADMIN|manually ends a jackpot game.
-$commands|$commands|displays the command list. (Obviously)
+$commands or $cmds|$commands or $cmds|displays the command list. (Obviously)
 $help|$help (COMMAND NAME)|gives a description of the given command. (Woah this is meta)
 $rank|$rank|displays your current rank and xp in a beautiful visual.
 $levels|$levels|displays the top 10 users with the highest xp.
