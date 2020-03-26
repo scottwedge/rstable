@@ -694,7 +694,7 @@ async def on_message(message):
 			await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$update (@user) (amount) (rs3 or 07)`.")
 	############################################
 	elif  message.content == ('$commands'):
-		walletcmds, wagercmds, keycmds, gamecmds, misccmds = []
+		walletcmds, wagercmds, keycmds, gamecmds, misccmds = [], [], [], [], []
 
 		f = open('commands.txt')
 		for counter, i in enumerate(f):
