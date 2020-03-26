@@ -698,13 +698,13 @@ async def on_message(message):
 
 		f = open('commands.txt')
 		for counter, i in enumerate(f):
-			if counter<8:
+			if counter<7:
 				walletcmds.append(i.split("|")[0] + '\n')
-			elif counter>7 and counter<12:
+			elif counter>6 and counter<11:
 				wagercmds.append(i.split("|")[0] + '\n')
-			elif counter>11 and counter<18:
+			elif counter>10 and counter<17:
 				keycmds.append(i.split("|")[0] + '\n')
-			elif counter>17 and counter<29:
+			elif counter>16 and counter<28:
 				gamecmds.append(i.split("|")[0] + '\n')
 			else:
 				misccmds.append(i.split("|")[0] + '\n')
