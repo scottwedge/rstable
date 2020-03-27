@@ -1294,7 +1294,7 @@ async def on_message(message):
 					embed = discord.Embed(description="A game of roulette has started! Use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.", color=3800857)
 					embed.set_author(name="Roulette Game", icon_url=str(message.server.icon_url))
 					embed.add_field(name="Time Left", value="**40** Seconds", inline=True)
-					gif=random.choice(['https://bit.ly/2TK7mL6','https://bit.ly/2Zqh2dx','https://bit.ly/2NuBqHN','https://bit.ly/3d4Gq0q','https://bit.ly/33cI8s5'])
+					gif=random.choice(['https://cdn.discordapp.com/attachments/580436923756314624/687833813358870553/ezgif.com-resize.gif','https://cdn.discordapp.com/attachments/580436923756314624/614584556065914880/SenranKatsuragi.gif','https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif','https://cdn.discordapp.com/attachments/580436923756314624/687711049864183816/wheelgirl2.2.gif','https://cdn.discordapp.com/attachments/580436923756314624/687686305622130748/WheelGirl2.0.gif'])
 					embed.set_image(url=gif)
 					roulettemsg = await client.send_message(message.channel, embed=embed)
 			else:
@@ -1595,16 +1595,15 @@ async def on_message(message):
 	################################
 	elif message.content.startswith('$purge'):
 		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
-			purged = int((message.content).split(' ')[1])
+			purged = int((message.content).split(' ')[1]) + 1
 			await client.purge_from(message.channel, limit = purged)
-			await client.send_message(message.channel, "Deleted **" + str(purged) + "** messages!")
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
 	################################
 	elif message.content.startswith('$sayin'):
 		if isstaff(message.author.id,message.server.roles,message.author.roles)=="verified":
 			channel = client.get_channel(str((message.content).split('|')[1]))
-			await client.send_message(channel, str((message.content).split('|')[2]))
+			await client.send_message(channel, (str((message.content).split('|')[2])).title())
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
 
