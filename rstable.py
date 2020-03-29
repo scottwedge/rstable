@@ -1565,7 +1565,17 @@ async def on_message(message):
 			await client.send_message(channel, (str((message.content).split('|')[2])).title())
 		else:
 			await client.send_message(message.channel, "Admin Command Only!")
-
+	################################
+	elif message.content.startswith('$cashin') or message.content.startswith('$cashout'):
+		if str(message.channel.id) == '514298345993404416':
+			if len((message.content).split(' ')) == 2:
+				game = '07'
+			else:
+				game = (message.content).split(' ')[2]
+			amount = (message.content).split(' ')[1]
+			await client.send_message(client.get_channel('514298345993404416'), '<@&512370598459080724>, <@' + str(message.author.id) + '> has made a ' + (message.content).split(' ')[0][1:] + ' request of **' + amount + '**.')
+		else:
+			await client.send_message(message.channel, "This command can only be used in <#514298345993404416>.")
 
 
 client.loop.create_task(my_background_task())
