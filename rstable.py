@@ -84,6 +84,14 @@ conn.commit()
 # 				)""")
 # conn.commit()
 
+# c.execute("DROP TABLE cash")
+c.execute("""CREATE TABLE cash (
+				id text,
+				way text,
+				code integer
+				)""")
+conn.commit()
+
 client = discord.Client()
 
 def add_member(userid,rs3,osrs):
@@ -1568,14 +1576,64 @@ async def on_message(message):
 	################################
 	elif message.content.startswith('$cashin') or message.content.startswith('$cashout'):
 		if str(message.channel.id) == '514298345993404416':
-			if len((message.content).split(' ')) == 2:
-				game = '07'
-			else:
-				game = (message.content).split(' ')[2]
-			amount = (message.content).split(' ')[1]
-			await client.send_message(client.get_channel('514298345993404416'), '<@&512370598459080724>, <@' + str(message.author.id) + '> has made a ' + (message.content).split(' ')[0][1:] + ' request of **' + amount + '**.')
+			try:
+				if len((message.content).split(' ')) == 2:
+					game = '07'
+				else:
+					game = (message.content).split(' ')[2]
+
+				amount = (message.content).split(' ')[1]
+				current = getvalue(int(message.author.id), game, "rsmoney")
+				way = (message.content).split(' ')[0][1:]
+				enough = True
+
+				if way == 'cashout' and amount > current:
+					enough == False
+
+				if enough:
+					c.execute("SELECT code FROM cash")
+					codelist, codes = c.fetchall(), []
+					for i in codelist:
+						codes.append(int(i[0]))
+					while True:
+						code = random.randint(100,999)
+						if code in codes:
+							continue
+						else:
+							break
+					c.execute("INSERT INTO cash VALUES (%s, %s, %s)", (message.author.id, way, code))
+					await client.send_message(client.get_channel('617795929570803723'), '<@&512370598459080724>, <@' + str(message.author.id) + '> wants to ' + way + ' **' + amount + '** ' + game + '. Use `$accept ' + str(code) + '`.')
+					embed = discord.Embed(description="A message has been sent to a cashier. Your request will be processed and you will be messaged soon.", color=5174318)
+					embed.set_author(name=way.title(), icon_url=str(message.server.icon_url))
+					await client.send_message(message.channel, embed=embed)
+				else:
+					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much money to cashout!")
+			except:
+				await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$`" + way + " (AMOUNT) (rs3 or 07)`.")
 		else:
 			await client.send_message(message.channel, "This command can only be used in <#514298345993404416>.")
+
+	elif message.content.startswith('!accept'):
+		if str(message.channel.id) == "617795929570803723":
+			code = int((message.content).split(' ')[1])
+			c.execute("SELECT code FROM cash")
+			codelist, codes = c.fetchall(), []
+			for i in codelist:
+				codes.append(int(i[0]))
+
+			if code in codes:
+				c.execute("SELECT id FROM cash WHERE code={}".format(code))
+				userid = str(c.fetchone()[0])
+				c.execute("SELECT way FROM cash WHERE code={}".format(code))
+				way = str(c.fetchone()[0])
+				embed = discord.Embed(description="<@"+userid+">, <@"+str(message.author.id)+"> will perform your "+way+".", color=5174318)
+				embed.set_author(name=way.title(), icon_url=str(message.server.icon_url))
+				await client.send_message(client.get_channel("514298345993404416"), embed=embed)
+				await client.send_message(message.channel, "Accepted. Please DM them now.")
+			else:
+				await client.send_message(message.channel, "There is no cashout/cashin request with that code.")
+		else:
+			None
 
 
 client.loop.create_task(my_background_task())
