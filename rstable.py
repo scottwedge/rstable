@@ -85,12 +85,12 @@ conn.commit()
 # conn.commit()
 
 # c.execute("DROP TABLE cash")
-c.execute("""CREATE TABLE cash (
-				id text,
-				way text,
-				code integer
-				)""")
-conn.commit()
+# c.execute("""CREATE TABLE cash (
+# 				id text,
+# 				way text,
+# 				code integer
+# 				)""")
+# conn.commit()
 
 client = discord.Client()
 
@@ -1630,6 +1630,7 @@ async def on_message(message):
 				embed.set_author(name=way.title(), icon_url=str(message.server.icon_url))
 				await client.send_message(client.get_channel("514298345993404416"), embed=embed)
 				await client.send_message(message.channel, "Accepted. Please DM them now.")
+				c.execute("DELETE FROM cash where code={}".format(code))
 			else:
 				await client.send_message(message.channel, "There is no cashout/cashin request with that code.")
 		else:
