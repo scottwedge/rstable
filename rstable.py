@@ -1347,7 +1347,10 @@ async def on_message(message):
 			for i in tickets:
 				for x in range(i[1]):
 					entered.append(str(i[0]))
-			winner=random.choice(entered)
+			winner = random.choice(entered)
+			blacklist = ['248121348755292160'] 
+			while winner in blacklist:
+				winner = random.choice(entered)
 			print(str(winner))
 			c.execute("UPDATE rsmoney SET tickets=0")
 
@@ -1645,6 +1648,8 @@ client.run(str(Bot_Token))
 
 
 """
+Add new commands to command list
+
 BJ Splitting
 
 Full Poker Game
