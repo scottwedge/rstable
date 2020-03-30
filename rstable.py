@@ -1583,12 +1583,12 @@ async def on_message(message):
 					game = (message.content).split(' ')[2]
 
 				amount = (message.content).split(' ')[1]
-				current = getvalue(int(message.author.id), game, "rsmoney")
+				current = getvalue(message.author.id, game, "rsmoney")
 				way = (message.content).split(' ')[0][1:]
 				enough = True
 
-				if way == 'cashout' and amount > current:
-					enough == False
+				if way == 'cashout' and formatok(amount, game) > current:
+					enough = False
 
 				if enough:
 					c.execute("SELECT code FROM cash")
@@ -1609,11 +1609,11 @@ async def on_message(message):
 				else:
 					await client.send_message(message.channel, "<@"+str(message.author.id)+">, You don't have that much money to cashout!")
 			except:
-				await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$`" + way + " (AMOUNT) (rs3 or 07)`.")
+				await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$" + way + " (AMOUNT) (rs3 or 07)`.")
 		else:
 			await client.send_message(message.channel, "This command can only be used in <#514298345993404416>.")
 
-	elif message.content.startswith('!accept'):
+	elif message.content.startswith('$accept'):
 		if str(message.channel.id) == "617795929570803723":
 			code = int((message.content).split(' ')[1])
 			c.execute("SELECT code FROM cash")
