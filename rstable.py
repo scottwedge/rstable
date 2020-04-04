@@ -63,7 +63,8 @@ c.execute("""CREATE TABLE bj (
 				bet integer,
 				currency text,
 				messageid text,
-				channelid text
+				channelid text,
+				split boolean
 				)""")
 conn.commit()
 
@@ -84,13 +85,15 @@ conn.commit()
 # 				)""")
 # conn.commit()
 
-# c.execute("DROP TABLE cash")
-# c.execute("""CREATE TABLE cash (
-# 				id text,
-# 				way text,
-# 				code integer
-# 				)""")
-# conn.commit()
+c.execute("DROP TABLE cash")
+c.execute("""CREATE TABLE cash (
+				id text,
+				way text,
+				code integer,
+				currency text,
+				amount integer
+				)""")
+conn.commit()
 
 client = discord.Client()
 
@@ -112,7 +115,7 @@ def getvalue(userid,value,table):
 
 	c.execute("SELECT {} FROM {} WHERE id={}".format(value, table, userid))
 
-	if value=="privacy" or value=="claimed":
+	if value=="privacy" or value=="claimed" or value=="split":
 		return bool(c.fetchone()[0])
 	elif value in strings:
 		return str(c.fetchone()[0])
@@ -260,7 +263,7 @@ def openkey(kind):
 	if kind=='bronze':
 		ranges=[7, 8, 9, 16, 19, 21, 23, 25, 29, 35, 56, 92, 153, 101, 91, 78, 66, 62, 55, 48, 6, 16, 24, 24, 110]
 	elif kind=='silver':
-		ranges=[1, 1, 10, 15, 18, 20, 35, 40, 40, 41, 43, 44, 46, 53, 56, 56, 55, 54, 51, 38, 48, 48, 56, 35, 45, 24, 24, 170, 50, 40, 100, 30]
+		ranges=[1, 1, 10, 15, 18, 20, 35, 40, 40, 41, 43, 44, 46, 53, 56, 56, 55, 54, 51, 38, 48, 48, 56, 35, 45, 24, 24, 170, 50, 40, 100, 30, 30]
 	elif kind=='gold':
 		ranges=[1, 2, 3, 4, 8, 10, 22, 25, 26, 28, 40, 60, 50, 75, 65, 60, 52, 54, 56, 65, 55, 100, 69, 36, 34, 65, 170, 40, 70, 20]
 
@@ -910,7 +913,7 @@ async def on_message(message):
 						except:
 							update_money(message.author.id, bet*-1, currency)
 							ticketbets(message.author.id, bet, currency)
-							c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id,deck,"","",0,0,bet,currency,"",str(message.channel.id)))
+							c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, '', '', 0, 0, bet, currency, '', str(message.channel.id), False))
 							drawcard(message.author.id, True)
 							drawcard(message.author.id, True)
 							drawcard(message.author.id, False)
@@ -919,7 +922,7 @@ async def on_message(message):
 							playercards=getvalue(message.author.id, "playercards", "bj")
 							scorebj(message.author.id,botcards, False)
 							scorebj(message.author.id,playercards, True)
-							sent=await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
+							sent=await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
 							c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
 					else:
 						await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
@@ -945,7 +948,7 @@ async def on_message(message):
 			profit(False, currency, bet)
 			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 		else:
-			await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
+			await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
 	###################################
 	elif message.content == 'stand' or message.content == 'dd':
 		currency = getvalue(message.author.id,"currency","bj")
@@ -955,6 +958,7 @@ async def on_message(message):
 		channelid = getvalue(message.author.id,"channelid","bj")
 		current = getvalue(int(message.author.id), currency, "rsmoney")
 		bet = getvalue(message.author.id,"bet","bj")
+		split = getvalue(message.author.id, 'split', 'bj')
 		sent = await client.get_message(message.server.get_channel(channelid), messageid)
 		enough=True
 
@@ -1001,8 +1005,36 @@ async def on_message(message):
 			elif botscore>playerscore:
 				await client.edit_message(sent, embed=printbj(message.author, True, "The dealer's score is higher than yours. You lose.", 16711718))
 
+			if split:
+				deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
+				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, '', playercards[0], 0, 0, bet, currency, '', str(message.channel.id), False))
+				drawcard(message.author.id, True)
+				drawcard(message.author.id, False)
+				drawcard(message.author.id, False)
+				botcards = getvalue(message.author.id, "botcards", "bj")
+				playercards = getvalue(message.author.id, "playercards", "bj")
+				scorebj(message.author.id,botcards, False)
+				scorebj(message.author.id,playercards, True)
+				sent = await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
+				c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
+
 			profit(win, currency, bet)
 			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
+	################################
+	elif message.content == 'split':
+		currency = getvalue(message.author.id,"currency","bj")
+		bet = getvalue(message.author.id,"bet","bj")
+		playercards = getvalue(message.author.id,"playercards","bj")
+		current = getvalue(int(message.author.id), currency, "rsmoney")
+		if len(playercards) == 2 and playercards[0] == playercards[1]:
+			if current >= bet:
+				update_money(message.author.id, bet*-1, currency)
+				c.execute("UPDATE bj SET split={} WHERE id={}".format(True, message.author.id))
+				c.execute("UPDATE bj SET playercards={} WHERE id={}".format(playercards[0], message.author.id))
+			else:
+				await client.send_message(message.channel, "You don't have enough money to split!")
+		else:
+			await client.send_message(message.channel, "Conditions not met to split. Your hand must consist of a pair of the same card.")
 	################################
 	elif message.content == '$keys' or message.content == '$k':
 		bronze=getvalue(message.author.id, "bronze", "rsmoney")
@@ -1515,7 +1547,7 @@ async def on_message(message):
 			role = get(message.server.roles, name='🎾Hall of Famer')
 			badges.append(('pictures/halloffamers.png', (230, 320)))
 			progress = int(((xp-25000)/100000)*495)
-			badge, levelxp, color = 'Hall of Famer', 100000, (85, 195, 141)
+			badge, levelxp, color = 'H.O.F', 100000, (85, 195, 141)
 
 		if role != None and role not in message.author.roles:
 			await client.add_roles(message.author, role)
@@ -1604,7 +1636,7 @@ async def on_message(message):
 							continue
 						else:
 							break
-					c.execute("INSERT INTO cash VALUES (%s, %s, %s)", (message.author.id, way, code))
+					c.execute("INSERT INTO cash VALUES (%s, %s, %s, %s, %s)", (message.author.id, way, code, game, formatok(amount, game)))
 					await client.send_message(client.get_channel('617795929570803723'), '<@&512370598459080724>, <@' + str(message.author.id) + '> wants to ' + way + ' **' + amount + '** ' + game + '. Use `$accept ' + str(code) + '`.')
 					embed = discord.Embed(description="A message has been sent to a cashier. Your request will be processed and you will be messaged soon.", color=5174318)
 					embed.set_author(name=way.title(), icon_url=str(message.server.icon_url))
@@ -1625,10 +1657,13 @@ async def on_message(message):
 				codes.append(int(i[0]))
 
 			if code in codes:
-				c.execute("SELECT id FROM cash WHERE code={}".format(code))
-				userid = str(c.fetchone()[0])
-				c.execute("SELECT way FROM cash WHERE code={}".format(code))
-				way = str(c.fetchone()[0])
+				c.execute("SELECT * FROM cash WHERE code={}".format(code))
+				userid = str(c.fetchone()[0][0])
+				way = str(c.fetchone()[0][1])
+				currency = str(c.fetchone()[0][3])
+				amount = int(c.fetchone()[0][4])
+				if way == 'cashout':
+					update_money(userid, amount*-1, currency)
 				embed = discord.Embed(description="<@"+userid+">, <@"+str(message.author.id)+"> will perform your "+way+".", color=5174318)
 				embed.set_author(name=way.title(), icon_url=str(message.server.icon_url))
 				await client.send_message(client.get_channel("514298345993404416"), embed=embed)
