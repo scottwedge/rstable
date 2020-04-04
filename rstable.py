@@ -1026,6 +1026,7 @@ async def on_message(message):
 		bet = getvalue(message.author.id,"bet","bj")
 		playercards = getvalue(message.author.id,"playercards","bj")
 		current = getvalue(int(message.author.id), currency, "rsmoney")
+		print(playercards)
 		if len(playercards.split('|')) == 2 and playercards.split('|')[0][0] == playercards.split('|')[1][0]:
 			if current >= bet:
 				update_money(message.author.id, bet*-1, currency)
