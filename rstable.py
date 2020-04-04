@@ -227,7 +227,7 @@ def printbj(user,stood,description,color):
 		splitplayerscore = scorebj(user.id, splitplayer, 'Split')
 		splitbotscore = scorebj(user.id, splitbot, 'Split')
 		embed.add_field(name=str(user)[:-5]+"'s Hand (Split) - "+str(splitplayerscore), value=cardsToEmoji(splitplayer, stood, False), inline=False)
-		embed.add_field(name="Dealer's Hand (Split) - "+str(splitbotscore), value=cardsToEmoji(splitbot, False, True), inline=False)
+		embed.add_field(name="Dealer's Hand (Split) - "+str(splitbotscore), value=cardsToEmoji(splitbot, False, True), inline=True)
 	return embed
 
 def drawcard(userid,player):
@@ -949,7 +949,10 @@ async def on_message(message):
 		sent = await client.get_message(message.server.get_channel(channelid), messageid)
 
 		if playerscore>21:
-			await client.edit_message(sent, embed=printbj(message.author, True, "Sorry. You busted and lost.", 16711718))
+			if split:
+				await client.send_message(message.channel, embed=printbj(message.author, True, "Sorry. You busted and lost.", 16711718))
+			else:
+				await client.edit_message(sent, embed=printbj(message.author, True, "Sorry. You busted and lost.", 16711718))
 			profit(False, currency, bet)
 			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 
@@ -1004,21 +1007,26 @@ async def on_message(message):
 			win=False
 
 			if botscore>21:
-				await client.edit_message(sent, embed=printbj(message.author, True, "Dealer Busts. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
+				embed = printbj(message.author, True, "Dealer Busts. You win **"+formatfromk(bet*2, currency)+"**!", 3407616)
 				update_money(message.author.id, bet*2, currency)
 				win=True
 			elif playerscore==21 and playercards.count('a')==1 and (playercards.count('10')==1 or playercards.count('j')==1 or playercards.count('q')==1 or playercards.count('k')==1):
-				await client.edit_message(sent, embed=printbj(message.author, True, "You got a blackjack! You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
+				embed = printbj(message.author, True, "You got a blackjack! You win **"+formatfromk(bet*2, currency)+"**!", 3407616)
 				update_money(message.author.id, bet*2, currency)
 			elif botscore==playerscore:
-				await client.edit_message(sent, embed=printbj(message.author, True, "Tie! Money Back.", 16776960))
+				embed = printbj(message.author, True, "Tie! Money Back.", 16776960)
 				update_money(message.author.id, bet, currency)
 			elif playerscore>botscore:
-				await client.edit_message(sent, embed=printbj(message.author, True, "Your score is higher than the dealer's. You win **"+formatfromk(bet*2, currency)+"**!", 3407616))
+				embed = printbj(message.author, True, "Your score is higher than the dealer's. You win **"+formatfromk(bet*2, currency)+"**!", 3407616)
 				update_money(message.author.id, bet*2, currency)
 				win=True
 			elif botscore>playerscore:
-				await client.edit_message(sent, embed=printbj(message.author, True, "The dealer's score is higher than yours. You lose.", 16711718))
+				embed = printbj(message.author, True, "The dealer's score is higher than yours. You lose.", 16711718)
+
+			if split:
+				await client.send_message(message.channel, embed=embed)
+			else:
+				await client.edit_message(sent, embed=embed)
 
 			profit(win, currency, bet)
 			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
