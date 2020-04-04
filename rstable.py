@@ -101,7 +101,8 @@ def add_member(userid,rs3,osrs):
 	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0,"2020-01-01 00:00:00",0))
 
 def getvalue(userid,value,table):
-	strings=["clientseed","seedreset","serverseed","yesterdayseed","deck","botcards","playercards","currency","messageid","channelid","bets","streak","weeklydate"]
+	strings=['clientseed','seedreset','serverseed','yesterdayseed','deck','botcards','playercards','currency','messageid','channelid','bets','streak','weeklydate']
+	booleans=['privacy', 'claimed', 'split']
 
 	if value=="07":
 		value="osrs"
@@ -115,7 +116,7 @@ def getvalue(userid,value,table):
 
 	c.execute("SELECT {} FROM {} WHERE id={}".format(value, table, userid))
 
-	if value=="privacy" or value=="claimed" or value=="split":
+	if value in booleans:
 		return bool(c.fetchone()[0])
 	elif value in strings:
 		return str(c.fetchone()[0])
@@ -189,41 +190,45 @@ def scorebj(userid,cards,player):
 	
 	if player:
 		c.execute("UPDATE bj SET playerscore={} WHERE id={}".format(score, userid))
-	elif player==False:
+	elif player == False:
 		c.execute("UPDATE bj SET botscore={} WHERE id={}".format(score, userid))
 	return score
 
 def printbj(user,stood,description,color):
-	botcards=[]
-	playercards=[]
-	botscore=getvalue(user.id,"botscore","bj")
-	playerscore=getvalue(user.id,"playerscore","bj")
-	bot=""
-	player=""
-	if stood:
-		size=0
-	else:
-		size=1
-		bot+=(str(get(client.get_all_emojis(), name="cardback")))
+	def cardsToEmoji(cards, stood, bot):
+		emojiCards=''
+		if stood and bot:
+			size = 0
+		elif stood == False and bot:
+			size = 1
+			emojiCards += (str(get(client.get_all_emojis(), name="cardback")))
+		for i in (cards.split("|"))[size:]:
+			for emoji in client.get_all_emojis():
+				if emoji.name==i:
+					emojid=emoji.id
+					emojiCards+=("<:"+str(i)+":"+str(emojid)+">")
+		return emojiCards
 
-	for i in ((getvalue(user.id,"botcards","bj")).split("|"))[size:]:
-		for emoji in client.get_all_emojis():
-			if emoji.name==i:
-				emojid=emoji.id
-				bot+=("<:"+str(i)+":"+str(emojid)+">")
-	for i in ((getvalue(user.id,"playercards","bj")).split("|"))[:-1]:
-		for emoji in client.get_all_emojis():
-			if emoji.name==i:
-				emojid=emoji.id
-				player+=("<:"+str(i)+":"+str(emojid)+">")
-
+	botscore = getvalue(user.id,"botscore","bj")
+	playerscore = getvalue(user.id,"playerscore","bj")
+	botcards = getvalue(user.id, 'botcards', 'bj')
+	playercards = getvalue(user.id, 'playercards', 'bj')
+	split = getvalue(user.id, 'split', 'bj')
+	splitbot = '|'.join(botcards.split('|')[:2])+'|'
+	splitplayer = playercards.split('|')[0]+'|'
+	splitplayerscore = scorebj(user.id, splitplayer, 'Split')
+	splitbotscore = scorebj(user.id, splitbot, 'Split')
 	embed = discord.Embed(description=description, color=color)
 	embed.set_author(name=str(user)[:-5]+"'s Blackjack Game", icon_url=str(user.avatar_url))
-	embed.add_field(name=str(user)[:-5]+"'s Hand - "+str(playerscore), value=player, inline=True)
+	embed.add_field(name=str(user)[:-5]+"'s Hand - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
+
 	if stood:
-		embed.add_field(name="Dealer's Hand - "+str(botscore), value=bot, inline=True)
+		embed.add_field(name="Dealer's Hand - "+str(botscore), value=cardsToEmoji(botcards, stood, True), inline=True)
 	else:
-		embed.add_field(name="Dealer's Hand - ?", value=bot, inline=True)
+		embed.add_field(name="Dealer's Hand - ?", value=cardsToEmoji(botcards, stood, True), inline=True)
+	if split:
+		embed.add_field(name=str(user)[:-5]+"'s Hand (Split) - "+str(splitplayerscore), value=cardsToEmoji(splitplayer, stood, False), inline=True)
+		embed.add_field(name="Dealer's Hand (Split) - "+str(splitbotscore), value=cardsToEmoji(splitbot, False, True), inline=True)
 	return embed
 
 def drawcard(userid,player):
@@ -951,14 +956,13 @@ async def on_message(message):
 
 			if split:
 				deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
-				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, '', playercards.split('|')[0]+'|', 0, 0, bet, currency, '', str(message.channel.id), False))
-				drawcard(message.author.id, False)
-				drawcard(message.author.id, False)
+				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, firstbotcards, playercards.split('|')[0]+'|', 0, 0, bet, currency, messageid, str(message.channel.id), 'None', 'None'))
 				botcards = getvalue(message.author.id, "botcards", "bj")
 				playercards = getvalue(message.author.id, "playercards", "bj")
 				scorebj(message.author.id, botcards, False)
 				scorebj(message.author.id, playercards, True)
 				sent = await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
+				c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
 		else:
 			await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
 	###################################
@@ -966,6 +970,7 @@ async def on_message(message):
 		currency = getvalue(message.author.id,"currency","bj")
 		playerscore = getvalue(message.author.id,"playerscore","bj")
 		playercards = getvalue(message.author.id,"playercards","bj")
+		firstbotcards = getvalue(message.author.id,"botcards","bj")
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		current = getvalue(int(message.author.id), currency, "rsmoney")
@@ -991,12 +996,12 @@ async def on_message(message):
 				await client.send_message(message.channel, "You don't have enough money to double down!")
 
 		if enough:
-			cards=getvalue(message.author.id,"botcards","bj")
-			botscore=scorebj(message.author.id,cards,False)
+			botcards = getvalue(message.author.id,"botcards","bj")
+			botscore = scorebj(message.author.id,cards,False)
 			while botscore<17 and playerscore>botscore:
 				drawcard(message.author.id,False)
-				cards=getvalue(message.author.id,"botcards","bj")
-				botscore=scorebj(message.author.id,cards,False)
+				botcards = getvalue(message.author.id,"botcards","bj")
+				botscore = scorebj(message.author.id,cards,False)
 
 			win=False
 
@@ -1022,9 +1027,7 @@ async def on_message(message):
 
 			if split:
 				deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
-				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, '', playercards.split('|')[0]+'|', 0, 0, bet, currency, '', str(message.channel.id), False))
-				drawcard(message.author.id, False)
-				drawcard(message.author.id, False)
+				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, firstbotcards, playercards.split('|')[0]+'|', 0, 0, bet, currency, messageid, str(message.channel.id), 'None', 'None'))
 				botcards = getvalue(message.author.id, "botcards", "bj")
 				playercards = getvalue(message.author.id, "playercards", "bj")
 				scorebj(message.author.id, botcards, False)
@@ -1040,7 +1043,7 @@ async def on_message(message):
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		split = getvalue(message.author.id,"split","bj")
-		if split == False:
+		if split:
 			if len(playercards.split('|')) == 3 and playercards.split('|')[0][0] == playercards.split('|')[1][0]:
 				if current >= bet:
 					update_money(message.author.id, bet*-1, currency)
@@ -1049,7 +1052,7 @@ async def on_message(message):
 					playercards = getvalue(message.author.id, "playercards", "bj")
 					scorebj(message.author.id, playercards, True)
 					sent = await client.get_message(message.server.get_channel(channelid), messageid)
-					await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
+					await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28, playercards.split('|')[0]+'|'))
 				else:
 					await client.send_message(message.channel, "You don't have enough money to split!")
 			else:
