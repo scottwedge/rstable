@@ -1005,6 +1005,9 @@ async def on_message(message):
 			elif botscore>playerscore:
 				await client.edit_message(sent, embed=printbj(message.author, True, "The dealer's score is higher than yours. You lose.", 16711718))
 
+			profit(win, currency, bet)
+			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
+
 			if split:
 				deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
 				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, '', playercards.split('|')[0], 0, 0, bet, currency, '', str(message.channel.id), False))
@@ -1017,21 +1020,22 @@ async def on_message(message):
 				scorebj(message.author.id,playercards, True)
 				sent = await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
 				c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
-
-			profit(win, currency, bet)
-			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 	################################
 	elif message.content == 'split':
 		currency = getvalue(message.author.id,"currency","bj")
 		bet = getvalue(message.author.id,"bet","bj")
 		playercards = getvalue(message.author.id,"playercards","bj")
 		current = getvalue(int(message.author.id), currency, "rsmoney")
+		messageid = getvalue(message.author.id,"messageid","bj")
+		channelid = getvalue(message.author.id,"channelid","bj")
 		print(playercards)
 		if len(playercards.split('|')) == 3 and playercards.split('|')[0][0] == playercards.split('|')[1][0]:
 			if current >= bet:
 				update_money(message.author.id, bet*-1, currency)
 				c.execute("UPDATE bj SET split={} WHERE id={}".format(True, message.author.id))
 				c.execute("UPDATE bj SET playercards='{}' WHERE id={}".format(playercards.split('|')[0]+'|', message.author.id))
+				sent = await client.get_message(message.server.get_channel(channelid), messageid)
+				await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
 			else:
 				await client.send_message(message.channel, "You don't have enough money to split!")
 		else:
@@ -1659,10 +1663,11 @@ async def on_message(message):
 
 			if code in codes:
 				c.execute("SELECT * FROM cash WHERE code={}".format(code))
-				userid = str(c.fetchone()[0][0])
-				way = str(c.fetchone()[0][1])
-				currency = str(c.fetchone()[0][3])
-				amount = int(c.fetchone()[0][4])
+				cash = c.fetchall()[0]
+				userid = str(cash[0])
+				way = str(cash[1])
+				currency = str(cash[3])
+				amount = int(cash[4])
 				if way == 'cashout':
 					update_money(userid, amount*-1, currency)
 				embed = discord.Embed(description="<@"+userid+">, <@"+str(message.author.id)+"> will perform your "+way+".", color=5174318)
