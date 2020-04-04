@@ -213,10 +213,6 @@ def printbj(user,stood,description,color):
 	botcards = getvalue(user.id, 'botcards', 'bj')
 	playercards = getvalue(user.id, 'playercards', 'bj')
 	split = getvalue(user.id, 'split', 'bj')
-	splitbot = '|'.join(botcards.split('|')[:2])+'|'
-	splitplayer = playercards.split('|')[0]+'|'
-	splitplayerscore = scorebj(user.id, splitplayer, 'Split')
-	splitbotscore = scorebj(user.id, splitbot, 'Split')
 	embed = discord.Embed(description=description, color=color)
 	embed.set_author(name=str(user)[:-5]+"'s Blackjack Game", icon_url=str(user.avatar_url))
 	embed.add_field(name=str(user)[:-5]+"'s Hand - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
@@ -226,6 +222,10 @@ def printbj(user,stood,description,color):
 	else:
 		embed.add_field(name="Dealer's Hand - ?", value=cardsToEmoji(botcards, stood, True), inline=True)
 	if split:
+		splitbot = '|'.join(botcards.split('|')[:2])+'|'
+		splitplayer = playercards.split('|')[0]+'|'
+		splitplayerscore = scorebj(user.id, splitplayer, 'Split')
+		splitbotscore = scorebj(user.id, splitbot, 'Split')
 		embed.add_field(name=str(user)[:-5]+"'s Hand (Split) - "+str(splitplayerscore), value=cardsToEmoji(splitplayer, stood, False), inline=True)
 		embed.add_field(name="Dealer's Hand (Split) - "+str(splitbotscore), value=cardsToEmoji(splitbot, False, True), inline=True)
 	return embed
