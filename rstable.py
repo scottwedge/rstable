@@ -1024,7 +1024,7 @@ async def on_message(message):
 
 			if split:
 				deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
-				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, '', playercards.split('|')[0], 0, 0, bet, currency, '', str(message.channel.id), False))
+				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, '', playercards.split('|')[0]+'|', 0, 0, bet, currency, '', str(message.channel.id), False))
 				drawcard(message.author.id, True)
 				drawcard(message.author.id, False)
 				drawcard(message.author.id, False)
