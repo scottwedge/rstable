@@ -995,12 +995,12 @@ async def on_message(message):
 				await client.send_message(message.channel, "You don't have enough money to double down!")
 
 		if enough:
-			botcards = getvalue(message.author.id,"botcards","bj")
-			botscore = scorebj(message.author.id,cards,False)
-			while botscore<17 and playerscore>botscore:
-				drawcard(message.author.id,False)
+			botcards = getvalue(message.author.id, "botcards", "bj")
+			botscore = scorebj(message.author.id, botcards, False)
+			while botscore < 17 and playerscore > botscore:
+				drawcard(message.author.id, False)
 				botcards = getvalue(message.author.id,"botcards","bj")
-				botscore = scorebj(message.author.id,cards,False)
+				botscore = scorebj(message.author.id, botcards, False)
 
 			win=False
 
