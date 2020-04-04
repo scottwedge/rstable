@@ -1026,7 +1026,8 @@ async def on_message(message):
 
 			if split:
 				c.execute("UPDATE bj SET split={} WHERE id={}".format(False, message.author.id))
-				await client.send_message(message.channel, embed=printbj(message.author, True, 'Hand #1 Result'))
+				await client.send_message(message.channel, embed=printbj(message.author, True, 'Hand #1 Result', 28))
+				c.execute("UPDATE bj SET split={} WHERE id={}".format(True, messageuathor.id))
 
 			profit(win, currency, bet)
 			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
