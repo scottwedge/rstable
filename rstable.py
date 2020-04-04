@@ -959,7 +959,7 @@ async def on_message(message):
 				playercards = getvalue(message.author.id, "playercards", "bj")
 				scorebj(message.author.id,botcards, False)
 				scorebj(message.author.id,playercards, True)
-				sent = await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
+				sent = await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
 				c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
 		else:
 			await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
@@ -1030,9 +1030,11 @@ async def on_message(message):
 				drawcard(message.author.id, False)
 				botcards = getvalue(message.author.id, "botcards", "bj")
 				playercards = getvalue(message.author.id, "playercards", "bj")
-				scorebj(message.author.id,botcards, False)
-				scorebj(message.author.id,playercards, True)
-				sent = await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
+				print(botcards)
+				print(playercards)
+				scorebj(message.author.id, botcards, False)
+				scorebj(message.author.id, playercards, True)
+				sent = await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
 				c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
 	################################
 	elif message.content == 'split':
