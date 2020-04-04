@@ -1051,7 +1051,7 @@ async def on_message(message):
 					playercards = getvalue(message.author.id, "playercards", "bj")
 					scorebj(message.author.id, playercards, True)
 					sent = await client.get_message(message.server.get_channel(channelid), messageid)
-					await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28, playercards.split('|')[0]+'|'))
+					await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
 				else:
 					await client.send_message(message.channel, "You don't have enough money to split!")
 			else:
