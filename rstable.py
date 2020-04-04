@@ -85,15 +85,15 @@ conn.commit()
 # 				)""")
 # conn.commit()
 
-c.execute("DROP TABLE cash")
-c.execute("""CREATE TABLE cash (
-				id text,
-				way text,
-				code integer,
-				currency text,
-				amount integer
-				)""")
-conn.commit()
+# c.execute("DROP TABLE cash")
+# c.execute("""CREATE TABLE cash (
+# 				id text,
+# 				way text,
+# 				code integer,
+# 				currency text,
+# 				amount integer
+# 				)""")
+# conn.commit()
 
 client = discord.Client()
 
@@ -1634,12 +1634,12 @@ async def on_message(message):
 				else:
 					game = (message.content).split(' ')[2]
 
-				amount = (message.content).split(' ')[1]
+				amount = formatok((message.content).split(' ')[1], game)
 				current = getvalue(message.author.id, game, "rsmoney")
 				way = (message.content).split(' ')[0][1:]
 				enough = True
 
-				if way == 'cashout' and formatok(amount, game) > current:
+				if way == 'cashout' and amount > current:
 					enough = False
 
 				if enough:
@@ -1653,8 +1653,8 @@ async def on_message(message):
 							continue
 						else:
 							break
-					c.execute("INSERT INTO cash VALUES (%s, %s, %s, %s, %s)", (message.author.id, way, code, game, formatok(amount, game)))
-					await client.send_message(client.get_channel('617795929570803723'), '<@&512370598459080724>, <@' + str(message.author.id) + '> wants to ' + way + ' **' + amount + '** ' + game + '. Use `$accept ' + str(code) + '`.')
+					c.execute("INSERT INTO cash VALUES (%s, %s, %s, %s, %s)", (message.author.id, way, code, game, amount))
+					await client.send_message(client.get_channel('617795929570803723'), '<@&512370598459080724>, <@' + str(message.author.id) + '> wants to ' + way + ' **' + formatfromk(amount, game) + '** ' + game + '. Use `$accept ' + str(code) + '`.')
 					embed = discord.Embed(description="A message has been sent to a cashier. Your request will be processed and you will be messaged soon.", color=5174318)
 					embed.set_author(name=way.title(), icon_url=str(message.server.icon_url))
 					await client.send_message(message.channel, embed=embed)
