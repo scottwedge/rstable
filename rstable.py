@@ -1031,7 +1031,7 @@ async def on_message(message):
 			if current >= bet:
 				update_money(message.author.id, bet*-1, currency)
 				c.execute("UPDATE bj SET split={} WHERE id={}".format(True, message.author.id))
-				c.execute("UPDATE bj SET playercards={} WHERE id={}".format(playercards.split('|')[0]+'|', message.author.id))
+				c.execute("UPDATE bj SET playercards='{}' WHERE id={}".format(playercards.split('|')[0]+'|', message.author.id))
 			else:
 				await client.send_message(message.channel, "You don't have enough money to split!")
 		else:
