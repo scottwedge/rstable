@@ -197,9 +197,8 @@ def scorebj(userid,cards,player):
 def printbj(user,stood,description,color):
 	def cardsToEmoji(cards, stood, bot):
 		emojiCards=''
-		if stood and bot:
-			size = 0
-		elif stood == False and bot:
+		size = 0
+		if stood == False and bot:
 			size = 1
 			emojiCards += (str(get(client.get_all_emojis(), name="cardback")))
 		for i in (cards.split("|"))[size:]:
