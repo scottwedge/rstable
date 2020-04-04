@@ -1042,7 +1042,7 @@ async def on_message(message):
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		split = getvalue(message.author.id,"split","bj")
-		if split:
+		if split == False:
 			if len(playercards.split('|')) == 3 and playercards.split('|')[0][0] == playercards.split('|')[1][0]:
 				if current >= bet:
 					update_money(message.author.id, bet*-1, currency)
