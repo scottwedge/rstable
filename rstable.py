@@ -1039,19 +1039,23 @@ async def on_message(message):
 		current = getvalue(int(message.author.id), currency, "rsmoney")
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
-		if len(playercards.split('|')) == 3 and playercards.split('|')[0][0] == playercards.split('|')[1][0]:
-			if current >= bet:
-				update_money(message.author.id, bet*-1, currency)
-				c.execute("UPDATE bj SET split={} WHERE id={}".format(True, message.author.id))
-				c.execute("UPDATE bj SET playercards='{}' WHERE id={}".format(playercards.split('|')[0]+'|', message.author.id))
-				playercards = getvalue(message.author.id, "playercards", "bj")
-				scorebj(message.author.id, playercards, True)
-				sent = await client.get_message(message.server.get_channel(channelid), messageid)
-				await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
+		split = getvalue(message.author.id,"split","bj")
+		if split == False:
+			if len(playercards.split('|')) == 3 and playercards.split('|')[0][0] == playercards.split('|')[1][0]:
+				if current >= bet:
+					update_money(message.author.id, bet*-1, currency)
+					c.execute("UPDATE bj SET split={} WHERE id={}".format(True, message.author.id))
+					c.execute("UPDATE bj SET playercards='{}' WHERE id={}".format(playercards.split('|')[0]+'|', message.author.id))
+					playercards = getvalue(message.author.id, "playercards", "bj")
+					scorebj(message.author.id, playercards, True)
+					sent = await client.get_message(message.server.get_channel(channelid), messageid)
+					await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
+				else:
+					await client.send_message(message.channel, "You don't have enough money to split!")
 			else:
-				await client.send_message(message.channel, "You don't have enough money to split!")
+				await client.send_message(message.channel, "Conditions not met to split. Your hand must consist of a pair of the same card.")
 		else:
-			await client.send_message(message.channel, "Conditions not met to split. Your hand must consist of a pair of the same card.")
+			await client.send_message(message.channel, "You cannot split when you have already split...")
 	################################
 	elif message.content == '$keys' or message.content == '$k':
 		bronze=getvalue(message.author.id, "bronze", "rsmoney")
