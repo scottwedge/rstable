@@ -235,7 +235,6 @@ def drawcard(userid,player):
 	decklist=deck.split("|")
 	index=random.randint(0, (len(decklist)-1))
 	card=decklist[index]
-	print(card)
 	del decklist[index]
 	deck='|'.join(decklist)
 	
@@ -899,42 +898,42 @@ async def on_message(message):
 	#################################
 	elif message.content.startswith('$bj'):
 		if str(message.channel.id) == '585143700129185829' or str(message.channel.id) == '617144512409501696':
-			#try:
-			deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
-			if len((message.content).split(" "))==2:
-				currency='07'
-			else:
-				currency=(message.content).split(" ")[2]
-
-			bet=formatok((message.content).split(" ")[1], currency)
-			current=getvalue(int(message.author.id), currency, "rsmoney")
-
-			if isenough(bet, currency)[0]:
-				if current>=bet:
-					try:
-						c.execute("SELECT playerscore FROM bj WHERE id={}".format(message.author.id))
-						tester=int(c.fetchone()[0])
-						await client.send_message(message.channel, "You are already in a game of blackjack! Type `hit`, `stand`, or `dd` to continue the game!")
-					except:
-						update_money(message.author.id, bet*-1, currency)
-						ticketbets(message.author.id, bet, currency)
-						c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, '', '', 0, 0, bet, currency, '', str(message.channel.id), False))
-						drawcard(message.author.id, True)
-						drawcard(message.author.id, True)
-						drawcard(message.author.id, False)
-						drawcard(message.author.id, False)
-						botcards = getvalue(message.author.id, "botcards", "bj")
-						playercards = getvalue(message.author.id, "playercards", "bj")
-						scorebj(message.author.id,botcards, False)
-						scorebj(message.author.id,playercards, True)
-						sent = await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
-						c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
+			try:
+				deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
+				if len((message.content).split(" "))==2:
+					currency='07'
 				else:
-					await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
-			else:
-				await client.send_message(message.channel, isenough(bet, currency)[1])
-			#except:
-			#	await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$bj (AMOUNT) (rs3 or 07)`.")
+					currency=(message.content).split(" ")[2]
+
+				bet=formatok((message.content).split(" ")[1], currency)
+				current=getvalue(int(message.author.id), currency, "rsmoney")
+
+				if isenough(bet, currency)[0]:
+					if current>=bet:
+						try:
+							c.execute("SELECT playerscore FROM bj WHERE id={}".format(message.author.id))
+							tester=int(c.fetchone()[0])
+							await client.send_message(message.channel, "You are already in a game of blackjack! Type `hit`, `stand`, or `dd` to continue the game!")
+						except:
+							update_money(message.author.id, bet*-1, currency)
+							ticketbets(message.author.id, bet, currency)
+							c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, '', '', 0, 0, bet, currency, '', str(message.channel.id), False))
+							drawcard(message.author.id, True)
+							drawcard(message.author.id, True)
+							drawcard(message.author.id, False)
+							drawcard(message.author.id, False)
+							botcards = getvalue(message.author.id, "botcards", "bj")
+							playercards = getvalue(message.author.id, "playercards", "bj")
+							scorebj(message.author.id,botcards, False)
+							scorebj(message.author.id,playercards, True)
+							sent = await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
+							c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
+					else:
+						await client.send_message(message.channel, "<@"+str(message.author.id)+">, you don't have that much gold!")
+				else:
+					await client.send_message(message.channel, isenough(bet, currency)[1])
+			except:
+				await client.send_message(message.channel, "An **error** has occurred. Make sure you use `$bj (AMOUNT) (rs3 or 07)`.")
 		else:
 			await client.send_message(message.channel, "This command can only be used in <#585143700129185829>.")
 	################################
