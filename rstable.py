@@ -936,12 +936,12 @@ async def on_message(message):
 	elif message.content == 'hit':
 		drawcard(message.author.id, True)
 		cards = getvalue(message.author.id,"playercards","bj")
-		print(cards)
 		playerscore = scorebj(message.author.id,cards,True)
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		currency = getvalue(message.author.id,"currency","bj")
 		bet = getvalue(message.author.id,"bet","bj")
+		split = getvalue(message.author.id, 'split', 'bj')
 		sent = await client.get_message(message.server.get_channel(channelid), messageid)
 
 		if playerscore>21:
