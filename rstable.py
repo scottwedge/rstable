@@ -226,7 +226,7 @@ def printbj(user,stood,description,color):
 		splitplayer = playercards.split('|')[0]+'|'
 		splitplayerscore = scorebj(user.id, splitplayer, 'Split')
 		splitbotscore = scorebj(user.id, splitbot, 'Split')
-		embed.add_field(name=str(user)[:-5]+"'s Hand 2 - "+str(splitplayerscore), value=cardsToEmoji(splitplayer, stood, False), inline=False)
+		embed.add_field(name=str(user)[:-5]+"'s Hand 2 - "+str(splitplayerscore), value=cardsToEmoji(splitplayer, stood, False), inline=True)
 		embed.add_field(name="Dealer's Hand 2 - "+str(splitbotscore), value=cardsToEmoji(splitbot, False, True), inline=True)
 	return embed
 
@@ -939,8 +939,9 @@ async def on_message(message):
 	################################
 	elif message.content == 'hit':
 		drawcard(message.author.id, True)
-		cards = getvalue(message.author.id,"playercards","bj")
-		playerscore = scorebj(message.author.id,cards,True)
+		playercards = getvalue(message.author.id,"playercards","bj")
+		playerscore = scorebj(message.author.id,playercards,True)
+		botcards = getvalue(message.author.id, 'botcards', 'bj')
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		currency = getvalue(message.author.id,"currency","bj")
@@ -958,7 +959,7 @@ async def on_message(message):
 
 			if split:
 				deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
-				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, firstbotcards, playercards.split('|')[0]+'|', 0, 0, bet, currency, messageid, str(message.channel.id), False))
+				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, botcards, playercards.split('|')[0]+'|', 0, 0, bet, currency, messageid, str(message.channel.id), False))
 				botcards = getvalue(message.author.id, "botcards", "bj")
 				playercards = getvalue(message.author.id, "playercards", "bj")
 				scorebj(message.author.id, botcards, False)
