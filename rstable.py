@@ -217,7 +217,7 @@ def printbj(user,stood,description,color):
 	if split:
 		embed.set_author(name=str(user)[:-5]+"'s Blackjack Game - Split", icon_url=str(user.avatar_url))
 	else:
-		embed.set_author(name=str(user)[:-5]+"'s Blackjack Game - Split", icon_url=str(user.avatar_url))
+		embed.set_author(name=str(user)[:-5]+"'s Blackjack Game", icon_url=str(user.avatar_url))
 	embed.add_field(name=str(user)[:-5]+"'s Hand - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
 
 	if stood:
