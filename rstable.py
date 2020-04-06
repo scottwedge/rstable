@@ -220,10 +220,6 @@ def printbj(user,stood,description,color):
 		embed.set_author(name=str(user)[:-5]+"'s Blackjack Game - Split", icon_url=str(user.avatar_url))
 	else:
 		embed.set_author(name=str(user)[:-5]+"'s Blackjack Game", icon_url=str(user.avatar_url))
-	if stood:
-		embed.add_field(name="Dealer's Hand - "+str(botscore), value=cardsToEmoji(botcards, stood, True), inline=True)
-	else:
-		embed.add_field(name="Dealer's Hand - ?", value=cardsToEmoji(botcards, stood, True), inline=True)
 	if 'y' in split:
 		embed.add_field(name=str(user)[:-5]+"'s Hand 1 - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
 		embed.add_field(name=str(user)[:-5]+"'s Hand 2 - "+str(splitscore), value=cardsToEmoji(split[1:], stood, False), inline=True)
@@ -232,6 +228,10 @@ def printbj(user,stood,description,color):
 		embed.add_field(name=str(user)[:-5]+"'s Hand 2 - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
 	else:
 		embed.add_field(name=str(user)[:-5]+"'s Hand - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
+	if stood:
+		embed.add_field(name="Dealer's Hand - "+str(botscore), value=cardsToEmoji(botcards, stood, True), inline=True)
+	else:
+		embed.add_field(name="Dealer's Hand - ?", value=cardsToEmoji(botcards, stood, True), inline=True)
 
 	return embed
 
@@ -1029,6 +1029,7 @@ async def on_message(message):
 				await client.send_message(message.channel, "You don't have enough money to double down!")
 
 		if enough:
+			print(split)
 			if 'y' not in split:
 				botcards = getvalue(message.author.id, "botcards", "bj")
 				botscore = scorebj(message.author.id, botcards, False)
@@ -1037,7 +1038,7 @@ async def on_message(message):
 					botcards = getvalue(message.author.id,"botcards","bj")
 					botscore = scorebj(message.author.id, botcards, False)
 
-			elif 'y' in split:
+			if 'y' in split:
 				c.execute("UPDATE bj SET playercards='{}' WHERE id={}".format(split[1:], message.author.id))
 				c.execute("UPDATE bj SET split='{}' WHERE id={}".format('z'+playercards, message.author.id))
 				botcards = getvalue(message.author.id, "botcards", "bj")
