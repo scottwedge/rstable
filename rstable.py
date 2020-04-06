@@ -221,11 +221,11 @@ def printbj(user,stood,description,color):
 	else:
 		embed.set_author(name=str(user)[:-5]+"'s Blackjack Game", icon_url=str(user.avatar_url))
 	if 'y' in split:
-		embed.add_field(name=str(user)[:-5]+"'s Hand 1 - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
-		embed.add_field(name=str(user)[:-5]+"'s Hand 2 - "+str(splitscore), value=cardsToEmoji(split[1:], stood, False), inline=True)
+		embed.add_field(name=str(user)[:-5]+"'s First Hand - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
+		embed.add_field(name=str(user)[:-5]+"'s Second Hand - "+str(splitscore), value=cardsToEmoji(split[1:], stood, False), inline=True)
 	elif 'z' in split:
-		embed.add_field(name=str(user)[:-5]+"'s Hand 1 - "+str(splitscore), value=cardsToEmoji(split[1:], stood, False), inline=True)
-		embed.add_field(name=str(user)[:-5]+"'s Hand 2 - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
+		embed.add_field(name=str(user)[:-5]+"'s First Hand - "+str(splitscore), value=cardsToEmoji(split[1:], stood, False), inline=True)
+		embed.add_field(name=str(user)[:-5]+"'s Second Hand - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
 	else:
 		embed.add_field(name=str(user)[:-5]+"'s Hand - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
 	if stood:
@@ -1021,15 +1021,14 @@ async def on_message(message):
 				cards = getvalue(message.author.id,"playercards","bj")
 				playerscore = scorebj(message.author.id,cards,True)
 				if playerscore>21:
-					await client.edit_message(sent, embed=printbj(message.author, True, "Sorry. You busted and lost.", 16711718))
-					profit(False, currency, bet)
-					c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
+					if split == 'None':
+						await client.edit_message(sent, embed=printbj(message.author, True, "Sorry. You busted and lost.", 16711718))
+						c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 			else:
 				enough=False
 				await client.send_message(message.channel, "You don't have enough money to double down!")
 
 		if enough:
-			print(split)
 			if 'y' not in split:
 				botcards = getvalue(message.author.id, "botcards", "bj")
 				botscore = scorebj(message.author.id, botcards, False)
@@ -1056,8 +1055,8 @@ async def on_message(message):
 				embed2 = bjresult(message.author, bet, currency, botscore, playerscore, playercards)
 				embed1.set_author(name=str(message.author)[:-5]+"'s Blackjack Hand 1 Result", icon_url=str(message.author.avatar_url))
 				embed2.set_author(name=str(message.author)[:-5]+"'s Blackjack Hand 2 Result", icon_url=str(message.author.avatar_url))
-				await client.send_message(message.channel, embed1)
-				await client.send_message(message.channel, embed2)
+				await client.send_message(message.channel, embed=embed1)
+				await client.send_message(message.channel, embed=embed2)
 				c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 	################################
 	elif message.content == 'split':
