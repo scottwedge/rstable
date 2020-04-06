@@ -1050,7 +1050,7 @@ async def on_message(message):
 				c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 			else:
 				await client.delete_message(sent)
-				await splitscore = scorebj(message.author.id, split[1:], 'Split')
+				splitscore = scorebj(message.author.id, split[1:], 'Split')
 				embed1 = bjresult(message.author, bet, currency, botscore, splitscore, split[1:])
 				embed2 = bjresult(message.author, bet, currency, botscore, playerscore, playercards)
 				embed1.set_author(name=str(message.author)[:-5]+"'s Blackjack Hand 1 Result", icon_url=str(message.author.avatar_url))
