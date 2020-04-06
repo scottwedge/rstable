@@ -993,8 +993,8 @@ async def on_message(message):
 				embed2 = bjresult(message.author, bet, currency, botscore, playerscore, playercards)
 				embed1.set_author(name=str(message.author)[:-5]+"'s Blackjack Hand 1 Result", icon_url=str(message.author.avatar_url))
 				embed2.set_author(name=str(message.author)[:-5]+"'s Blackjack Hand 2 Result", icon_url=str(message.author.avatar_url))
-				await client.send_message(message.channel, embed1)
-				await client.send_message(message.channel, embed2)
+				await client.send_message(message.channel, embed=embed1)
+				await client.send_message(message.channel, embed=embed2)
 				c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 		else:
 			await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
