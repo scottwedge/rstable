@@ -64,7 +64,7 @@ c.execute("""CREATE TABLE bj (
 				currency text,
 				messageid text,
 				channelid text,
-				split boolean
+				split text
 				)""")
 conn.commit()
 
@@ -101,8 +101,8 @@ def add_member(userid,rs3,osrs):
 	c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (userid,rs3,osrs,0,0,0,0,"ClientSeed",False,0,0,0,0,"2020-01-01 00:00:00",0))
 
 def getvalue(userid,value,table):
-	strings=['clientseed','seedreset','serverseed','yesterdayseed','deck','botcards','playercards','currency','messageid','channelid','bets','streak','weeklydate']
-	booleans=['privacy', 'claimed', 'split']
+	strings=['clientseed','seedreset','serverseed','yesterdayseed','deck','botcards','playercards','currency','messageid','channelid','bets','streak','weeklydate','split']
+	booleans=['privacy', 'claimed']
 
 	if value=="07":
 		value="osrs"
@@ -213,17 +213,26 @@ def printbj(user,stood,description,color):
 	botcards = getvalue(user.id, 'botcards', 'bj')
 	playercards = getvalue(user.id, 'playercards', 'bj')
 	split = getvalue(user.id, 'split', 'bj')
+	splitscore = scorebj(user.id, split[1:], 'Split') if split != 'None' else None
 	embed = discord.Embed(description=description, color=color)
-	if split:
+
+	if split != 'None':
 		embed.set_author(name=str(user)[:-5]+"'s Blackjack Game - Split", icon_url=str(user.avatar_url))
 	else:
 		embed.set_author(name=str(user)[:-5]+"'s Blackjack Game", icon_url=str(user.avatar_url))
-	embed.add_field(name=str(user)[:-5]+"'s Hand - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
-
 	if stood:
 		embed.add_field(name="Dealer's Hand - "+str(botscore), value=cardsToEmoji(botcards, stood, True), inline=True)
 	else:
 		embed.add_field(name="Dealer's Hand - ?", value=cardsToEmoji(botcards, stood, True), inline=True)
+	if 'y' in split:
+		embed.add_field(name=str(user)[:-5]+"'s Hand 1 - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
+		embed.add_field(name=str(user)[:-5]+"'s Hand 2 - "+str(splitscore), value=cardsToEmoji(split[1:], stood, False), inline=True)
+	elif 'z' in split:
+		embed.add_field(name=str(user)[:-5]+"'s Hand 1 - "+str(splitscore), value=cardsToEmoji(split[1:], stood, False), inline=True)
+		embed.add_field(name=str(user)[:-5]+"'s Hand 2 - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
+	else:
+		embed.add_field(name=str(user)[:-5]+"'s Hand - "+str(playerscore), value=cardsToEmoji(playercards, stood, False), inline=True)
+
 	return embed
 
 def drawcard(userid,player):
@@ -242,6 +251,25 @@ def drawcard(userid,player):
 		c.execute("UPDATE bj SET botcards='{}' WHERE id={}".format(str(botcards)+str(card)+"|", userid))
 
 	c.execute("UPDATE bj SET deck='{}' WHERE id={}".format(deck, userid))
+
+def bjresult(user, bet, currency, botscore, playerscore, playercards):
+			if playerscore>21:
+				embed = printbj(user, True, "Sorry. You busted and lost.", 16711718)
+			elif botscore>21:
+				embed = printbj(user, True, "Dealer Busts. You win **"+formatfromk(bet*2, currency)+"**!", 3407616)
+				update_money(user.id, bet*2, currency)
+			elif playerscore==21 and playercards.count('a')==1 and (playercards.count('10')==1 or playercards.count('j')==1 or playercards.count('q')==1 or playercards.count('k')==1):
+				embed = printbj(user, True, "You got a blackjack! You win **"+formatfromk(bet*2, currency)+"**!", 3407616)
+				update_money(user.id, bet*2, currency)
+			elif botscore==playerscore:
+				embed = printbj(user, True, "Tie! Money Back.", 16776960)
+				update_money(user.id, bet, currency)
+			elif playerscore>botscore:
+				embed = printbj(user, True, "Your score is higher than the dealer's. You win **"+formatfromk(bet*2, currency)+"**!", 3407616)
+				update_money(user.id, bet*2, currency)
+			elif botscore>playerscore:
+				embed = printbj(user, True, "The dealer's score is higher than yours. You lose.", 16711718)
+			return embed
 
 def profit(win, currency, bet):
 	if currency=="rs3":
@@ -913,7 +941,7 @@ async def on_message(message):
 						except:
 							update_money(message.author.id, bet*-1, currency)
 							ticketbets(message.author.id, bet, currency)
-							c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, '', '', 0, 0, bet, currency, '', str(message.channel.id), False))
+							c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, '', '', 0, 0, bet, currency, '', str(message.channel.id), 'None'))
 							drawcard(message.author.id, True)
 							drawcard(message.author.id, True)
 							drawcard(message.author.id, False)
@@ -938,6 +966,7 @@ async def on_message(message):
 		playercards = getvalue(message.author.id,"playercards","bj")
 		playerscore = scorebj(message.author.id,playercards,True)
 		botcards = getvalue(message.author.id, 'botcards', 'bj')
+		botscore = getvalue(message.author.id, 'botscore', 'bj')
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		currency = getvalue(message.author.id,"currency","bj")
@@ -946,19 +975,27 @@ async def on_message(message):
 		sent = await client.get_message(message.server.get_channel(channelid), messageid)
 
 		if playerscore>21:
-			await client.edit_message(sent, embed=printbj(message.author, True, "Sorry. You busted and lost.", 16711718))
-			profit(False, currency, bet)
-			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
-
-			if split:
-				deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
-				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, botcards, playercards.split('|')[0]+'|', 0, 0, bet, currency, '', str(message.channel.id), False))
+			if 'y' in split:
+				c.execute("UPDATE bj SET playercards='{}' WHERE id={}".format(split[1:], message.author.id))
+				c.execute("UPDATE bj SET split='{}' WHERE id={}".format('z'+playercards, message.author.id))
 				botcards = getvalue(message.author.id, "botcards", "bj")
 				playercards = getvalue(message.author.id, "playercards", "bj")
 				scorebj(message.author.id, botcards, False)
 				scorebj(message.author.id, playercards, True)
-				sent = await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
-				c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
+				await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down for hand two.", 28))
+			elif split == 'None':
+				await client.edit_message(sent, embed=printbj(message.author, True, "Sorry. You busted and lost.", 16711718))
+				c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
+			else:
+				await client.delete_message(sent)
+				await splitscore = scorebj(message.author.id, split[1:], 'Split')
+				embed1 = bjresult(message.author, bet, currency, botscore, splitscore, split[1:])
+				embed2 = bjresult(message.author, bet, currency, botscore, playerscore, playercards)
+				embed1.set_author(name=str(message.author)[:-5]+"'s Blackjack Hand 1 Result", icon_url=str(message.author.avatar_url))
+				embed2.set_author(name=str(message.author)[:-5]+"'s Blackjack Hand 2 Result", icon_url=str(message.author.avatar_url))
+				await client.send_message(message.channel, embed1)
+				await client.send_message(message.channel, embed2)
+				c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 		else:
 			await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, `dd` to double down, or `split` to split.", 28))
 	###################################
@@ -966,14 +1003,14 @@ async def on_message(message):
 		currency = getvalue(message.author.id,"currency","bj")
 		playerscore = getvalue(message.author.id,"playerscore","bj")
 		playercards = getvalue(message.author.id,"playercards","bj")
-		firstbotcards = getvalue(message.author.id,"botcards","bj")
+		botcards = getvalue(message.author.id,"botcards","bj")
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		current = getvalue(int(message.author.id), currency, "rsmoney")
 		bet = getvalue(message.author.id,"bet","bj")
 		split = getvalue(message.author.id, 'split', 'bj')
 		sent = await client.get_message(message.server.get_channel(channelid), messageid)
-		enough=True
+		enough = True
 
 		if message.content=='dd':
 			if current>=bet:
@@ -992,45 +1029,35 @@ async def on_message(message):
 				await client.send_message(message.channel, "You don't have enough money to double down!")
 
 		if enough:
-			botcards = getvalue(message.author.id, "botcards", "bj")
-			botscore = scorebj(message.author.id, botcards, False)
-			while botscore < 17 and playerscore > botscore:
-				drawcard(message.author.id, False)
-				botcards = getvalue(message.author.id,"botcards","bj")
+			if 'y' not in split:
+				botcards = getvalue(message.author.id, "botcards", "bj")
 				botscore = scorebj(message.author.id, botcards, False)
+				while botscore < 17 and playerscore > botscore:
+					drawcard(message.author.id, False)
+					botcards = getvalue(message.author.id,"botcards","bj")
+					botscore = scorebj(message.author.id, botcards, False)
 
-			win=False
-
-			if botscore>21:
-				embed=printbj(message.author, True, "Dealer Busts. You win **"+formatfromk(bet*2, currency)+"**!", 3407616)
-				update_money(message.author.id, bet*2, currency)
-				win=True
-			elif playerscore==21 and playercards.count('a')==1 and (playercards.count('10')==1 or playercards.count('j')==1 or playercards.count('q')==1 or playercards.count('k')==1):
-				embed=printbj(message.author, True, "You got a blackjack! You win **"+formatfromk(bet*2, currency)+"**!", 3407616)
-				update_money(message.author.id, bet*2, currency)
-			elif botscore==playerscore:
-				embed=printbj(message.author, True, "Tie! Money Back.", 16776960)
-				update_money(message.author.id, bet, currency)
-			elif playerscore>botscore:
-				embed=printbj(message.author, True, "Your score is higher than the dealer's. You win **"+formatfromk(bet*2, currency)+"**!", 3407616)
-				update_money(message.author.id, bet*2, currency)
-				win=True
-			elif botscore>playerscore:
-				embed=printbj(message.author, True, "The dealer's score is higher than yours. You lose.", 16711718)
-
-			await client.edit_message(sent, embed=embed)
-			profit(win, currency, bet)
-			c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
-
-			if split:
-				deck="aC|aS|aH|aD|2C|2S|2H|2D|3C|3S|3H|3D|4C|4S|4H|4D|5C|5S|5H|5D|6C|6S|6H|6D|7C|7S|7H|7D|8C|8S|8H|8D|9C|9S|9H|9D|10C|10S|10H|10D|jC|jS|jH|jD|qC|qS|qH|qD|kC|kS|kH|kD"
-				c.execute("INSERT INTO bj VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (message.author.id, deck, firstbotcards, playercards.split('|')[0]+'|', 0, 0, bet, currency, '', str(message.channel.id), False))
+			elif 'y' in split:
+				c.execute("UPDATE bj SET playercards='{}' WHERE id={}".format(split[1:], message.author.id))
+				c.execute("UPDATE bj SET split='{}' WHERE id={}".format('z'+playercards, message.author.id))
 				botcards = getvalue(message.author.id, "botcards", "bj")
 				playercards = getvalue(message.author.id, "playercards", "bj")
 				scorebj(message.author.id, botcards, False)
 				scorebj(message.author.id, playercards, True)
-				sent = await client.send_message(message.channel, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down.", 28))
-				c.execute("UPDATE bj SET messageid={} WHERE id={}".format(str(sent.id), message.author.id))
+				await client.edit_message(sent, embed=printbj(message.author, False, "Use `hit` to draw, `stand` to pass, or `dd` to double down for hand two.", 28))
+			elif split == 'None':
+				await client.edit_message(sent, embed=bjresult(message.author, bet, currency, botscore, playerscore, playercards))
+				c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
+			else:
+				await client.delete_message(sent)
+				await splitscore = scorebj(message.author.id, split[1:], 'Split')
+				embed1 = bjresult(message.author, bet, currency, botscore, splitscore, split[1:])
+				embed2 = bjresult(message.author, bet, currency, botscore, playerscore, playercards)
+				embed1.set_author(name=str(message.author)[:-5]+"'s Blackjack Hand 1 Result", icon_url=str(message.author.avatar_url))
+				embed2.set_author(name=str(message.author)[:-5]+"'s Blackjack Hand 2 Result", icon_url=str(message.author.avatar_url))
+				await client.send_message(message.channel, embed1)
+				await client.send_message(message.channel, embed2)
+				c.execute("DELETE FROM bj WHERE id={}".format(message.author.id))
 	################################
 	elif message.content == 'split':
 		currency = getvalue(message.author.id,"currency","bj")
@@ -1040,11 +1067,11 @@ async def on_message(message):
 		messageid = getvalue(message.author.id,"messageid","bj")
 		channelid = getvalue(message.author.id,"channelid","bj")
 		split = getvalue(message.author.id,"split","bj")
-		if split == False:
+		if split == 'None':
 			if len(playercards.split('|')) == 3 and playercards.split('|')[0][0] == playercards.split('|')[1][0]:
 				if current >= bet:
 					update_money(message.author.id, bet*-1, currency)
-					c.execute("UPDATE bj SET split={} WHERE id={}".format(True, message.author.id))
+					c.execute("UPDATE bj SET split='{}' WHERE id={}".format('y'+playercards.split('|')[1]+'|', message.author.id))
 					c.execute("UPDATE bj SET playercards='{}' WHERE id={}".format(playercards.split('|')[0]+'|', message.author.id))
 					playercards = getvalue(message.author.id, "playercards", "bj")
 					scorebj(message.author.id, playercards, True)
