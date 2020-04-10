@@ -1723,6 +1723,8 @@ async def on_message(message):
 		else:
 			None
 
+	elif message.content == '$giveaways':
+		await client.add_roles(message.author, get(message.server.roles, name='Giveaways'))
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
