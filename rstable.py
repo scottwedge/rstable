@@ -1723,8 +1723,9 @@ async def on_message(message):
 		else:
 			None
 
-	elif message.content == '$giveaways':
-		await client.add_roles(message.author, get(message.server.roles, name='Giveaways'))
+	elif message.content.startswith('$thing'):
+		channel = message.server.get_channel((message.content).split(' ')[1])
+		await channel.set_permissions(message.author, send_messages=True)
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
