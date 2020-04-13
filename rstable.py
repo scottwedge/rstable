@@ -339,6 +339,7 @@ async def my_background_task():
     await client.wait_until_ready()
     while (not client.is_closed):
         channel = discord.Object(id=617076198740328459)
+        print(roulette)
         c.execute('SELECT seedreset FROM data')
         lastdate = str(c.fetchone()[0])
         today = str(time.gmtime()[2])
@@ -364,6 +365,7 @@ async def my_background_task():
             await channel.send(embed=embed)
         
         else:
+            print('yo')
             if roulette < 1:
                 if override != 100:
                     roll = override
