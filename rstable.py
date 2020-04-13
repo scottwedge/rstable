@@ -335,11 +335,12 @@ gif = ''
 override = 100
 
 async def my_background_task():
+    print('Hello?')
     global roulette, participants, winner, roulettemsg, gif, nextgiveaway, override
     await client.wait_until_ready()
-    while (not client.is_closed):
-        channel = discord.Object(id=617076198740328459)
+    while not client.is_closed:
         print(roulette)
+        channel = discord.Object(id=617076198740328459)
         c.execute('SELECT seedreset FROM data')
         lastdate = str(c.fetchone()[0])
         today = str(time.gmtime()[2])
