@@ -544,13 +544,13 @@ async def on_message(message):
                                             "\nRoles: "+', '.join(roles)+"\n"+
                                             "\nJoined server on: "+str(member.joined_at).split(" ")[0]+"\n"+
                                             "\nCreated account on: "+str(member.created_at).split(" ")[0]+"\n"+
-                                            "\nPlaying: "+str(member.game)+"\n", color=8270499)
+                                            "\nPlaying: "+str(member.activity)+"\n", color=8270499)
         embed.set_author(name='Information of ' + str(member)[:(- 5)], icon_url=str(member.avatar_url))
         embed.set_footer(text="Spying on people's information isn't very nice...")
         await message.channel.send(embed=embed)
     #########################################
     elif message.content.startswith('$setseed'):
-        if str(message.channel.id) == 656709120870580235:
+        if message.channel.id == 656709120870580235:
             clientseed = str(message.content[9:])
             if len(clientseed) > 20:
                 await message.channel.send('That client seed is too long. Please try a shorter one. (20 Character Limit)')
@@ -784,7 +784,7 @@ async def on_message(message):
             await message.channel.send('An **error** has occurred. Make sure you use `$transfer (@USER) (AMOUNT) (rs3 or 07)`.')
     #########################################
     elif message.content.startswith('$53') or message.content.startswith('$50') or message.content.startswith('$75') or message.content.startswith('$95'):
-        if str(message.channel.id) in [570857748451950603, 563836659003686913, 558011134074945536, 570857634299772929]:
+        if message.channel.id in [570857748451950603, 563836659003686913, 558011134074945536, 570857634299772929]:
             try:
                 if len(message.content.split(' ')) == 2:
                     currency = '07'
@@ -936,11 +936,10 @@ async def on_message(message):
         botcards = getvalue(message.author.id, 'botcards', 'bj')
         botscore = getvalue(message.author.id, 'botscore', 'bj')
         messageid = getvalue(message.author.id, 'messageid', 'bj')
-        channelid = getvalue(message.author.id, 'channelid', 'bj')
         currency = getvalue(message.author.id, 'currency', 'bj')
         bet = getvalue(message.author.id, 'bet', 'bj')
         split = getvalue(message.author.id, 'split', 'bj')
-        sent = await message.guild.get_channel(channelid).get_message(messageid)
+        sent = await message.author.fetch_message(messageid)
         
         if playerscore > 21:
             if 'y' in split:
@@ -973,11 +972,10 @@ async def on_message(message):
         playercards = getvalue(message.author.id, 'playercards', 'bj')
         botcards = getvalue(message.author.id, 'botcards', 'bj')
         messageid = getvalue(message.author.id, 'messageid', 'bj')
-        channelid = getvalue(message.author.id, 'channelid', 'bj')
         current = getvalue(int(message.author.id), currency, 'rsmoney')
         bet = getvalue(message.author.id, 'bet', 'bj')
         split = getvalue(message.author.id, 'split', 'bj')
-        sent = await message.guild.get_channel(channelid).get_message(messageid)
+        sent = await message.author.fetch_message(messageid)
         enough = True
         
         if message.content == 'dd':
@@ -1032,7 +1030,6 @@ async def on_message(message):
         playercards = getvalue(message.author.id, 'playercards', 'bj')
         current = getvalue(int(message.author.id), currency, 'rsmoney')
         messageid = getvalue(message.author.id, 'messageid', 'bj')
-        channelid = getvalue(message.author.id, 'channelid', 'bj')
         split = getvalue(message.author.id, 'split', 'bj')
         
         if split == 'None':
@@ -1043,7 +1040,7 @@ async def on_message(message):
                     c.execute("UPDATE bj SET playercards='{}' WHERE id={}".format(playercards.split('|')[0] + '|', message.author.id))
                     playercards = getvalue(message.author.id, 'playercards', 'bj')
                     scorebj(message.author.id, playercards, True)
-                    sent = await message.guild.get_channel(channelid).get_message(messageid)
+                    sent = await message.author.fetch_message(messageid)
                     await sent.edit(embed=printbj(message.author, False, 'Use `hit` to draw, `stand` to pass, or `dd` to double down.', 28))
                 else:
                     await message.channel.send("You don't have enough money to split!")
