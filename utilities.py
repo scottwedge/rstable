@@ -1,9 +1,9 @@
 from discord.utils import get
 import random
 
-def isstaff(checkedid,serverroles,authorroles):
+def isstaff(guildroles, authorroles):
 	for i in open("staff.txt"):
-		role=get(serverroles, name=str(i.strip()))
+		role=get(guildroles, name=str(i.strip()))
 		if role in authorroles:
 			return "verified"
 
