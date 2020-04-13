@@ -1595,7 +1595,7 @@ async def on_message(message):
         else:
             await message.channel.send('Admin Command Only!')
    #########################################
-   elif message.content.startswith('$cashin') or message.content.startswith('$cashout'):
+    elif message.content.startswith('$cashin') or message.content.startswith('$cashout'):
         if message.channel.id == 514298345993404416:
             try:
                 if len(message.content.split(' ')) == 2:
