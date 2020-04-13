@@ -528,9 +528,9 @@ async def on_message(message):
     elif message.content.startswith('$userinfo'):
         try:
             int(str(message.content[12:13]))
-            member = message.guild.get_member(message.content[12:30])
+            member = message.guild.get_member(int(message.content[12:30]))
         except:
-            member = message.guild.get_member(message.content[13:31])
+            member = message.guild.get_member(int(message.content[13:31]))
         
         roles = []
         
@@ -606,15 +606,15 @@ async def on_message(message):
         if message.content.startswith('$wallet <@'):
             try:
                 int(str(message.content[10:11]))
-                member = message.guild.get_member(message.content[10:28])
+                member = message.guild.get_member(int(message.content[10:28]))
             except:
-                member = message.guild.get_member(message.content[11:29])
+                member = message.guild.get_member(int(message.content[11:29]))
         else:
             try:
                 int(str(message.content[5:6]))
-                member = message.guild.get_member(message.content[5:23])
+                member = message.guild.get_member(int(message.content[5:23]))
             except:
-                member = message.guild.get_member(message.content[6:24])
+                member = message.guild.get_member(int(message.content[6:24]))
         
         if (getvalue(int(member.id), 'privacy', 'rsmoney') == False) or (isstaff(message.guild.roles, message.author.roles) == 'verified'):
             osrs = getvalue(int(member.id), '07', 'rsmoney')
@@ -648,9 +648,9 @@ async def on_message(message):
             if isstaff(message.guild.roles, message.author.roles) == 'verified':
                 try:
                     int(str(message.content).split(' ')[2][2:3])
-                    member = message.guild.get_member(str(message.content).split(' ')[2][2:-1])
+                    member = message.guild.get_member(int((message.content).split(' ')[2][2:-1]))
                 except:
-                    member = message.guild.get_member(str(message.content).split(' ')[2][3:-1])
+                    member = message.guild.get_member(int((message.content).split(' ')[2][3:-1]))
                 
                 if str(message.content).split(' ')[1] == '07':
                     currency = '07'
@@ -671,8 +671,8 @@ async def on_message(message):
         try:
             if isstaff(message.guild.roles, message.author.roles) == 'verified':
                 maximum = False
-                if str(message.content).split(' ')[2][(- 1):].lower() == 'b':
-                    if int(str(message.content).split(' ')[2][:(- 1)]) > 100:
+                if str(message.content).split(' ')[2][-1:].lower() == 'b':
+                    if int(str(message.content).split(' ')[2][:-1]) > 100:
                         await message.channel.send('You can only give up to 100b at one time for...reasons.')
                         maximum = True
                 
@@ -685,14 +685,14 @@ async def on_message(message):
                     
                     try:
                         int(str(message.content).split(' ')[1][2:3])
-                        member = message.guild.get_member(str(message.content).split(' ')[1][2:-1])
+                        member = message.guild.get_member(int((message.content).split(' ')[1][2:-1]))
                     except:
-                        member = message.guild.get_member(str(message.content).split(' ')[1][3:-1])
+                        member = message.guild.get_member(int((message.content).split(' ')[1][3:-1]))
                     
                     if message.content.startswith('$deposit'):
                         update_money(int(member.id), amount, currency)
                     elif message.content.startswith('$withdraw'):
-                        update_money(int(member.id), amount * (- 1), currency)
+                        update_money(int(member.id), amount * -1, currency)
                     
                     embed = discord.Embed(description=('<@' + str(member.id)) + ">'s wallet has been updated.", color=5174318)
                     embed.set_author(name='Update Request', icon_url=str(message.author.avatar_url))
@@ -757,9 +757,9 @@ async def on_message(message):
                 if current >= transfered:
                     try:
                         int(str(message.content).split(' ')[1][2:3])
-                        member = message.guild.get_member(str(message.content).split(' ')[1][2:-1])
+                        member = message.guild.get_member(int((message.content).split(' ')[1][2:-1]))
                     except:
-                        member = message.guild.get_member(str(message.content).split(' ')[1][3:-1])
+                        member = message.guild.get_member(int((message.content).split(' ')[1][3:-1]))
                     
                     if member.id == message.author.id:
                         await message.channel.send("You can't transfer money to yourself 😂")
@@ -809,7 +809,7 @@ async def on_message(message):
                         if roll in range(1, odds):
                             winnings = bet
                             words = 'Rolled **' + str(roll) + '** out of **100**. You lost **' + str(formatfromk(bet, currency)) + '** ' + str(currency) + '.'
-                            (sidecolor, gains, win) = (16718121, bet * (- 1), False)
+                            (sidecolor, gains, win) = (16718121, bet * -1, False)
                         else:
                             winnings = formatfromk(int(bet * multiplier), currency)
                             words = 'Rolled **' + str(roll) + '** out of **100**. You won **' + str(winnings) + '** ' + str(currency) + '.'
@@ -982,7 +982,7 @@ async def on_message(message):
         
         if message.content == 'dd':
             if current >= bet:
-                update_money(message.author.id, bet * (- 1), currency)
+                update_money(message.author.id, bet * -1, currency)
                 ticketbets(message.author.id, bet, currency)
                 bet = bet * 2
                 drawcard(message.author.id, True)
@@ -1158,9 +1158,9 @@ async def on_message(message):
             if isstaff(message.guild.roles, message.author.roles) == 'verified':
                 try:
                     int(str(message.content).split(' ')[1][2:3])
-                    member = message.guild.get_member(str(message.content).split(' ')[1][2:(- 1)])
+                    member = message.guild.get_member(int((message.content).split(' ')[1][2:-1]))
                 except:
-                    member = message.guild.get_member(str(message.content).split(' ')[1][3:(- 1)])
+                    member = message.guild.get_member(int((message.content).split(' ')[1][3:-1]))
                 
                 amount = int(message.content.split(' ')[3])
                 kind = message.content.split(' ')[2]
@@ -1183,9 +1183,9 @@ async def on_message(message):
             if (bronze in message.author.roles) or (silver in message.author.roles) or (gold in message.author.roles):
                 try:
                     int(str(message.content).split(' ')[1][2:3])
-                    member = message.guild.get_member(str(message.content).split(' ')[1][2:(- 1)])
+                    member = message.guild.get_member(int((message.content).split(' ')[1][2:-1]))
                 except:
-                    member = message.guild.get_member(str(message.content).split(' ')[1][3:(- 1)])
+                    member = message.guild.get_member(int((message.content).split(' ')[1][2:-1]))
                 
                 kind = str(message.content).split(' ')[2]
                 keyvalue = getvalue(message.author.id, kind, 'rsmoney')
@@ -1344,7 +1344,7 @@ async def on_message(message):
                         
                         if isenough(bet, game)[0]:
                             if current >= bet:
-                                update_money(message.author.id, bet * (- 1), game)
+                                update_money(message.author.id, bet * -1, game)
                                 c.execute('INSERT INTO roulette VALUES (%s, %s, %s, %s)', (message.author.id, bet, game, area))
                                 await message.add_reaction('✅')
                             else:
@@ -1384,9 +1384,9 @@ async def on_message(message):
             amount = int(message.content.split(' ')[2])
             try:
                 int(str(message.content).split(' ')[1][2:3])
-                member = message.guild.get_member(str(message.content).split(' ')[1][2:(- 1)])
+                member = message.guild.get_member(int((message.content).split(' ')[1][2:-1]))
             except:
-                member = message.guild.get_member(str(message.content).split(' ')[1][3:(- 1)])
+                member = message.guild.get_member(int((message.content).split(' ')[1][2:-1]))
             tickets = getvalue(int(member.id), 'tickets', 'rsmoney')
             c.execute('UPDATE rsmoney SET tickets={} WHERE id={}'.format(tickets + amount, member.id))
             await message.channel.send('Tickets updated.')
@@ -1461,7 +1461,7 @@ async def on_message(message):
             
             if isenough(bet, '07')[0]:
                 if current >= bet:
-                    update_money(message.author.id, bet * (- 1), '07')
+                    update_money(message.author.id, bet * -1, '07')
                     ticketbets(message.author.id, bet, '07')
                     c.execute('SELECT * FROM jackpot')
                     bets = c.fetchall()
@@ -1484,7 +1484,7 @@ async def on_message(message):
                     for i in bets:
                         chance = round((i[1] / total) * 100, 3)
                         c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), i[0]))
-                        embed.add_field(name=message.server.get_member(str(i[0])).name, value=((('Bet - *' + formatfromk(i[1], '07')) + '* | Chance of Winning - *') + str(chance)) + '%*', inline=False)
+                        embed.add_field(name=message.server.get_member(i[0]).name, value='Bet - *' + formatfromk(i[1], '07') + '* | Chance of Winning - *' + str(chance) + '%*', inline=False)
                     embed.set_author(name='Jackpot Bets', icon_url=str(message.guild.icon_url))
                     embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
                     await message.channel.send(embed=embed)
@@ -1651,7 +1651,7 @@ async def on_message(message):
                 currency = str(cash[3])
                 amount = int(cash[4])
                 if way == 'cashout':
-                    update_money(userid, amount * (- 1), currency)
+                    update_money(userid, amount * -1, currency)
                 embed = discord.Embed(description='<@' + userid + '>, <@' + str(message.author.id) + '> will perform your ' + way + '.', color=5174318)
                 embed.set_author(name=way.title(), icon_url=str(message.guild.icon_url))
                 await client.get_channel(514298345993404416).send(embed=embed)
