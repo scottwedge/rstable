@@ -358,8 +358,8 @@ async def my_background_task():
             c.execute('UPDATE data SET nonce=0')
             embed = discord.Embed(color=16724721)
             embed.set_author(name='Server Seed Updates')
-            embed.add_field(name="Yesterday's Server Seed Unhashed", value=serverseed, inline=True)
-            embed.add_field(name="Yesterday's Server Seed Hashed", value=hasher.hash(serverseed), inline=True)
+            embed.add_field(name="Yesterday's Server Seed Unhashed", value=guildseed, inline=True)
+            embed.add_field(name="Yesterday's Server Seed Hashed", value=hasher.hash(guildseed), inline=True)
             embed.add_field(name="Today's Server Seed Hashed", value=hasher.hash(newseed), inline=True)
             await channel.send(embed=embed)
         
@@ -555,8 +555,8 @@ async def on_message(message):
             if len(clientseed) > 20:
                 await message.channel.send('That client seed is too long. Please try a shorter one. (20 Character Limit)')
             else:
-                c.execute("UPDATE rsmoney SET clientseed='{}' WHERE id={}".format(str(clientseed), int(message.author.id)))
-                await message.channel.send(('Your client seed has been set to ' + message.content[9:]) + '.')
+                c.execute("UPDATE rsmoney SET clientseed='{}' WHERE id={}".format(str(clientseed), message.author.id))
+                await message.channel.send('Your client seed has been set to ' + message.content[9:] + '.')
         else:
             await message.channel.send('This command can only be used in <#656709120870580235> to prevent spam.')
     #########################################
@@ -939,7 +939,7 @@ async def on_message(message):
         currency = getvalue(message.author.id, 'currency', 'bj')
         bet = getvalue(message.author.id, 'bet', 'bj')
         split = getvalue(message.author.id, 'split', 'bj')
-        sent = await message.author.fetch_message(messageid)
+        sent = await message.channel.fetch_message(messageid)
         
         if playerscore > 21:
             if 'y' in split:
@@ -975,7 +975,7 @@ async def on_message(message):
         current = getvalue(int(message.author.id), currency, 'rsmoney')
         bet = getvalue(message.author.id, 'bet', 'bj')
         split = getvalue(message.author.id, 'split', 'bj')
-        sent = await message.author.fetch_message(messageid)
+        sent = await message.channel.fetch_message(messageid)
         enough = True
         
         if message.content == 'dd':
@@ -1040,7 +1040,7 @@ async def on_message(message):
                     c.execute("UPDATE bj SET playercards='{}' WHERE id={}".format(playercards.split('|')[0] + '|', message.author.id))
                     playercards = getvalue(message.author.id, 'playercards', 'bj')
                     scorebj(message.author.id, playercards, True)
-                    sent = await message.author.fetch_message(messageid)
+                    sent = await message.channel.fetch_message(messageid)
                     await sent.edit(embed=printbj(message.author, False, 'Use `hit` to draw, `stand` to pass, or `dd` to double down.', 28))
                 else:
                     await message.channel.send("You don't have enough money to split!")
@@ -1182,7 +1182,7 @@ async def on_message(message):
                     int(str(message.content).split(' ')[1][2:3])
                     member = message.guild.get_member(int((message.content).split(' ')[1][2:-1]))
                 except:
-                    member = message.guild.get_member(int((message.content).split(' ')[1][2:-1]))
+                    member = message.guild.get_member(int((message.content).split(' ')[1][3:-1]))
                 
                 kind = str(message.content).split(' ')[2]
                 keyvalue = getvalue(message.author.id, kind, 'rsmoney')
@@ -1383,7 +1383,7 @@ async def on_message(message):
                 int(str(message.content).split(' ')[1][2:3])
                 member = message.guild.get_member(int((message.content).split(' ')[1][2:-1]))
             except:
-                member = message.guild.get_member(int((message.content).split(' ')[1][2:-1]))
+                member = message.guild.get_member(int((message.content).split(' ')[1][3:-1]))
             tickets = getvalue(int(member.id), 'tickets', 'rsmoney')
             c.execute('UPDATE rsmoney SET tickets={} WHERE id={}'.format(tickets + amount, member.id))
             await message.channel.send('Tickets updated.')
