@@ -491,7 +491,7 @@ async def on_message(message):
         if message.author.id != 580511336598077511:
             await message.delete()
             embed = discord.Embed(description=str(message.content).title(), color=15925108)
-            embed.set_author(name='Suggestion From ' + str(message.author)[:(- 5)], icon_url=str(message.server.icon_url))
+            embed.set_author(name='Suggestion From ' + str(message.author)[:(- 5)], icon_url=str(message.guild.icon_url))
             embed.set_footer(text='Suggested On:' + str(datetime.datetime.now())[:(- 7)])
             embed.set_footer(text='👍 = Like | 👎 = Dislike')
             sent = await message.channel.send(embed=embed)
@@ -518,7 +518,7 @@ async def on_message(message):
     elif message.content.startswith('$poll'):
         message.content = message.content.title()
         embed = discord.Embed(description='Respond below with 👍 for YES, 👎 for NO, or 🤔 for UNSURE/NEUTRAL', color=16724721)
-        embed.set_author(name=str(message.content[6:]), icon_url=str(message.server.icon_url))
+        embed.set_author(name=str(message.content[6:]), icon_url=str(message.guild.icon_url))
         embed.set_footer(text='Polled on: ' + str(datetime.datetime.now())[:(- 7)])
         sent = await message.channel.send(embed=embed)
         await sent.add_reaction('👍')
@@ -721,7 +721,7 @@ async def on_message(message):
                 misccmds.append(i.split('|')[0] + '\n')
         
         embed = discord.Embed(description='Use `$help (COMMAND NAME)` for a description of what that command does.\n*Example: $help $wallet*', color=16771099)
-        embed.set_author(name='Bot Commands', icon_url=str(message.server.icon_url))
+        embed.set_author(name='Bot Commands', icon_url=str(message.guild.icon_url))
         embed.add_field(name='Wallet Commands', value=''.join(walletcmds), inline=True)
         embed.add_field(name='Wager Commands', value=''.join(wagercmds), inline=True)
         embed.add_field(name='Mystery Box Commands', value=''.join(keycmds), inline=True)
@@ -738,7 +738,7 @@ async def on_message(message):
                     description = ((i.strip('\n').split('|')[2] + '\n\nUsage: `') + i.split('|')[1]) + '`'
                     break
             embed = discord.Embed(description='This command ' + str(description), color=16771099)
-            embed.set_author(name='Command Explanation', icon_url=str(message.server.icon_url))
+            embed.set_author(name='Command Explanation', icon_url=str(message.guild.icon_url))
             await message.channel.send(embed=embed)
         except:
             await message.channel.send('That command could not be found, use `$commands` or `$cmds` for a list of commands.')
@@ -871,7 +871,7 @@ async def on_message(message):
             c.execute('UPDATE rsmoney SET rs3week=0')
             c.execute('UPDATE rsmoney SET osrsweek=0')
             embed = discord.Embed(description='All weekly bets have been reset.', color=5174318)
-            embed.set_author(name='Weekly Bets Reset', icon_url=str(message.server.icon_url))
+            embed.set_author(name='Weekly Bets Reset', icon_url=str(message.guild.icon_url))
             await message.channel.send(embed=embed)
         else:
             await message.channel.send('Admin Command Only!')
@@ -1303,7 +1303,7 @@ async def on_message(message):
                     words += str(counter + 1) + '. <@' + str(userid) + '> - **' + total + '**\n\n'
                 
                 embed = discord.Embed(color=557823, description=words)
-                embed.set_author(name=('Top ' + game.upper()) + ' Wagers', icon_url=str(message.server.icon_url))
+                embed.set_author(name=('Top ' + game.upper()) + ' Wagers', icon_url=str(message.guild.icon_url))
                 await message.channel.send(embed=embed)
             else:
                 None
@@ -1317,7 +1317,7 @@ async def on_message(message):
             else:
                 roulette = 40
                 embed = discord.Embed(description='A game of roulette has started! Use `bet (1st/2nd/3rd, 0-36, High/Low, Black/Red/Green, or Odd/Even) (Amount) (rs3 or 07)` to place a bet on the wheel.', color=3800857)
-                embed.set_author(name='Roulette Game', icon_url=str(message.server.icon_url))
+                embed.set_author(name='Roulette Game', icon_url=str(message.guild.icon_url))
                 embed.add_field(name='Time Left', value='**40** Seconds', inline=True)
                 gif = random.choice(['https://cdn.discordapp.com/attachments/580436923756314624/687833813358870553/ezgif.com-resize.gif', 'https://cdn.discordapp.com/attachments/580436923756314624/614584556065914880/SenranKatsuragi.gif', 'https://cdn.discordapp.com/attachments/580436923756314624/611625448094302218/RStablegamesTRADEMARK.gif', 'https://cdn.discordapp.com/attachments/580436923756314624/687711049864183816/wheelgirl2.2.gif', 'https://cdn.discordapp.com/attachments/580436923756314624/687686305622130748/WheelGirl2.0.gif'])
                 embed.set_image(url=gif)
@@ -1374,7 +1374,7 @@ async def on_message(message):
             c.execute('UPDATE rsmoney SET tickets=0')
             
             embed = discord.Embed(description=('<@' + str(winner)) + '> has won the raffle!', color=16729241)
-            embed.set_author(name='Raffle Winner', icon_url=str(message.server.icon_url))
+            embed.set_author(name='Raffle Winner', icon_url=str(message.guild.icon_url))
             await message.channel.send(embed=embed)
         else:
             await message.channel.send('Admin Command Only!')
@@ -1439,7 +1439,7 @@ async def on_message(message):
             await message.channel.send(embed=embed)
         else:
             embed = discord.Embed(description='Not so fast there, Amigo!\n\n**Start your subscription today at\nhttps://patreon.com/evilbob**', color=7995152)
-            embed.set_author(name='Subscribe for Weekly Keys', icon_url=str(message.server.icon_url))
+            embed.set_author(name='Subscribe for Weekly Keys', icon_url=str(message.guild.icon_url))
             embed.set_image(url='https://cdn.discordapp.com/attachments/580436923756314624/671919480271667200/Screen_Shot_2020-01-28_at_10.10.57_PM.png')
             embed.set_footer(text='Bronze, Silver, and Gold Subscriptions Available')
             await message.channel.send(embed=embed)
@@ -1485,7 +1485,7 @@ async def on_message(message):
                         chance = round((i[1] / total) * 100, 3)
                         c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), i[0]))
                         embed.add_field(name=message.server.get_member(str(i[0])).name, value=((('Bet - *' + formatfromk(i[1], '07')) + '* | Chance of Winning - *') + str(chance)) + '%*', inline=False)
-                    embed.set_author(name='Jackpot Bets', icon_url=str(message.server.icon_url))
+                    embed.set_author(name='Jackpot Bets', icon_url=str(message.guild.icon_url))
                     embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
                     await message.channel.send(embed=embed)
                     
@@ -1578,7 +1578,7 @@ async def on_message(message):
             words += str(counter + 1) + '. <@' + str(userid) + '> - **XP: ' + str(xp) + '**\n\n'
         
         embed = discord.Embed(color=557823, description=words)
-        embed.set_author(name='Top Levels and XP', icon_url=str(message.server.icon_url))
+        embed.set_author(name='Top Levels and XP', icon_url=str(message.guild.icon_url))
         await message.channel.send(embed=embed)
     #########################################
     elif message.content.startswith('$purge'):
@@ -1626,7 +1626,7 @@ async def on_message(message):
                     c.execute('INSERT INTO cash VALUES (%s, %s, %s, %s, %s)', (message.author.id, way, code, game, amount))
                     await client.get_channel(617795929570803723).send('<@&512370598459080724>, <@' + str(message.author.id) + '> wants to ' + way + ' **' + formatfromk(amount, game) + '** ' + game + '. Use `$accept ' + str(code) + '`.')
                     embed = discord.Embed(description='A message has been sent to a cashier. Your request will be processed and you will be messaged soon.', color=5174318)
-                    embed.set_author(name=way.title(), icon_url=str(message.server.icon_url))
+                    embed.set_author(name=way.title(), icon_url=str(message.guild.icon_url))
                     await message.channel.send(embed=embed)
                 else:
                     await message.channel.send(('<@' + str(message.author.id)) + ">, You don't have that much money to cashout!")
@@ -1653,7 +1653,7 @@ async def on_message(message):
                 if way == 'cashout':
                     update_money(userid, amount * (- 1), currency)
                 embed = discord.Embed(description='<@' + userid + '>, <@' + str(message.author.id) + '> will perform your ' + way + '.', color=5174318)
-                embed.set_author(name=way.title(), icon_url=str(message.server.icon_url))
+                embed.set_author(name=way.title(), icon_url=str(message.guild.icon_url))
                 await client.get_channel(514298345993404416).send(embed=embed)
                 await message.channel.send('Accepted. Please DM them now.')
                 c.execute('DELETE FROM cash where code={}'.format(code))
