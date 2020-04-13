@@ -206,11 +206,11 @@ def printbj(user, stood, description, color):
                   emojiCards += ("<:"+str(i)+":"+str(emojid)+">")
         return emojiCards
 
-    botscore = getvalue(user.id, 'botscore', 'bj')
-    playerscore = getvalue(user.id, 'playerscore', 'bj')
     botcards = getvalue(user.id, 'botcards', 'bj')
     playercards = getvalue(user.id, 'playercards', 'bj')
     split = getvalue(user.id, 'split', 'bj')
+    botscore = scorebj(user.id, botcards, False)
+    playerscore = scorebj(user.id, playercards, True)
     splitscore = scorebj(user.id, split[1:], 'Split') if split != 'None' else None
     embed = discord.Embed(description=description, color=color)
     
@@ -456,6 +456,7 @@ async def my_background_task():
                 embed.set_author(name='Roulette Game', icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
                 embed.add_field(name='Time Left', value=('**' + str(roulette)) + '** Seconds', inline=True)
                 embed.set_image(url=gif)
+                print("cannot edit")
                 await roulettemsg.edit(embed=embed)
                 roulette -= 10
             else:
