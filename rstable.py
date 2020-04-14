@@ -432,7 +432,7 @@ async def my_background_task():
                 
                 embed.set_author(name='Roulette Results', icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
                 embed.set_image(url=random.choice(['https://bit.ly/3aUQk2J', 'https://bit.ly/2Wb3wwc']))
-                channel = discord.Object(id=621787403778129934)
+                channel = client.get_channel(621787403778129934)
                 await channel.send(embed=embed)
                 
                 if winnerids == '':
@@ -1581,6 +1581,9 @@ async def on_message(message):
         if isstaff(message.guild.roles, message.author.roles) == 'verified':
             purged = int(message.content.split(' ')[1]) + 1
             await message.channel.purge(limit=purged)
+            sent = await message.channel.send('Successfully deleted **' + str(purged - 1) + '** messages.')
+            asyncio.sleep(2)
+            await sent.delete()
         else:
             await message.channel.send('Admin Command Only!')
     #########################################
