@@ -335,14 +335,15 @@ gif = ''
 override = 100
 
 async def my_background_task():
+    global roulette, participants, winner, roulettemsg, gif, nextgiveaway, override
     await client.wait_until_ready()
     while not client.is_closed():
-        global roulette, participants, winner, roulettemsg, gif, nextgiveaway, override
+        print(roulette)
         channel = discord.Object(id=617076198740328459)
         c.execute('SELECT seedreset FROM data')
         lastdate = str(c.fetchone()[0])
         today = str(time.gmtime()[2])
-        
+
         if today != lastdate:
             if datetime.datetime.today().weekday() == 0:
                 c.execute('UPDATE rsmoney SET rs3week=0')
