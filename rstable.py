@@ -455,7 +455,6 @@ async def my_background_task():
                 embed.set_author(name='Roulette Game', icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
                 embed.add_field(name='Time Left', value=('**' + str(roulette)) + '** Seconds', inline=True)
                 embed.set_image(url=gif)
-                print(roulettemsg)
                 await roulettemsg.edit(embed=embed)
                 roulette -= 10
             else:
@@ -1583,7 +1582,7 @@ async def on_message(message):
             purged = int(message.content.split(' ')[1]) + 1
             await message.channel.purge(limit=purged)
             sent = await message.channel.send('Successfully deleted **' + str(purged - 1) + '** messages.')
-            asyncio.sleep(2)
+            asyncio.sleep(3)
             await sent.delete()
         else:
             await message.channel.send('Admin Command Only!')
