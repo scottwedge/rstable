@@ -336,16 +336,14 @@ override = 100
 
 async def my_background_task():
     await client.wait_until_ready()
-    while not client.is_closed:
+    while not client.is_closed():
         global roulette, participants, winner, roulettemsg, gif, nextgiveaway, override
-        print(roulette)
         channel = discord.Object(id=617076198740328459)
         c.execute('SELECT seedreset FROM data')
         lastdate = str(c.fetchone()[0])
         today = str(time.gmtime()[2])
         
         if today != lastdate:
-
             if datetime.datetime.today().weekday() == 0:
                 c.execute('UPDATE rsmoney SET rs3week=0')
                 c.execute('UPDATE rsmoney SET osrsweek=0')
@@ -365,7 +363,6 @@ async def my_background_task():
             await channel.send(embed=embed)
         
         else:
-            print('yo')
             if roulette < 1:
                 if override != 100:
                     roll = override
@@ -458,7 +455,6 @@ async def my_background_task():
                 embed.set_author(name='Roulette Game', icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
                 embed.add_field(name='Time Left', value=('**' + str(roulette)) + '** Seconds', inline=True)
                 embed.set_image(url=gif)
-                print("cannot edit")
                 await roulettemsg.edit(embed=embed)
                 roulette -= 10
             else:
