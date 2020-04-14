@@ -330,7 +330,7 @@ colors = ['A', 'B', 'C', 'D', 'E', 'F', '0', '1', '2', '3', '4', '5', '6', '7', 
 nextgiveaway = 0
 participants = []
 roulette = 41
-roulettemsg = 0
+roulettemsg = None
 gif = ''
 override = 100
 
@@ -455,6 +455,7 @@ async def my_background_task():
                 embed.set_author(name='Roulette Game', icon_url='https://images-ext-2.discordapp.net/external/ZHvyT2JKvVpfLsN1_RdcnocCsnFjJylZom7aoOFUTD8/https/cdn.discordapp.com/icons/512158131674152973/567873fba79be608443232aae21dbb7c.jpg')
                 embed.add_field(name='Time Left', value=('**' + str(roulette)) + '** Seconds', inline=True)
                 embed.set_image(url=gif)
+                print(roulettemsg)
                 await roulettemsg.edit(embed=embed)
                 roulette -= 10
             else:
