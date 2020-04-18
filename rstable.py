@@ -1664,8 +1664,9 @@ async def on_message(message):
 
     elif message.content == ('$create'):
         category = (client.get_channel(609484060649193514)).category
-        newChannel = await message.guild.create_text_channel('ongoing events', category=category)
-        await category.set_permissions(message.author, read_messages=True, send_messages=True, read_message_history=True, manage_channel=True, manage_permissions=True, manage_messages=True)
+        old = client.get_channel(700880644561043536)
+        await old.delete()
+        await category.set_permissions(message.author, send_messages=True, read_message_history=True, manage_channel=True, manage_permissions=True, manage_messages=True)
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
