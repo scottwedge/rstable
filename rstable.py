@@ -1662,10 +1662,6 @@ async def on_message(message):
         else:
             None
 
-    elif message.content == ('$create'):
-        role = message.guild.get_role(585128010907254795)
-        await role.edit(permissions = discord.Permissions.none())
-
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
 client.run(str(Bot_Token))

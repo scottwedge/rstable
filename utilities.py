@@ -7,7 +7,7 @@ def isstaff(guildroles, authorroles):
 		if role in authorroles:
 			return "verified"
 
-def formatok(amount, currency):
+def formatok(amount):
 	#takes amount as string from message.content
 	#returns an integer in K
 	#amount=str(amount)
@@ -23,7 +23,7 @@ def formatok(amount, currency):
 	except:
 		return
 
-def formatfromk(amount, currency):
+def formatfromk(amount):
 	#takes amount as integer in K
 	#returns a string to be printed
 
