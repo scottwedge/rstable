@@ -254,16 +254,16 @@ def bjresult(user, bet, currency, botscore, playerscore, playercards):
     if playerscore > 21:
         embed = printbj(user, True, 'Sorry. You busted and lost.', 16711718)
     elif botscore > 21:
-        embed = printbj(user, True, ('Dealer Busts. You win **' + formatfromk(bet * 2, currency)) + '**!', 3407616)
+        embed = printbj(user, True, ('Dealer Busts. You win **' + formatfromk(bet * 2)) + '**!', 3407616)
         update_money(user.id, bet * 2, currency)
     elif (playerscore == 21) and (playercards.count('a') == 1) and ((playercards.count('10') == 1) or (playercards.count('j') == 1) or (playercards.count('q') == 1) or (playercards.count('k') == 1)):
-        embed = printbj(user, True, ('You got a blackjack! You win **' + formatfromk(bet * 2, currency)) + '**!', 3407616)
+        embed = printbj(user, True, ('You got a blackjack! You win **' + formatfromk(bet * 2)) + '**!', 3407616)
         update_money(user.id, bet * 2, currency)
     elif botscore == playerscore:
         embed = printbj(user, True, 'Tie! Money Back.', 16776960)
         update_money(user.id, bet, currency)
     elif playerscore > botscore:
-        embed = printbj(user, True, ("Your score is higher than the dealer's. You win **" + formatfromk(bet * 2, currency)) + '**!', 3407616)
+        embed = printbj(user, True, ("Your score is higher than the dealer's. You win **" + formatfromk(bet * 2)) + '**!', 3407616)
         update_money(user.id, bet * 2, currency)
     elif botscore > playerscore:
         embed = printbj(user, True, "The dealer's score is higher than yours. You lose.", 16711718)
@@ -317,7 +317,7 @@ def endjackpot():
                     bet integer,
                     chance real
                     )""")
-    embed = discord.Embed(description='<@' + str(winner[0]) + '> has won **' + formatfromk(int(total - (total * 0.05)), '07') + '** from the jackpot with a chance of **' + str(winner[2]) + '%**!', color=5056466)
+    embed = discord.Embed(description='<@' + str(winner[0]) + '> has won **' + formatfromk(int(total - (total * 0.05))) + '** from the jackpot with a chance of **' + str(winner[2]) + '%**!', color=5056466)
     embed.set_footer(text="Use '$add (amount)' to start a new jackpot game")
     embed.set_author(name='Jackpot Winner')
     return embed
@@ -381,7 +381,7 @@ async def my_background_task():
                     elif i[3].isdigit():
                         if int(i[3]) == roll:
                             update_money(int(i[0]), int(i[1]) * 36, str(i[2]))
-                            winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*36), str(i[2]))+"__ (Bet "+i[3]+" **Payout x36**)\n")
+                            winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*36))+"__ (Bet "+i[3]+" **Payout x36**)\n")
                     elif i[3] == 'even':
                         if ((roll % 2) == 0) and (roll != 0):
                             win = True
@@ -391,7 +391,7 @@ async def my_background_task():
                     elif i[3] == 'green':
                         if (roll == 0) or (roll == 37):
                             update_money(int(i[0]), int(i[1]) * 15, str(i[2]))
-                            winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*15), str(i[2]))+"__ (Bet "+i[3].title()+" **Payout x15**)\n")
+                            winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*15))+"__ (Bet "+i[3].title()+" **Payout x15**)\n")
                     elif i[3] == 'black':
                         if roll in [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]:
                             win = True
@@ -407,18 +407,18 @@ async def my_background_task():
                     elif i[3] == '1st':
                         if 13 > roll > 0:
                             update_money(int(i[0]), int(i[1]) * 3, str(i[2]))
-                            winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*3), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
+                            winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*3))+"__ (Bet "+i[3]+" **Payout x3**)\n")
                     elif i[3] == '2nd':
                         if 25 > roll > 12:
                             update_money(int(i[0]), int(i[1]) * 3, str(i[2]))
-                            winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*3), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
+                            winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*3))+"__ (Bet "+i[3]+" **Payout x3**)\n")
                     elif i[3] == '3rd':
                         if 37 > roll > 24:
                             update_money(int(i[0]), int(i[1]) * 3, str(i[2]))
-                            winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*3), str(i[2]))+"__ (Bet "+i[3]+" **Payout x3**)\n")
+                            winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*3))+"__ (Bet "+i[3]+" **Payout x3**)\n")
                     if win:
                         update_money(int(i[0]), int(i[1]) * 2, str(i[2]))
-                        winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*2), str(i[2]))+"__ (Bet "+(i[3]).title()+" **Payout x2**)\n")
+                        winnerids += ("<@"+str((i[0]))+"> __Won "+formatfromk(int(i[1]*2))+"__ (Bet "+(i[3]).title()+" **Payout x2**)\n")
                 
                 if roll == 37:
                     roll = '00'
@@ -579,8 +579,8 @@ async def on_message(message):
             sidecolor = 2490163
         else:
             sidecolor = 12249599
-        osrs = formatfromk(osrs, 'osrs')
-        rs3 = formatfromk(rs3, 'rs3')
+        osrs = formatfromk(osrs)
+        rs3 = formatfromk(rs3)
         if rs3 == '0k':
             rs3 = '0 k'
         if osrs == '0k':
@@ -593,7 +593,7 @@ async def on_message(message):
         c.execute('SELECT * FROM jackpot')
         bets = c.fetchall()
         total = sum((x[1] for x in bets))
-        embed.set_footer(text=('Checkout our Jackpot game, the current pot is up to ' + formatfromk(total, '07')) + '!')
+        embed.set_footer(text=('Checkout our Jackpot game, the current pot is up to ' + formatfromk(total)) + '!')
         if getvalue(int(message.author.id), 'privacy', 'rsmoney') == True:
             await message.channel.send(embed=embed)
         else:
@@ -626,8 +626,8 @@ async def on_message(message):
                 sidecolor = 2490163
             else:
                 sidecolor = 12249599
-            osrs = formatfromk(osrs, 'osrs')
-            rs3 = formatfromk(rs3, 'rs3')
+            osrs = formatfromk(osrs)
+            rs3 = formatfromk(rs3)
             if rs3 == '0k':
                 rs3 = '0 k'
             if osrs == '0k':
@@ -680,7 +680,7 @@ async def on_message(message):
                         currency = '07'
                     else:
                         currency = message.content.split(' ')[3]
-                    amount = formatok(str(message.content).split(' ')[2], currency)
+                    amount = formatok(str(message.content).split(' ')[2])
                     
                     try:
                         int(str(message.content).split(' ')[1][2:3])
@@ -749,7 +749,7 @@ async def on_message(message):
             else:
                 currency = message.content.split(' ')[3]
             
-            transfered = formatok(message.content.split(' ')[2], currency)
+            transfered = formatok(message.content.split(' ')[2])
             current = getvalue(int(message.author.id), currency, 'rsmoney')
             
             if transfered > 1:
@@ -772,7 +772,7 @@ async def on_message(message):
                             c.execute('UPDATE rsmoney SET osrs={} WHERE id={}'.format(current - transfered, message.author.id))
                             c.execute('UPDATE rsmoney SET osrs={} WHERE id={}'.format(taker + transfered, member.id))
                         
-                        embed = discord.Embed(description='<@' + str(message.author.id) + '> has transfered ' + str(formatfromk(transfered, currency)) + ' ' + currency + ' to <@' + str(member.id) + ">'s wallet.", color=5174318)
+                        embed = discord.Embed(description='<@' + str(message.author.id) + '> has transfered ' + str(formatfromk(transfered)) + ' ' + currency + ' to <@' + str(member.id) + ">'s wallet.", color=5174318)
                         embed.set_author(name='Transfer Request', icon_url=str(message.author.avatar_url))
                         await message.channel.send(embed=embed)
                 else:
@@ -789,7 +789,7 @@ async def on_message(message):
                     currency = '07'
                 else:
                     currency = str(message.content).split(' ')[2]
-                bet = formatok(str(message.content).split(' ')[1], currency)
+                bet = formatok(str(message.content).split(' ')[1])
                 current = getvalue(message.author.id, currency, 'rsmoney')
                 
                 if isenough(bet, currency)[0]:
@@ -807,12 +807,12 @@ async def on_message(message):
                         
                         if roll in range(1, odds):
                             winnings = bet
-                            words = 'Rolled **' + str(roll) + '** out of **100**. You lost **' + str(formatfromk(bet, currency)) + '** ' + str(currency) + '.'
+                            words = 'Rolled **' + str(roll) + '** out of **100**. You lost **' + formatfromk(bet) + '** ' + str(currency) + '.'
                             (sidecolor, gains, win) = (16718121, bet * -1, False)
                         else:
-                            winnings = formatfromk(int(bet * multiplier), currency)
+                            winnings = formatfromk(int(bet * multiplier))
                             words = 'Rolled **' + str(roll) + '** out of **100**. You won **' + str(winnings) + '** ' + str(currency) + '.'
-                            winnings = formatok(winnings, currency)
+                            winnings = formatok(winnings)
                             (sidecolor, gains, win) = (3997475, (bet * multiplier) - bet, True)
                         
                         update_money(int(message.author.id), gains, currency)
@@ -839,8 +839,8 @@ async def on_message(message):
         rs3total = getvalue(message.author.id, 'rs3total', 'rsmoney')
         osrstotal = getvalue(message.author.id, 'osrstotal', 'rsmoney')
         
-        osrs = formatfromk(osrstotal, 'osrs')
-        rs3 = formatfromk(rs3total, 'rs3')
+        osrs = formatfromk(osrstotal)
+        rs3 = formatfromk(rs3total)
         
         embed = discord.Embed(color=16766463)
         embed.set_author(name=str(message.author)[:(- 5)] + "'s Total Bets", icon_url=str(message.author.avatar_url))
@@ -849,15 +849,15 @@ async def on_message(message):
         c.execute('SELECT * FROM jackpot')
         bets = c.fetchall()
         total = sum((x[1] for x in bets))
-        embed.set_footer(text=('Checkout our Jackpot game, the current pot is up to ' + formatfromk(total, '07')) + '!')
+        embed.set_footer(text='Checkout our Jackpot game, the current pot is up to ' + formatfromk(total) + '!')
         await message.channel.send(embed=embed)
     #########################################
     elif message.content == '$thisweek':
         rs3week = getvalue(message.author.id, 'rs3week', 'rsmoney')
         osrsweek = getvalue(message.author.id, 'osrsweek', 'rsmoney')
         
-        osrs = formatfromk(osrsweek, 'osrs')
-        rs3 = formatfromk(rs3week, 'rs3')
+        osrs = formatfromk(osrsweek)
+        rs3 = formatfromk(rs3week)
         
         embed = discord.Embed(color=16766463)
         embed.set_author(name=str(message.author)[:(- 5)] + "'s Weekly Bets", icon_url=str(message.author.avatar_url))
@@ -896,7 +896,7 @@ async def on_message(message):
                 else:
                     currency = message.content.split(' ')[2]
                 
-                bet = formatok(message.content.split(' ')[1], currency)
+                bet = formatok(message.content.split(' ')[1])
                 current = getvalue(int(message.author.id), currency, 'rsmoney')
                 
                 if isenough(bet, currency)[0]:
@@ -1061,7 +1061,7 @@ async def on_message(message):
         c.execute('SELECT * FROM jackpot')
         bets = c.fetchall()
         total = sum((x[1] for x in bets))
-        embed.set_footer(text=('Checkout our Jackpot game, the current pot is up to ' + formatfromk(total, '07')) + '!')
+        embed.set_footer(text='Checkout our Jackpot game, the current pot is up to ' + formatfromk(total) + '!')
         await message.channel.send(embed=embed)
     #########################################
     elif message.content.startswith('$buykey'):
@@ -1138,7 +1138,7 @@ async def on_message(message):
                     update_money(message.author.id, int(price), '07')
                     
                     embed = discord.Embed(description=('You recieved item: **' + str(item)) + '**!', color=sidecolor)
-                    embed.add_field(name='Price', value=('*' + formatfromk(int(price), '07')) + '*', inline=True)
+                    embed.add_field(name='Price', value=('*' + formatfromk(int(price))) + '*', inline=True)
                     embed.set_author(name=kind.title() + ' Key Prize', icon_url=str(message.author.avatar_url))
                     embed.set_thumbnail(url=str(url))
                     await message.channel.send(embed=embed)
@@ -1206,7 +1206,7 @@ async def on_message(message):
                     update_money(member.id, int(price), '07')
                     
                     embed = discord.Embed(description='You gifted a ' + kind + ' prize to <@' + str(member.id) + '> and they won item: **' + str(item) + '**!', color=16756991)
-                    embed.add_field(name='Price', value=('*' + formatfromk(int(price), '07')) + '*', inline=True)
+                    embed.add_field(name='Price', value='*' + formatfromk(int(price)) + '*', inline=True)
                     embed.set_author(name=kind.title() + ' Key Prize - Gift', icon_url=str(member.avatar_url))
                     embed.set_thumbnail(url=str(url))
                     await message.channel.send(embed=embed)
@@ -1224,7 +1224,7 @@ async def on_message(message):
                     game = '07'
                 else:
                     game = message.content.split(' ')[2]
-                bet = formatok(str(message.content).split(' ')[1], game)
+                bet = formatok(str(message.content).split(' ')[1])
                 current = getvalue(message.author.id, game, 'rsmoney')
                 ticketbets(message.author.id, bet, game)
                 
@@ -1249,10 +1249,10 @@ async def on_message(message):
                             embed = discord.Embed(description='Tie! 10% commission taken.', color=16776960)
                             update_money(message.author.id, bet * -0.1, game)
                         elif scorefp(playerflowers)[0] > scorefp(botflowers)[0]:
-                            embed = discord.Embed(description=('Congratulations! You won **' + formatfromk(bet * 2, game)) + '**!', color=3997475)
+                            embed = discord.Embed(description=('Congratulations! You won **' + formatfromk(bet * 2)) + '**!', color=3997475)
                             update_money(message.author.id, bet, game)
                         elif scorefp(playerflowers)[0] < scorefp(botflowers)[0]:
-                            embed = discord.Embed(description=('House wins. You lost ' + formatfromk(bet, game)) + '.', color=16718121)
+                            embed = discord.Embed(description=('House wins. You lost ' + formatfromk(bet)) + '.', color=16718121)
                             update_money(message.author.id, bet * -1, game)
                         
                         embed.add_field(name='Player Hand', value=(pprint + '\nResult: ') + scorefp(playerflowers)[1], inline=True)
@@ -1295,7 +1295,7 @@ async def on_message(message):
                 for (counter, i) in enumerate(top):
                     userid = i[0]
                     total = i[number]
-                    total = formatfromk(int(total), game)
+                    total = formatfromk(int(total))
                     words += str(counter + 1) + '. <@' + str(userid) + '> - **' + total + '**\n\n'
                 
                 embed = discord.Embed(color=557823, description=words)
@@ -1330,7 +1330,7 @@ async def on_message(message):
                         game = '07'
                     else:
                         game = message.content.split(' ')[3]
-                    bet = formatok(str(message.content).split(' ')[2], game)
+                    bet = formatok(str(message.content).split(' ')[2])
                     area = str(message.content).split(' ')[1]
                     if area not in areas:
                         await message.channel.send('You can only bet on `1st/2nd/3rd`, `0-36`, `High/Low`, `Black/Red/Green`, and `Odd/Even`')
@@ -1442,15 +1442,15 @@ async def on_message(message):
     #########################################
     elif message.content.startswith('$jackpot'):
         if isstaff(message.guild.roles, message.author.roles) == 'verified':
-            rollamount = formatok(message.content.split(' ')[1], '07')
+            rollamount = formatok(message.content.split(' ')[1])
             c.execute('UPDATE data SET jackpotroll={}'.format(rollamount))
-            await message.channel.send(('The jackpot will now end once the pot reaches **' + formatfromk(rollamount, '07')) + '**.')
+            await message.channel.send('The jackpot will now end once the pot reaches **' + formatfromk(rollamount) + '**.')
         else:
             await message.channel.send('Only admins can change the amount at which a jackpot will end. Please tag one if necessary.')
     #########################################
     elif message.content.startswith('$add'):
         if message.channel.id == 658489832284094469:
-            bet = formatok(str(message.content).split(' ')[1], '07')
+            bet = formatok(str(message.content).split(' ')[1])
             current = getvalue(message.author.id, '07', 'rsmoney')
             c.execute('SELECT jackpotroll FROM data')
             rollamount = int(c.fetchone()[0])
@@ -1475,12 +1475,12 @@ async def on_message(message):
                     c.execute('SELECT * FROM jackpot')
                     bets = c.fetchall()
                     total = sum((x[1] for x in bets))
-                    embed = discord.Embed(description=((('Jackpot Value: **' + formatfromk(total, '07')) + '**\n*This jackpot will end once the pot reaches: **') + formatfromk(rollamount, '07')) + '***\n\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
+                    embed = discord.Embed(description=((('Jackpot Value: **' + formatfromk(total)) + '**\n*This jackpot will end once the pot reaches: **') + formatfromk(rollamount)) + '***\n\nUse `$add (amount in 07)` to contribute to the jackpot.', color=5056466)
                     
                     for i in bets:
                         chance = round((i[1] / total) * 100, 3)
                         c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), i[0]))
-                        embed.add_field(name=message.server.get_member(i[0]).name, value='Bet - *' + formatfromk(i[1], '07') + '* | Chance of Winning - *' + str(chance) + '%*', inline=False)
+                        embed.add_field(name=message.server.get_member(i[0]).name, value='Bet - *' + formatfromk(i[1]) + '* | Chance of Winning - *' + str(chance) + '%*', inline=False)
                     embed.set_author(name='Jackpot Bets', icon_url=str(message.guild.icon_url))
                     embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
                     await message.channel.send(embed=embed)
@@ -1581,8 +1581,9 @@ async def on_message(message):
         if isstaff(message.guild.roles, message.author.roles) == 'verified':
             purged = int(message.content.split(' ')[1]) + 1
             await message.channel.purge(limit=purged)
+            asyncio.sleep(1)
             sent = await message.channel.send('Successfully deleted **' + str(purged - 1) + '** messages.')
-            asyncio.sleep(3)
+            asyncio.sleep(2)
             await sent.delete()
         else:
             await message.channel.send('Admin Command Only!')
@@ -1602,7 +1603,7 @@ async def on_message(message):
                 else:
                     game = message.content.split(' ')[2]
                 
-                amount = formatok(message.content.split(' ')[1], game)
+                amount = formatok(message.content.split(' ')[1])
                 current = getvalue(message.author.id, game, 'rsmoney')
                 way = message.content.split(' ')[0][1:]
                 enough = True
@@ -1623,7 +1624,7 @@ async def on_message(message):
                             break
                     
                     c.execute('INSERT INTO cash VALUES (%s, %s, %s, %s, %s)', (message.author.id, way, code, game, amount))
-                    await client.get_channel(617795929570803723).send('<@&512370598459080724>, <@' + str(message.author.id) + '> wants to ' + way + ' **' + formatfromk(amount, game) + '** ' + game + '. Use `$accept ' + str(code) + '`.')
+                    await client.get_channel(617795929570803723).send('<@&512370598459080724>, <@' + str(message.author.id) + '> wants to ' + way + ' **' + formatfromk(amount) + '** ' + game + '. Use `$accept ' + str(code) + '`.')
                     embed = discord.Embed(description='A message has been sent to a cashier. Your request will be processed and you will be messaged soon.', color=5174318)
                     embed.set_author(name=way.title(), icon_url=str(message.guild.icon_url))
                     await message.channel.send(embed=embed)
@@ -1660,6 +1661,11 @@ async def on_message(message):
                 await message.channel.send('There is no cashout/cashin request with that code.')
         else:
             None
+
+    elif message.content == ('$create'):
+        category = (client.get_channel(609484060649193514)).category
+        newChannel = await message.guild.create_text_channel('ongoing events', category=category)
+        await newChannel.set_permissions(message.author, read_messages=True, send_messages=True, read_message_history=True, manage_channel=True, manage_permissions=True, manage_messages=True)
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
