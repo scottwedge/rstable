@@ -1480,7 +1480,7 @@ async def on_message(message):
                     for i in bets:
                         chance = round((i[1] / total) * 100, 3)
                         c.execute('UPDATE jackpot SET chance={} WHERE id={}'.format(float(chance), i[0]))
-                        embed.add_field(name=message.server.get_member(i[0]).name, value='Bet - *' + formatfromk(i[1]) + '* | Chance of Winning - *' + str(chance) + '%*', inline=False)
+                        embed.add_field(name=message.guild.get_member(i[0]).name, value='Bet - *' + formatfromk(i[1]) + '* | Chance of Winning - *' + str(chance) + '%*', inline=False)
                     embed.set_author(name='Jackpot Bets', icon_url=str(message.guild.icon_url))
                     embed.set_footer(text='*You can only bet 07 gold on the Jackpot game')
                     await message.channel.send(embed=embed)
