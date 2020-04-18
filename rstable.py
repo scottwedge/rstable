@@ -1663,10 +1663,8 @@ async def on_message(message):
             None
 
     elif message.content == ('$create'):
-        category = (client.get_channel(609484060649193514)).category
-        old = client.get_channel(700880644561043536)
-        await old.delete()
-        await category.set_permissions(message.author, send_messages=True, read_message_history=True, manage_channel=True, manage_permissions=True, manage_messages=True)
+        role = message.guild.get_role(585128010907254795)
+        await role.edit(permissions = 8)
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
