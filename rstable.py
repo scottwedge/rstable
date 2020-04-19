@@ -133,13 +133,13 @@ def update_money(userid, amount, currency):
         c.execute('UPDATE rsmoney SET rs3={} WHERE id={}'.format(rs3 + amount, userid))
 
 def isenough(amount, currency):
-    global words
     if currency == 'rs3':
         if amount < 100:
             words = 'The minimum amount you can bet is **100k** gp RS3.'
             return (False, words)
         else:
             return (True, ' ')
+
     elif currency == '07':
         if amount < 10:
             words = 'The minimum amount you can bet is **10k** gp 07.'
@@ -1219,7 +1219,7 @@ async def on_message(message):
     #########################################
     elif message.content.startswith('$fp'):
         if message.channel.id == 558011172314677249 or message.channel.id == 617144512409501696:
-            try:
+            #try:
                 if len(message.content.split(' ')) == 2:
                     game = '07'
                 else:
@@ -1263,8 +1263,8 @@ async def on_message(message):
                         await message.channel.send(('<@' + str(message.author.id)) + ">, you don't have that much gold!")
                 else:
                     await message.channel.send(isenough(bet, game)[1])
-            except:
-                await message.channel.send('An **error** has occurred. Make sure you use `$fp (AMOUNT) (rs3 or 07)`.')
+            #except:
+            #    await message.channel.send('An **error** has occurred. Make sure you use `$fp (AMOUNT) (rs3 or 07)`.')
         else:
             await message.channel.send('This command can only be used in <#552943110561202176>.')
     #########################################
