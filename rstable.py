@@ -1241,8 +1241,10 @@ async def on_message(message):
                         #flowers=['Red', 'Orange', 'Yellow', 'Assorted', 'Blue', 'Purple', 'Mixed', 'Black', 'White']
                         emojis = ['rf', 'blf', 'yf', 'puf', 'of', 'pf', 'raf', 'bf', 'wf']
                         for i in playerflowers:
+                            print(playerflowers)
                             pprint += str(get(client.emojis, name=emojis[i]))
                         for i in botflowers:
+                            print(botflowers)
                             bprint += str(get(client.emojis, name=emojis[i]))
 
                         if scorefp(playerflowers)[0] == scorefp(botflowers)[0]:
