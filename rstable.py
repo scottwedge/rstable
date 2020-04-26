@@ -476,7 +476,7 @@ async def on_message(message):
     global roulette, roulettemsg, gif, nextgiveaway, participants, override
     
     if message.author.id != 580511336598077511:
-        if message.content.startswith('$'):
+        if message.content.startswith('$') or message.content.startswith('~'):
             None
         else:
             xp = getvalue(message.author.id, 'xp', 'rsmoney')
@@ -633,7 +633,7 @@ async def on_message(message):
             if osrs == '0k':
                 osrs = '0 k'
             embed = discord.Embed(description='Need to load up on weekly keys? Check out our [Patreon](https://www.patreon.com/EvilBob)', color=sidecolor)
-            embed.set_author(name=str(member)[:(- 5)] + "'s Wallet", icon_url=str(member.avatar_url))
+            embed.set_author(name=str(member)[:-5] + "'s Wallet", icon_url=str(member.avatar_url))
             embed.add_field(name='RS3 Balance', value=rs3, inline=True)
             embed.add_field(name='07 Balance', value=osrs, inline=True)
             embed.add_field(name='Tickets', value=str(tickets), inline=True)
