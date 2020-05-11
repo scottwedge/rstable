@@ -486,7 +486,7 @@ async def on_message(message):
     
     if (message.guild.id != 512158131674152973) and (message.guild.id != 518832231532331018):
         None
-    elif str(message.channel.id) == 556097134370226192:
+    elif message.channel.id == 556097134370226192:
         if message.author.id != 580511336598077511:
             await message.delete()
             embed = discord.Embed(description=str(message.content).title(), color=15925108)
@@ -1584,9 +1584,7 @@ async def on_message(message):
             purged = int(message.content.split(' ')[1]) + 1
             await message.channel.purge(limit=purged)
             asyncio.sleep(1)
-            sent = await message.channel.send('Successfully deleted **' + str(purged - 1) + '** messages.')
-            asyncio.sleep(2)
-            await sent.delete()
+            sent = await message.channel.send('Successfully deleted **' + str(purged - 1) + '** messages.', delete_after = 3)
         else:
             await message.channel.send('Admin Command Only!')
     #########################################
