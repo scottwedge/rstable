@@ -1737,7 +1737,7 @@ async def on_message(message):
             embed = discord.Embed(description='<@' + winner + "> has won the previous __daily giveaway__ and gained **" + amount + "**!\n\nUse `$daily` to enter today's giveaway! The following people have entered:", color=7354353)
             embed.set_author(name='Giveaway Winner', icon_url=str(message.guild.icon_url))
             await newChannel.send(embed=embed)
-            update_money(winner, formatok(amount), '07')
+            update_money(int(winner), formatok(amount), '07')
             c.execute("UPDATE daily SET people='{}'".format(''))
             c.execute('UPDATE daily SET channelid={}'.format(newChannel.id))
         else:
