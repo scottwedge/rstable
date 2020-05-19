@@ -1719,7 +1719,6 @@ async def on_message(message):
     ############################################
     elif message.content == '$drawdaily':
         dailyChannel = client.get_channel(712152896900169748)
-        everyone = get(message.guild.roles, name='everyone')
         category = dailyChannel.category
         c.execute('SELECT people FROM daily')
         people = str(c.fetchone()[0])
@@ -1727,7 +1726,7 @@ async def on_message(message):
             winner = random.choice(people.split('|'))
             await dailyChannel.delete()
             newChannel = await message.guild.create_text_channel('Daily Giveaway', category=category)
-            await newChannel.set_permissions(everyone, send_messages=False)
+            await newChannel.set_permissions(message.guild.default_role, send_messages=False)
             embed = discord.Embed(description='<@' + winner + "> has won yesterday's __daily giveaway__!\n\nUse `$daily` to enter today's giveaway! The following people have entered:", color=7354353)
             embed.set_author(name='Giveaway Winner', icon_url=str(message.guild.icon_url))
             await newChannel.send(embed=embed)
