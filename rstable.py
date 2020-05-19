@@ -1730,7 +1730,8 @@ async def on_message(message):
         category = dailyChannel.category
 
         if people != '':
-            winner = random.choice(people.split('|'))
+            participants = (people.split('|')).remove('')
+            winner = random.choice(participants)
             await dailyChannel.delete()
             newChannel = await message.guild.create_text_channel('Daily Giveaway', category=category)
             await newChannel.set_permissions(message.guild.default_role, send_messages=False)
