@@ -98,12 +98,12 @@ conn.commit()
 #               )""")
 # conn.commit()
 
-#c.execute("DROP TABLE daily")
-c.execute("""CREATE TABLE daily (
-              prize integer,
-              people text
-              )""")
-conn.commit()
+# c.execute("DROP TABLE daily")
+# c.execute("""CREATE TABLE daily (
+#               prize integer,
+#               people text
+#               )""")
+# conn.commit()
 
 client = discord.Client()
 
@@ -1689,6 +1689,7 @@ async def on_message(message):
         if isstaff(message.guild.roles, message.author.roles) == 'verified':
             amount = formatok(message.content.split(' ')[1])
             c.execute('UPDATE daily set prize={}'.format(amount))
+            await message.channel.send('The daily prize amount has been updated to **' + formatformk(amount) + '**.')
         else:
             await message.channel.send('Admin Command Only!')
     ############################################
