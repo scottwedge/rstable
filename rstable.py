@@ -1724,14 +1724,13 @@ async def on_message(message):
         c.execute('SELECT * FROM daily')
         daily = c.fetchall()[0]
         channelid = int(daily[2])
-        people = str(daily[1])
+        people = str(daily[1])[:-1]
         amount = formatfromk(int(daily[0]))
         dailyChannel = client.get_channel(channelid)
         category = dailyChannel.category
 
         if people != '':
-            participants = (people.split('|')).remove('')
-            winner = random.choice(participants)
+            winner = random.choice(people.split('|'))
             await dailyChannel.delete()
             newChannel = await message.guild.create_text_channel('Daily Giveaway', category=category)
             await newChannel.set_permissions(message.guild.default_role, send_messages=False)
