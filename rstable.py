@@ -35,9 +35,10 @@ conn.set_session(autocommit=True)
 #               gold integer,
 #               tickets integer,
 #               weeklydate text,
-#               xp integer
+#               xp integer,
+#               deposits integer
 #               )""")
-# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0,"2020-01-01 00:00:00",0))
+# c.execute("INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", ("546184449373634560",0,0,0,0,0,0,"None",False,0,0,0,0,"2020-01-01 00:00:00",0,0))
 # conn.commit()
 
 # c.execute("DROP TABLE data")
@@ -48,9 +49,10 @@ conn.set_session(autocommit=True)
 #               nonce integer,
 #               rs3profit bigint,
 #               osrsprofit bigint,
-#               jackpotroll integer
+#               jackpotroll integer,
+#               daily integer
 #               )""")
-# c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0, 0, 1000))
+# c.execute("INSERT INTO data VALUES (%s, %s, %s, %s, %s, %s, %s)", (time.strftime("%d"), hasher.create_seed(), "None", 0, 0, 0, 1000, 100))
 #conn.commit()
 
 c.execute("DROP TABLE bj")
@@ -96,13 +98,21 @@ conn.commit()
 #               )""")
 # conn.commit()
 
+#c.execute("DROP TABLE daily")
+c.execute("""CREATE TABLE daily (
+              prize integer,
+              people text
+              )""")
+conn.commit()
+
 client = discord.Client()
 
 def add_member(userid, rs3, osrs):
-    c.execute('INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (userid, rs3, osrs, 0, 0, 0, 0, 'ClientSeed', False, 0, 0, 0, 0, '2020-01-01 00:00:00', 0))
+    c.execute('INSERT INTO rsmoney VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', (userid, rs3, osrs, 0, 0, 0, 0, 'ClientSeed', False, 0, 0, 0, 0, '2020-01-01 00:00:00', 0, 0))
 
 def getvalue(userid, value, table):
-    strings = ['clientseed', 'seedreset', 'serverseed', 'yesterdayseed', 'deck', 'botcards', 'playercards', 'currency', 'messageid', 'channelid', 'bets', 'streak', 'weeklydate', 'split']
+    strings = ['clientseed', 'seedreset', 'serverseed', 'yesterdayseed', 'deck', 'botcards', 'playercards', 
+                'currency', 'messageid', 'channelid', 'bets', 'streak', 'weeklydate', 'split', 'people']
     booleans = ['privacy', 'claimed']
 
     if value == '07':
@@ -781,6 +791,7 @@ async def on_message(message):
                 await message.channel.send(('You must transfer at least **1k** ' + currency) + '.')
         except:
             await message.channel.send('An **error** has occurred. Make sure you use `$transfer (@USER) (AMOUNT) (rs3 or 07)`.')
+        await message.delete()
     #########################################
     elif message.content.startswith('$53') or message.content.startswith('$50') or message.content.startswith('$75') or message.content.startswith('$95'):
         if message.channel.id in [570857748451950603, 563836659003686913, 558011134074945536, 570857634299772929]:
@@ -838,14 +849,17 @@ async def on_message(message):
     elif (message.content == '$wager') or (message.content == '$total bet') or (message.content == '$tb'):
         rs3total = getvalue(message.author.id, 'rs3total', 'rsmoney')
         osrstotal = getvalue(message.author.id, 'osrstotal', 'rsmoney')
+        deposits = getvalue(message.author.id, 'deposits', 'rsmoney')
         
         osrs = formatfromk(osrstotal)
         rs3 = formatfromk(rs3total)
+        deposits = formatfromk(deposits)
         
         embed = discord.Embed(color=16766463)
         embed.set_author(name=str(message.author)[:(- 5)] + "'s Total Bets", icon_url=str(message.author.avatar_url))
         embed.add_field(name='RS3 Total Bets', value=rs3, inline=True)
         embed.add_field(name='07 Total Bets', value=osrs, inline=True)
+        embed.add_field(name='Deposits This Month', value=deposits, inline=True)
         c.execute('SELECT * FROM jackpot')
         bets = c.fetchall()
         total = sum((x[1] for x in bets))
@@ -1652,6 +1666,9 @@ async def on_message(message):
                 amount = int(cash[4])
                 if way == 'cashout':
                     update_money(userid, amount * -1, currency)
+                elif way == 'cashin':
+                    deposits = getvalue(message.author.id, 'deposits', 'rsmoney')
+                    c.execute('UPDATE rsmoney SET deposits={} WHERE id={}'.format(deposits + amount, message.author.id))
                 embed = discord.Embed(description='<@' + userid + '>, <@' + str(message.author.id) + '> will perform your ' + way + '.', color=5174318)
                 embed.set_author(name=way.title(), icon_url=str(message.guild.icon_url))
                 await client.get_channel(514298345993404416).send(embed=embed)
@@ -1661,6 +1678,55 @@ async def on_message(message):
                 await message.channel.send('There is no cashout/cashin request with that code.')
         else:
             None
+    #############################################
+    elif message.content == ('$cleardeposits'):
+        if isstaff(message.guild.roles, message.author.roles) == 'verified':
+            c.execute('UPDATE rsmoney SET deposits=0')
+        else:
+            await message.channel.send('Admin Command Only!')
+    ############################################
+    elif message.content.startswith('$changedaily'):
+        if isstaff(message.guild.roles, message.author.roles) == 'verified':
+            amount = formatok(message.content.split(' ')[1])
+            c.execute('UPDATE daily set prize={}'.format(amount))
+        else:
+            await message.channel.send('Admin Command Only!')
+    ############################################
+    elif message.content == ('$daily'):
+        rookie = get(message.guild.roles, name='🎒Rookie')
+        deposits = getvalue(message.author.id, 'deposits', 'rsmoney')
+        people = getvalue(message.author.id, 'people', 'daily')
+        dailyChannel = client.get_channel(712152896900169748)
+        if rookie in message.author.roles:
+            if deposits >= 1000:
+                if str(message.author.id) not in people:
+                    c.execute('UPDATE daily SET people={}'.format(people + str(message.author.id) + '|'))
+                    await message.channel.send(':white_check_mark: ' + str(message.author.id) + '> has entered the daily giveaway!')
+                    await dailyChannel.send('<@' + str(message.author.id) + '>')
+                else:
+                    await message.channel.send("You have already entered today's __daily giveaway__!", delete_after = 3)
+            else:
+                await message.channel.send(':no_entry: <@' + str(message.author.id) + '> has not deposited at least **1m** this month.')
+        else:
+            await message.channel.send(':no_entry: <@' + str(message.author.id) + '> does not have the 🎒Rookie role. Check your rank with `$rank`.')
+    ############################################
+    elif message.content == '$drawdaily':
+        dailyChannel = client.get_channel(712152896900169748)
+        everyone = get(message.guild.roles, name='everyone')
+        category = dailyChannel.category
+        people = getvalue(message.author.id, 'people', 'daily')
+        if people != '':
+            winner = random.choice(people.split('|'))
+            await dailyChannel.delete()
+            newChannel = await message.guild.create_text_channel('Daily Giveaway', category=category)
+            await newChannel.set_permissions(everyone, send_messages=False)
+            embed = discord.Embed(description='<@' + winner + "> has won yesterday's __daily giveaway__!\n\nUse `$daily` to enter today's giveaway! The following people have entered:", color=7354353)
+            embed.set_author(name='Giveaway Winner', icon_url=str(message.guild.icon_url))
+            await newChannel.send(embed=embed)
+            c.execute('UPDATE daily SET people={}'.format(''))
+        else:
+            words = 'Not enough people entered to choose a winner :cry:'
+
 
 client.loop.create_task(my_background_task())
 Bot_Token = os.environ['TOKEN']
