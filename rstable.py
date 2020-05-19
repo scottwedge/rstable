@@ -1699,7 +1699,10 @@ async def on_message(message):
         c.execute('SELECT people FROM daily')
         people = str(c.fetchone()[0])
         dailyChannel = client.get_channel(712152896900169748)
+        if deposits >= 1000:
+            await message.channel.send(':white_check_mark: ' + str(message.author.id) + '> has deposited at least **1m** this month.')
         if rookie in message.author.roles:
+            await message.channel.send(':white_check_mark: ' + str(message.author.id) + '> has the 🎒Rookie role.')
             if deposits >= 1000:
                 if str(message.author.id) not in people:
                     c.execute('UPDATE daily SET people={}'.format(people + str(message.author.id) + '|'))
@@ -1710,6 +1713,8 @@ async def on_message(message):
             else:
                 await message.channel.send(':no_entry: <@' + str(message.author.id) + '> has not deposited at least **1m** this month.')
         else:
+            if deposits < 1000:
+                await message.channel.send(':no_entry: <@' + str(message.author.id) + '> has not deposited at least **1m** this month.')
             await message.channel.send(':no_entry: <@' + str(message.author.id) + '> does not have the 🎒Rookie role. Check your rank with `$rank`.')
     ############################################
     elif message.content == '$drawdaily':
