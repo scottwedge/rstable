@@ -1738,7 +1738,7 @@ async def on_message(message):
             embed.set_author(name='Giveaway Winner', icon_url=str(message.guild.icon_url))
             await newChannel.send(embed=embed)
             update_money(message.guild.get_member(winner), formatok(amount), '07')
-            c.execute('UPDATE daily SET people={}'.format(''))
+            c.execute("UPDATE daily SET people='{}'".format(''))
             c.execute('UPDATE daily SET channelid={}'.format(newChannel.id))
         else:
             words = 'Not enough people entered to choose a winner :cry:'
