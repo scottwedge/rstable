@@ -372,6 +372,30 @@ async def my_background_task():
             embed.add_field(name="Yesterday's Server Seed Hashed", value=hasher.hash(guildseed), inline=True)
             embed.add_field(name="Today's Server Seed Hashed", value=hasher.hash(newseed), inline=True)
             await channel.send(embed=embed)
+            ################################
+            c.execute('SELECT * FROM daily')
+            daily = c.fetchall()[0]
+            channelid = int(daily[2])
+            people = str(daily[1])[:-1]
+            amount = formatfromk(int(daily[0]))
+            dailyChannel = client.get_channel(channelid)
+            category = dailyChannel.category
+
+            if people != '':
+                winner = random.choice(people.split('|'))
+                words = '<@' + winner + "> has won the previous __daily giveaway__ and gained **" + amount + "**!\n\nUse `$daily` to enter today's giveaway! The following people have entered:"
+                update_money(int(winner), formatok(amount), '07')
+            else:
+                words = 'Not enough people entered to choose a winner :cry:'
+                
+            await dailyChannel.delete()
+            newChannel = await channel.guild.create_text_channel('Daily Giveaway', category=category)
+            await newChannel.set_permissions(channel.guild.default_role, send_messages=False)
+            embed = discord.Embed(description=words, color=7354353)
+            embed.set_author(name='Giveaway Results', icon_url=str(channel.guild.icon_url))
+            await newChannel.send(embed=embed)
+            c.execute("UPDATE daily SET people='{}'".format(''))
+            c.execute('UPDATE daily SET channelid={}'.format(newChannel.id))
         
         else:
             if roulette < 1:
@@ -1731,17 +1755,19 @@ async def on_message(message):
 
         if people != '':
             winner = random.choice(people.split('|'))
-            await dailyChannel.delete()
-            newChannel = await message.guild.create_text_channel('Daily Giveaway', category=category)
-            await newChannel.set_permissions(message.guild.default_role, send_messages=False)
-            embed = discord.Embed(description='<@' + winner + "> has won the previous __daily giveaway__ and gained **" + amount + "**!\n\nUse `$daily` to enter today's giveaway! The following people have entered:", color=7354353)
-            embed.set_author(name='Giveaway Winner', icon_url=str(message.guild.icon_url))
-            await newChannel.send(embed=embed)
+            words = '<@' + winner + "> has won the previous __daily giveaway__ and gained **" + amount + "**!\n\nUse `$daily` to enter today's giveaway! The following people have entered:"
             update_money(int(winner), formatok(amount), '07')
-            c.execute("UPDATE daily SET people='{}'".format(''))
-            c.execute('UPDATE daily SET channelid={}'.format(newChannel.id))
         else:
             words = 'Not enough people entered to choose a winner :cry:'
+
+        await dailyChannel.delete()
+        newChannel = await message.guild.create_text_channel('Daily Giveaway', category=category)
+        await newChannel.set_permissions(message.guild.default_role, send_messages=False)
+        embed = discord.Embed(description=words, color=7354353)
+        embed.set_author(name='Giveaway Results', icon_url=str(message.guild.icon_url))
+        await newChannel.send(embed=embed)
+        c.execute("UPDATE daily SET people='{}'".format(''))
+        c.execute('UPDATE daily SET channelid={}'.format(newChannel.id))
 
 
 client.loop.create_task(my_background_task())
