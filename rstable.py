@@ -1689,14 +1689,15 @@ async def on_message(message):
         if isstaff(message.guild.roles, message.author.roles) == 'verified':
             amount = formatok(message.content.split(' ')[1])
             c.execute('UPDATE daily set prize={}'.format(amount))
-            await message.channel.send('The daily prize amount has been updated to **' + formatformk(amount) + '**.')
+            await message.channel.send('The daily prize amount has been updated to **' + formatfromk(amount) + '**.')
         else:
             await message.channel.send('Admin Command Only!')
     ############################################
     elif message.content == ('$daily'):
         rookie = get(message.guild.roles, name='🎒Rookie')
         deposits = getvalue(message.author.id, 'deposits', 'rsmoney')
-        people = getvalue(message.author.id, 'people', 'daily')
+        c.execute('SELECT people FROM daily')
+        people = str(c.fetchone()[0])
         dailyChannel = client.get_channel(712152896900169748)
         if rookie in message.author.roles:
             if deposits >= 1000:
@@ -1715,7 +1716,8 @@ async def on_message(message):
         dailyChannel = client.get_channel(712152896900169748)
         everyone = get(message.guild.roles, name='everyone')
         category = dailyChannel.category
-        people = getvalue(message.author.id, 'people', 'daily')
+        c.execute('SELECT people FROM daily')
+        people = str(c.fetchone()[0])
         if people != '':
             winner = random.choice(people.split('|'))
             await dailyChannel.delete()
