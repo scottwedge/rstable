@@ -1712,7 +1712,7 @@ async def on_message(message):
                     await message.channel.send(':white_check_mark: <@' + str(message.author.id) + '> has entered the daily giveaway!')
                     await dailyChannel.send('<@' + str(message.author.id) + '>')
                 else:
-                    await message.channel.send("You have already entered today's __daily giveaway__!", delete_after = 3)
+                    await message.channel.send("You have already entered today's __daily giveaway__!")
             else:
                 await message.channel.send(':no_entry: <@' + str(message.author.id) + '> has not deposited at least **1m** this month.')
         else:
@@ -1737,7 +1737,7 @@ async def on_message(message):
             embed = discord.Embed(description='<@' + winner + "> has won the previous __daily giveaway__ and gained **" + amount + "**!\n\nUse `$daily` to enter today's giveaway! The following people have entered:", color=7354353)
             embed.set_author(name='Giveaway Winner', icon_url=str(message.guild.icon_url))
             await newChannel.send(embed=embed)
-            update_money(message.guild.get_member(winner), formatok(amount), '07')
+            update_money(winner, formatok(amount), '07')
             c.execute("UPDATE daily SET people='{}'".format(''))
             c.execute('UPDATE daily SET channelid={}'.format(newChannel.id))
         else:
