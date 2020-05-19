@@ -1700,13 +1700,13 @@ async def on_message(message):
         people = str(c.fetchone()[0])
         dailyChannel = client.get_channel(712152896900169748)
         if deposits >= 1000:
-            await message.channel.send(':white_check_mark: ' + str(message.author.id) + '> has deposited at least **1m** this month.')
+            await message.channel.send(':white_check_mark: <@' + str(message.author.id) + '> has deposited at least **1m** this month.')
         if rookie in message.author.roles:
-            await message.channel.send(':white_check_mark: ' + str(message.author.id) + '> has the 🎒Rookie role.')
+            await message.channel.send(':white_check_mark: <@' + str(message.author.id) + '> has the 🎒Rookie role.')
             if deposits >= 1000:
                 if str(message.author.id) not in people:
-                    c.execute('UPDATE daily SET people={}'.format(people + str(message.author.id) + '|'))
-                    await message.channel.send(':white_check_mark: ' + str(message.author.id) + '> has entered the daily giveaway!')
+                    c.execute("UPDATE daily SET people='{}'".format(people + str(message.author.id) + '|'))
+                    await message.channel.send(':white_check_mark: <@' + str(message.author.id) + '> has entered the daily giveaway!')
                     await dailyChannel.send('<@' + str(message.author.id) + '>')
                 else:
                     await message.channel.send("You have already entered today's __daily giveaway__!", delete_after = 3)
