@@ -101,6 +101,7 @@ conn.commit()
 # c.execute("DROP TABLE daily")
 # c.execute("""CREATE TABLE daily (
 #               prize integer,
+#               channelid integer,
 #               people text
 #               )""")
 # conn.commit()
@@ -1698,7 +1699,9 @@ async def on_message(message):
         deposits = getvalue(message.author.id, 'deposits', 'rsmoney')
         c.execute('SELECT people FROM daily')
         people = str(c.fetchone()[0])
-        dailyChannel = client.get_channel(712152896900169748)
+        c.execute('SELECT channelid FROM daily')
+        channelid = int(c.fetchone()[0])
+        dailyChannel = client.get_channel(channelid)
         if deposits >= 1000:
             await message.channel.send(':white_check_mark: <@' + str(message.author.id) + '> has deposited at least **1m** this month.')
         if rookie in message.author.roles:
@@ -1718,7 +1721,9 @@ async def on_message(message):
             await message.channel.send(':no_entry: <@' + str(message.author.id) + '> does not have the 🎒Rookie role. Check your rank with `$rank`.')
     ############################################
     elif message.content == '$drawdaily':
-        dailyChannel = client.get_channel(712152896900169748)
+        c.execute('SELECT channelid FROM daily')
+        channelid = int(c.fetchone()[0])
+        dailyChannel = client.get_channel(channelid)
         category = dailyChannel.category
         c.execute('SELECT people FROM daily')
         people = str(c.fetchone()[0])
@@ -1731,6 +1736,7 @@ async def on_message(message):
             embed.set_author(name='Giveaway Winner', icon_url=str(message.guild.icon_url))
             await newChannel.send(embed=embed)
             c.execute('UPDATE daily SET people={}'.format(''))
+            c.execute('UPDATE daily SET channelid={}'.format(newChannel.id))
         else:
             words = 'Not enough people entered to choose a winner :cry:'
 
