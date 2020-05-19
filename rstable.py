@@ -101,8 +101,8 @@ conn.commit()
 # c.execute("DROP TABLE daily")
 # c.execute("""CREATE TABLE daily (
 #               prize integer,
-#               channelid integer,
-#               people text
+#               people text,
+#               channelid bigint
 #               )""")
 # conn.commit()
 
@@ -1721,20 +1721,23 @@ async def on_message(message):
             await message.channel.send(':no_entry: <@' + str(message.author.id) + '> does not have the 🎒Rookie role. Check your rank with `$rank`.')
     ############################################
     elif message.content == '$drawdaily':
-        c.execute('SELECT channelid FROM daily')
-        channelid = int(c.fetchone()[0])
+        c.execute('SELECT * FROM daily')
+        daily = c.fetchall()[0]
+        channelid = int(daily[2])
+        people = str(daily[1])
+        amount = formatfromk(int(daily[0]))
         dailyChannel = client.get_channel(channelid)
         category = dailyChannel.category
-        c.execute('SELECT people FROM daily')
-        people = str(c.fetchone()[0])
+
         if people != '':
             winner = random.choice(people.split('|'))
             await dailyChannel.delete()
             newChannel = await message.guild.create_text_channel('Daily Giveaway', category=category)
             await newChannel.set_permissions(message.guild.default_role, send_messages=False)
-            embed = discord.Embed(description='<@' + winner + "> has won yesterday's __daily giveaway__!\n\nUse `$daily` to enter today's giveaway! The following people have entered:", color=7354353)
+            embed = discord.Embed(description='<@' + winner + "> has won the previous __daily giveaway__ and gained **" + amount + "**!\n\nUse `$daily` to enter today's giveaway! The following people have entered:", color=7354353)
             embed.set_author(name='Giveaway Winner', icon_url=str(message.guild.icon_url))
             await newChannel.send(embed=embed)
+            update_money(message.guild.get_member(winner), formatok(amount), '07')
             c.execute('UPDATE daily SET people={}'.format(''))
             c.execute('UPDATE daily SET channelid={}'.format(newChannel.id))
         else:
