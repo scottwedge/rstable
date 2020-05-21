@@ -1127,11 +1127,11 @@ async def on_message(message):
                         update_money(message.author.id, (- 750) * amount, '07')
                         await message.channel.send(embed=embed)
                 elif kind == 'gold':
-                    if buyer < (2000 * amount):
+                    if buyer < (1250 * amount):
                         await message.channel.send("You don't have enough to buy that many gold keys.")
                     else:
                         c.execute('UPDATE rsmoney SET gold={} WHERE id={}'.format(gold + amount, message.author.id))
-                        update_money(message.author.id, (- 2000) * amount, '07')
+                        update_money(message.author.id, (- 1250) * amount, '07')
                         await message.channel.send(embed=embed)
             except:
                 await message.channel.send('An **error** has occurred. Make sure you use `$buykey (AMOUNT) (KEY TYPE)`.')
