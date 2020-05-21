@@ -1173,7 +1173,7 @@ async def on_message(message):
                     
                     update_money(message.author.id, int(price), '07')
                     
-                    embed = discord.Embed(description=('You recieved item: **' + str(item)) + '**!', color=sidecolor)
+                    embed = discord.Embed(description=('You received item: **' + str(item)) + '**!', color=sidecolor)
                     embed.add_field(name='Price', value=('*' + formatfromk(int(price))) + '*', inline=True)
                     embed.set_author(name=kind.title() + ' Key Prize', icon_url=str(message.author.avatar_url))
                     embed.set_thumbnail(url=str(url))
@@ -1220,6 +1220,7 @@ async def on_message(message):
                     member = message.guild.get_member(int((message.content).split(' ')[1][3:-1]))
                 
                 kind = str(message.content).split(' ')[2]
+                
                 keyvalue = getvalue(message.author.id, kind, 'rsmoney')
                 
                 if keyvalue >= 1:
